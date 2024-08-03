@@ -17,6 +17,18 @@ export default function App() {
 		setNewItem(""); //clears the field everytime it's submitted
 	}
 
+	function toggleTodo(id: number, completed: boolean) {
+		setTodos((currentTodos: any) => {
+			return currentTodos.map((todo: any) => {
+				//check each item and update the one that fired the onChange event
+				if (todo.id === id) {
+					return { ...todo, completed: completed };
+				}
+				return todo;
+			});
+		});
+	}
+
 	return (
 		<>
 			<form onSubmit={handleSubmit} className="new-item-form">
@@ -32,9 +44,11 @@ export default function App() {
 					return (
 						<li key={todo.id}>
 							<label>
-								<input type="checkbox" checked={todo.completed} />
+								{/* update the state accordingly whenever the checkbox changes so that it's rendered properly */}
+								<input type="checkbox" checked={todo.completed} onChange={(e) => toggleTodo(todo.id, e.target.checked)} />
 								{todo.title}
 							</label>
+							<button className="btn btn-del">Delete</button>
 						</li>
 					);
 				})}
