@@ -2,30 +2,37 @@ import { useState } from "react";
 import "./styles.css";
 
 export default function App() {
-	const [newItem, setNewItem] = useState("");
-	const [todos, setTodos] = useState<any[]>([]); //useState([]) infers the type never[] from the default value [], so don't use it in TypeScript
+	const [newItem, setNewItem] = useState(""); //this state is for managing user input field
+	const [items, setItems] = useState<any[]>([]); //useState([]) infers the type never[] from the default value [], so don't use it in TypeScript
 
-	// the argument is an event object, just leaving it as any type for now
-	function handleSubmit(e: any) {
+	// the argument is an event object
+	function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault(); //prevent page from refreshing
 
 		//updating the state
-		setTodos((currentTodos) => {
-			return [...currentTodos, { id: crypto.randomUUID(), title: newItem, completed: false }];
+		setItems((currentItems) => {
+			return [...currentItems, { id: crypto.randomUUID(), title: newItem, completed: false }];
 		});
 
 		setNewItem(""); //clears the field everytime it's submitted
 	}
 
-	function toggleTodo(id: number, completed: boolean) {
-		setTodos((currentTodos: any) => {
-			return currentTodos.map((todo: any) => {
+	function toggleItem(id: number, completed: boolean) {
+		setItems((currentItems: any) => {
+			return currentItems.map((item: any) => {
 				//check each item and update the one that fired the onChange event
-				if (todo.id === id) {
-					return { ...todo, completed: completed };
+				if (item.id === id) {
+					return { ...item, completed: completed };
 				}
-				return todo;
+				return item;
 			});
+		});
+	}
+
+	function deleteItem(id: number) {
+		setItems((currentItems: any) => {
+			//using filter() instead of map() as the element to be deleted can't be properly mapped
+			return currentItems.filter((item: any) => item.id !== id);
 		});
 	}
 
@@ -33,22 +40,25 @@ export default function App() {
 		<>
 			<form onSubmit={handleSubmit} className="new-item-form">
 				<div className="form-row">
-					<label htmlFor="item">New Item</label>
+					<label htmlFor="item">Enter your new item here</label>
 					<input /* Set the value to use the state hook and update it using onChange */ value={newItem} onChange={(e) => setNewItem(e.target.value)} type="text" id="item"></input>
 				</div>
 				<button className="btn">Add</button>
 			</form>
 			<h1 className="header">My list</h1>
 			<ul className="list">
-				{todos.map((todo) => {
+				{items.length === 0 && "You haven't added any item yet" /* short-circuiting */}
+				{items.map((item) => {
 					return (
-						<li key={todo.id}>
+						<li key={item.id}>
 							<label>
 								{/* update the state accordingly whenever the checkbox changes so that it's rendered properly */}
-								<input type="checkbox" checked={todo.completed} onChange={(e) => toggleTodo(todo.id, e.target.checked)} />
-								{todo.title}
+								<input type="checkbox" checked={item.completed} onChange={(e) => toggleItem(item.id, e.target.checked)} />
+								{item.title}
 							</label>
-							<button className="btn btn-del">Delete</button>
+							<button className="btn btn-del" onClick={() => deleteItem(item.id)}>
+								Delete
+							</button>
 						</li>
 					);
 				})}
