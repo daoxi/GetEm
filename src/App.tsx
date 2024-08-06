@@ -1,11 +1,25 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NewItemForm } from "./NewItemForm";
 import { ItemList } from "./ItemList";
 import "./styles.css";
 
 export default function App() {
-	const [items, setItems] = useState<any[]>([]); //useState([]) infers the type never[] from the default value [], so don't use it in TypeScript
+	//Use localStorage for initializing state unless if it's empty 
+	const [items, setItems] = useState<any[]>(() => {
+		const myItems = localStorage.getItem("myItems");
+		if (myItems === null) {
+			return [];
+		} else {
+			return JSON.parse(myItems);
+		}
+	});
 
+	//Save the data in localStorage whenever the state changes
+	useEffect(() => {
+		localStorage.setItem("myItems", JSON.stringify(items));
+	}, [items]);
+
+	//adding item to the current state array, this function will also be used in other component(s)
 	function addItem(title: string) {
 		//updating the state
 		setItems((currentItems) => {
