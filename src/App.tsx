@@ -1,21 +1,12 @@
 import { useState } from "react";
+import { NewItemForm} from "./NewItemForm"
 import "./styles.css";
 
 export default function App() {
-	const [newItem, setNewItem] = useState(""); //this state is for managing user input field
+
 	const [items, setItems] = useState<any[]>([]); //useState([]) infers the type never[] from the default value [], so don't use it in TypeScript
 
-	// the argument is an event object
-	function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-		e.preventDefault(); //prevent page from refreshing
 
-		//updating the state
-		setItems((currentItems) => {
-			return [...currentItems, { id: crypto.randomUUID(), title: newItem, completed: false }];
-		});
-
-		setNewItem(""); //clears the field everytime it's submitted
-	}
 
 	function toggleItem(id: number, completed: boolean) {
 		setItems((currentItems: any) => {
@@ -38,13 +29,7 @@ export default function App() {
 
 	return (
 		<>
-			<form onSubmit={handleSubmit} className="new-item-form">
-				<div className="form-row">
-					<label htmlFor="item">Enter your new item here</label>
-					<input /* Set the value to use the state hook and update it using onChange */ value={newItem} onChange={(e) => setNewItem(e.target.value)} type="text" id="item"></input>
-				</div>
-				<button className="btn">Add</button>
-			</form>
+	< NewItemForm />
 			<h1 className="header">My list</h1>
 			<ul className="list">
 				{items.length === 0 && "You haven't added any item yet" /* short-circuiting */}
