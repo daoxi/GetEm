@@ -1,12 +1,17 @@
 import { useState } from "react";
-import { NewItemForm} from "./NewItemForm"
+import { NewItemForm } from "./NewItemForm";
+import { ItemList } from "./ItemList";
 import "./styles.css";
 
 export default function App() {
-
 	const [items, setItems] = useState<any[]>([]); //useState([]) infers the type never[] from the default value [], so don't use it in TypeScript
 
-
+	function addItem(title: string) {
+		//updating the state
+		setItems((currentItems) => {
+			return [...currentItems, { id: crypto.randomUUID(), title: title, completed: false }];
+		});
+	}
 
 	function toggleItem(id: number, completed: boolean) {
 		setItems((currentItems: any) => {
@@ -29,25 +34,8 @@ export default function App() {
 
 	return (
 		<>
-	< NewItemForm />
-			<h1 className="header">My list</h1>
-			<ul className="list">
-				{items.length === 0 && "You haven't added any item yet" /* short-circuiting */}
-				{items.map((item) => {
-					return (
-						<li key={item.id}>
-							<label>
-								{/* update the state accordingly whenever the checkbox changes so that it's rendered properly */}
-								<input type="checkbox" checked={item.completed} onChange={(e) => toggleItem(item.id, e.target.checked)} />
-								{item.title}
-							</label>
-							<button className="btn btn-del" onClick={() => deleteItem(item.id)}>
-								Delete
-							</button>
-						</li>
-					);
-				})}
-			</ul>
+			<NewItemForm addItem={addItem} /> {/* passing the function as props */}
+			<ItemList items={items} toggleItem={toggleItem} deleteItem={deleteItem} />
 		</>
 	);
 }
