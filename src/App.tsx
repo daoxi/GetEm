@@ -4,7 +4,7 @@ import { ItemList } from "./ItemList";
 import "./styles.css";
 
 export default function App() {
-	//Use localStorage for initializing state unless if it's empty 
+	//Use localStorage for initializing state unless if it's empty
 	const [items, setItems] = useState<any[]>(() => {
 		const myItems = localStorage.getItem("myItems");
 		if (myItems === null) {
@@ -27,6 +27,7 @@ export default function App() {
 		});
 	}
 
+	//Toggling the checkbox on/off for the item
 	function toggleItem(id: number, completed: boolean) {
 		setItems((currentItems: any) => {
 			return currentItems.map((item: any) => {
@@ -39,6 +40,7 @@ export default function App() {
 		});
 	}
 
+	//Removing item for which the user clicked the delete button
 	function deleteItem(id: number) {
 		setItems((currentItems: any) => {
 			//using filter() instead of map() as the element to be deleted can't be properly mapped

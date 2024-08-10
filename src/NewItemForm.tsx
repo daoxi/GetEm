@@ -1,6 +1,8 @@
+//Contains the form used for users to add a new item to the list
+
 import { useState } from "react";
 
-export function NewItemForm({addItem}:any) {
+export function NewItemForm({ addItem }: any) {
 	const [newItem, setNewItem] = useState(""); //this state is for managing user input field
 
 	// the argument is an event object
