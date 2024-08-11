@@ -6,32 +6,33 @@
 body {
 	background: #fff;
 	color: hsl(200, 100%, 10%);
-	max-width: 500px;
-	padding: 1rem;
+	max-width: 600px;
+	padding-top: 1rem;
 	margin: 0 auto;
 }
 
 .new-item-form {
 	display: flex;
 	flex-direction: column;
-	gap: 0.5rem;
-	input {
-		outline: none;
-		border: 2px solid hsl(200, 0%, 60%);
-		background: hsl(200, 0%, 90%, 0.5);
-		border-radius: 0.5em;
-		padding: 0.25em 0.5em;
-		color: hsl(200, 0%, 10%);
-		&:focus {
-			border: 2px solid hsl(200, 0%, 20%);
+	gap: 0.7rem;
+
+	.form-row {
+		display: flex;
+		flex-direction: column;
+		gap: 0.2rem;
+
+		input {
+			outline: none;
+			border: 2px solid hsl(200, 0%, 60%);
+			background: hsl(200, 0%, 90%, 0.5);
+			border-radius: 0.5em;
+			padding: 0.25em 0.5em;
+			color: hsl(200, 0%, 10%);
+			&:focus {
+				border: 2px solid hsl(200, 0%, 20%);
+			}
 		}
 	}
-}
-
-.form-row {
-	display: flex;
-	flex-direction: column;
-	gap: 0.1rem;
 }
 
 .btn {
@@ -62,8 +63,12 @@ body {
 
 .list-header {
 	font-size: 1.5rem;
-	margin-top: 1.5rem;
-	margin-bottom: 0.5rem;
+	margin-top: 2rem;
+	margin-bottom: 0.7rem;
+}
+
+.list-intro {
+	font-size: 0.8rem;
 }
 
 .item-list {
@@ -77,14 +82,61 @@ body {
 		display: flex;
 		gap: 0.5rem;
 		align-items: center;
-		label {
-			display: flex;
-			gap: 0.25rem;
-			cursor: pointer;
-			align-items: center;
+
+		.item-checkbox-container {
+			//hiding default checkbox because it can't be styled reliably (especially on Safari)
+			.item-checkbox {
+				outline: none;
+				width: 0;
+				height: 0;
+				appearance: none;
+				pointer-events: none;
+				position: absolute;
+			}
+			//using pseudo-element for styling checkbox instead
+			&::before {
+				content: "?";
+				display: block;
+				height: 1.5rem;
+				width: 1.5rem;
+				font-size: 1.2rem;
+				background: hsl(150, 0%, 90%);
+				border-radius: 0.25em;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+			}
+			&:hover::before {
+				background: hsl(150, 0%, 80%);
+			}
 		}
-		&:has(input:checked) {
-			label {
+
+		.item-title-container {
+			width: 100%;
+			height: 100%;
+			.item-title {
+				width: 100%;
+				height: 1.5rem;
+			}
+		}
+
+		//all of the styling for when the checkbox is checked
+		&:has(.item-checkbox:checked) {
+			//styling pseudo-element checkbox
+			.item-checkbox-container {
+				&::before {
+					content: "✔";
+					background: hsl(150, 100%, 40%);
+					color: hsl(150, 100%, 90%);
+					font-size: 0.75rem;
+					font-weight: bold;
+				}
+				&:hover::before {
+					background: hsl(150, 100%, 30%);
+				}
+			}
+			//styling text for items
+			.item-title {
 				color: hsl(200, 20%, 40%);
 				text-decoration: line-through;
 			}
