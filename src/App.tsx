@@ -19,9 +19,8 @@ export default function App() {
 		localStorage.setItem("myItems", JSON.stringify(items));
 	}, [items]);
 
-	//adding item to the current state array, this function will also be used in other component(s)
+	//Adding item to the current state array, this function will also be used in other component(s)
 	function addItem(title: string) {
-		//updating the state
 		setItems((currentItems) => {
 			return [...currentItems, { id: crypto.randomUUID(), title: title, completed: false }];
 		});
@@ -40,6 +39,19 @@ export default function App() {
 		});
 	}
 
+	//Editing text content of an existing item
+	function editItem(id: number, title: string) {
+		setItems((currentItems: any) => {
+			return currentItems.map((item: any) => {
+				//check each item and update the one that fired the onChange event
+				if (item.id === id) {
+					return { ...item, title: title };
+				}
+				return item;
+			});
+		});
+	}
+
 	//Removing item for which the user clicked the delete button
 	function deleteItem(id: number) {
 		setItems((currentItems: any) => {
@@ -51,7 +63,7 @@ export default function App() {
 	return (
 		<>
 			<NewItemForm addItem={addItem} /> {/* passing the function as props */}
-			<ItemList items={items} toggleItem={toggleItem} deleteItem={deleteItem} />
+			<ItemList items={items} toggleItem={toggleItem} editItem={editItem} deleteItem={deleteItem} />
 		</>
 	);
 }

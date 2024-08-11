@@ -22,7 +22,7 @@ export function NewItemForm({ addItem }: any) {
 			<form onSubmit={handleSubmit} className="new-item-form">
 				<div className="form-row">
 					<label htmlFor="item">Enter your new item here</label>
-					<input /* Set the value to use the state hook and update it using onChange */ value={newItem} onChange={(e) => setNewItem(e.target.value)} type="text" id="item"></input>
+					<input type="text" /* Set the value to use the state hook and update it using onChange */ value={newItem} onChange={(e) => setNewItem(e.target.value)} id="item"></input>
 				</div>
 				<button className="btn btn-add">Add</button>
 			</form>

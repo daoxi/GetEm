@@ -1,6 +1,6 @@
 //Contains the list that includes all the items that were added by the user
 
-export function ItemList({ items, toggleItem, deleteItem }: any) {
+export function ItemList({ items, toggleItem, editItem, deleteItem }: any) {
 	return (
 		<>
 			<h1 className="list-header">My list</h1>
@@ -13,7 +13,9 @@ export function ItemList({ items, toggleItem, deleteItem }: any) {
 							{/* Using React keys in the list array for best practice */}
 							<label>
 								<input type="checkbox" checked={item.completed} onChange={(e) => toggleItem(item.id, e.target.checked) /* update the state accordingly whenever the checkbox changes so that it's rendered properly */} />
-								{item.title}
+							</label>
+							<label>
+								<input type="text" value={item.title} onChange={(e) => editItem(item.id, e.target.value)}></input>
 							</label>
 							<button className="btn btn-del" onClick={() => deleteItem(item.id)}>
 								✕
