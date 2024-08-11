@@ -24,7 +24,7 @@ export function NewItemForm({ addItem }: any) {
 					<label htmlFor="item">Enter your new item here</label>
 					<input /* Set the value to use the state hook and update it using onChange */ value={newItem} onChange={(e) => setNewItem(e.target.value)} type="text" id="item"></input>
 				</div>
-				<button className="btn">Add</button>
+				<button className="btn btn-add">Add</button>
 			</form>
 		</>
 	);

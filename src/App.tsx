@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { NewItemForm } from "./NewItemForm";
 import { ItemList } from "./ItemList";
-import "./styles.css";
+import "./styles.scss";
 
 export default function App() {
 	//Use localStorage for initializing state unless if it's empty

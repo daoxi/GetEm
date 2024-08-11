@@ -3,8 +3,8 @@
 export function ItemList({ items, toggleItem, deleteItem }: any) {
 	return (
 		<>
-			<h1 className="header">My list</h1>
-			<ul className="list">
+			<h1 className="list-header">My list</h1>
+			<ul className="item-list">
 				{items.length === 0 && "You haven't added any item yet" /* short-circuiting */}
 				{items.map((item: any) => {
 					return (
@@ -16,7 +16,7 @@ export function ItemList({ items, toggleItem, deleteItem }: any) {
 								{item.title}
 							</label>
 							<button className="btn btn-del" onClick={() => deleteItem(item.id)}>
-								Delete
+								✕
 							</button>
 						</li>
 					);
