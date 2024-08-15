@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Checklist from "./Checklist";
 import { Container } from "react-bootstrap";
+import { NewNote } from "./NewNote";
 
 function App() {
 	return (
@@ -21,7 +22,7 @@ function App() {
 				path="/new"
 				element={
 					<>
-						<h1>New</h1>
+						<NewNote />
 					</>
 				}
 			/>
