@@ -6,6 +6,7 @@ import { Container } from "react-bootstrap";
 import { NewNote } from "./NewNote";
 import { useLocalStorage } from "./useLocalStorage";
 import { useMemo } from "react";
+import { v4 as uuidv4 } from 'uuid';
 
 //Note data with the id
 export type Note = {
