@@ -4,8 +4,40 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Checklist from "./Checklist";
 import { Container } from "react-bootstrap";
 import { NewNote } from "./NewNote";
+import { useLocalStorage } from "./useLocalStorage";
+
+//Note data with the id 
+export type Note = {
+	id: string
+} & NoteData
+
+export type RawNote = {
+	id: string
+}
+
+export type RawNoteData = {
+	title: string,
+	markdown: string,
+	//store only the ids of the tags, so that when tags' values change, there's no need to update each note
+	tagIds: string []
+}
+
+//Note data without the id 
+export type NoteData = {
+	title: string,
+	markdown: string,
+	tags: Tag[]
+}
+
+export type Tag = {
+	id: string,
+	label: string
+}
 
 function App() {
+	const [notes, setNotes] = useLocalStorage<RawNote[]>("NOTES", []);
+	const [tags, setTags] = useLocalStorage<Tag[]>("TAGS", []);
+
 	return (
 		<Container className="my-4">
 		<Routes>
