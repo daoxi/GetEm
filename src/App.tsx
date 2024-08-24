@@ -6,7 +6,7 @@ import { Container } from "react-bootstrap";
 import { NewNote } from "./NewNote";
 import { useLocalStorage } from "./useLocalStorage";
 import { useMemo } from "react";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidV4 } from "uuid";
 
 //Note data with the id
 export type Note = {
@@ -45,7 +45,7 @@ function App() {
 	//convert raw note into actual note with tags (instead of just with ids of tags), and update it whenever there's any change on the notes or tags
 	const notesWithTags = useMemo(() => {
 		return notes.map((note) => {
-			//add all the tags with matching tag ids
+			//add all the tags (that have matching tag ids) to the raw note
 			return {
 				...note,
 				tags: tags.filter((tag) => {
@@ -54,6 +54,18 @@ function App() {
 			};
 		});
 	}, [notes, tags]);
+
+	//handles creation of a note
+	function onCreateNote({ tags, ...data }: NoteData) {
+		setNotes((prevNotes) => {
+			//basically converting from NoteData to RawNote
+			return [...prevNotes, { ...data, id: uuidV4(), tagIds: tags.map((tag) => tag.id) }];
+		});
+	}
+
+	function addTag(tag: Tag) {
+		setTags((prev) => [...prev, tag]);
+	}
 
 	return (
 		<Container className="my-4">
@@ -71,7 +83,7 @@ function App() {
 					path="/new"
 					element={
 						<>
-							<NewNote />
+							<NewNote onSubmit={onCreateNote} onAddTag={addTag} availableTags={tags} />
 						</>
 					}
 				/>

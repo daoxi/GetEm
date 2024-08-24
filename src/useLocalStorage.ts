@@ -1,4 +1,4 @@
-//the custom hook for storing and updating data locally
+//This file is for the custom hook for storing and updating data locally
 
 import { useEffect, useState } from "react";
 

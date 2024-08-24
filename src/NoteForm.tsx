@@ -5,13 +5,15 @@ import { Form, Stack, Col, Row, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import CreatableReactSelect from "react-select/creatable";
 import { NoteData, Tag } from "./App";
+import { v4 as uuidV4 } from "uuid";
 
 type NoteFormProps = {
-	onSubmit: (data: NoteData) => void;
+	onSubmit: (data: NoteData) => void,
+	onAddTag: (tag: Tag) => void,
+	availableTags: Tag[]
 };
 
-export function NoteForm({ onSubmit }: NoteFormProps) {
-	
+export function NoteForm({ onSubmit, onAddTag, availableTags }: NoteFormProps) {
 	const titleRef = useRef<HTMLInputElement>(null);
 	const markdownRef = useRef<HTMLTextAreaElement>(null);
 	const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
@@ -23,7 +25,7 @@ export function NoteForm({ onSubmit }: NoteFormProps) {
 			//these values can't be null because they're required (as specified in the <Form.Control/> components), hence the non-null type assertion
 			title: titleRef.current!.value,
 			markdown: markdownRef.current!.value,
-			tags: [],
+			tags: selectedTags,
 		});
 	}
 
@@ -42,9 +44,20 @@ export function NoteForm({ onSubmit }: NoteFormProps) {
 							<Form.Group controlId="tags">
 								<Form.Label>Tags</Form.Label>
 								<CreatableReactSelect
+									//onCreateOption is fired when user creates a new tag, label is the input that the user typed in
+									onCreateOption={(label) => {
+										const newTag = { id: uuidV4(), label };
+										onAddTag(newTag);
+										//automatically add new tag to the currently selected tags by default
+										setSelectedTags((prev) => [...prev, newTag]);
+									}}
 									value={selectedTags.map((tag) => {
 										//CreatableReactSelect expects a label and an id
 										return { label: tag.label, value: tag.id };
+									})}
+									//when user creates a new tag, it does not fire onChange, instead it fires onCreateOption
+									options={availableTags.map(tags => {
+										return {label: tags.label, value: tags.id}
 									})}
 									onChange={(tags) => {
 										setSelectedTags(
