@@ -7,6 +7,7 @@ import { NewNote } from "./NewNote";
 import { useLocalStorage } from "./useLocalStorage";
 import { useMemo } from "react";
 import { v4 as uuidV4 } from "uuid";
+import { NoteList } from "./NoteList";
 
 //Note data with the id
 export type Note = {
@@ -74,7 +75,7 @@ function App() {
 					path="/"
 					element={
 						<>
-							<h1>Working</h1>
+							<NoteList />
 							<Checklist />
 						</>
 					}
