@@ -1,16 +1,36 @@
-import { useState } from "react";
-import { Row, Col, Stack, Button, Form } from "react-bootstrap";
+import { useMemo, useState } from "react";
+import { Row, Col, Stack, Button, Form, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ReactSelect from "react-select";
-import { Tag } from "./App";
+import { Note, Tag } from "./App";
+
+type SimplifiedNote = {
+	tags: Tag[];
+	title: string;
+	id: string;
+};
 
 type NoteListProps = {
 	availableTags: Tag[];
+	notes: SimplifiedNote[];
 };
 
-export function NoteList({ availableTags }: NoteListProps) {
+export function NoteList({ availableTags, notes }: NoteListProps) {
 	const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
 	const [title, setTitle] = useState("");
+
+	const filteredNotes = useMemo(() => {
+		return notes.filter((note) => {
+			//checks for whether both the title and the tags match the search, returns a boolean
+			return (
+				//check for title, making it case-insensitive
+				(title === "" || note.title.toLowerCase().includes(title.toLowerCase())) &&
+				//check for tags, for "every" selected tag, it should match "some" (i.e. at least one) tag for the note
+				(selectedTags.length === 0 || selectedTags.every((tag) => note.tags.some((noteTag) => noteTag.id === tag.id)))
+			);
+		});
+	}, [title, selectedTags, notes]);
+
 	return (
 		<>
 			<Row className="align-items-center mb-4">
@@ -62,7 +82,21 @@ export function NoteList({ availableTags }: NoteListProps) {
 					</Col>
 				</Row>
 			</Form>
-			<Row xs={1} sm={2} lg={3} xl={4} /* Set number of columns for each screen size */ className="g-3" /* for gap */></Row>
+			<Row xs={1} sm={2} lg={3} xl={4} /* Set number of columns for each screen size */ className="g-3" /* for gap */>
+				{filteredNotes.map(note => (
+					<Col key={note.id}>
+						<NoteCard id={note.id} title={note.title} tags={note.tags} />
+					</Col>
+				))}
+			</Row>
 		</>
 	);
 }
+
+function NoteCard({ id, title, tags }: SimplifiedNote) {
+	return <Card as={Link} to={`/${id}`}>
+		<Card.Body>
+
+		</Card.Body>
+	</Card>
+};

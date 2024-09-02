@@ -75,7 +75,7 @@ function App() {
 					path="/"
 					element={
 						<>
-							<NoteList availableTags={tags}/>
+							<NoteList notes={notesWithTags} availableTags={tags}/>
 							<Checklist />
 						</>
 					}
