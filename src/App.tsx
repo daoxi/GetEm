@@ -49,9 +49,7 @@ function App() {
 			//add all the tags (that have matching tag ids) to the raw note
 			return {
 				...note,
-				tags: tags.filter((tag) => {
-					note.tagIds.includes(tag.id);
-				}),
+				tags: tags.filter((tag) => note.tagIds.includes(tag.id)),
 			};
 		});
 	}, [notes, tags]);
@@ -75,7 +73,7 @@ function App() {
 					path="/"
 					element={
 						<>
-							<NoteList notes={notesWithTags} availableTags={tags}/>
+							<NoteList notes={notesWithTags} availableTags={tags} />
 							<Checklist />
 						</>
 					}
