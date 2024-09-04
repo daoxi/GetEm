@@ -2,7 +2,8 @@ import { useMemo, useState } from "react";
 import { Row, Col, Stack, Button, Form, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ReactSelect from "react-select";
-import { Note, Tag } from "./App";
+import { Tag } from "./App";
+import styles from "./NoteList.module.css";
 
 type SimplifiedNote = {
 	tags: Tag[];
@@ -83,7 +84,7 @@ export function NoteList({ availableTags, notes }: NoteListProps) {
 				</Row>
 			</Form>
 			<Row xs={1} sm={2} lg={3} xl={4} /* Set number of columns for each screen size */ className="g-3" /* for gap */>
-				{filteredNotes.map(note => (
+				{filteredNotes.map((note) => (
 					<Col key={note.id}>
 						<NoteCard id={note.id} title={note.title} tags={note.tags} />
 					</Col>
@@ -94,9 +95,9 @@ export function NoteList({ availableTags, notes }: NoteListProps) {
 }
 
 function NoteCard({ id, title, tags }: SimplifiedNote) {
-	return <Card as={Link} to={`/${id}`}>
-		<Card.Body>
-
-		</Card.Body>
-	</Card>
-};
+	return (
+		<Card as={Link} to={`/${id}`} className={`h-100 text-reset text-decoration-none ${styles.card}`} /* h-100 to fill the full height, ${styles.card} for CSS module for more detailed styles */>
+			<Card.Body></Card.Body>
+		</Card>
+	);
+}
