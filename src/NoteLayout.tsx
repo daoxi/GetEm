@@ -1,4 +1,4 @@
-import { Navigate, Outlet, useParams } from "react-router-dom";
+import { Navigate, Outlet, useOutletContext, useParams } from "react-router-dom";
 import { Note } from "./App";
 
 type NoteLayoutProps = {
@@ -9,7 +9,12 @@ export function NoteLayout({ notes }: NoteLayoutProps) {
 	const { id } = useParams(); // get id from the URL
 	const note = notes.find((note) => note.id === id); //find the note with matching id
 
-	if (note == null) return <Navigate to="/" replace />; //use "replace" to replace the URL in order to prevent going back to the page that doesn't exist
+	if (note == null) return <Navigate to="/" replace />; //go back to homepage for non-matching ids, use "replace" to replace the URL in order to prevent going back to the page that doesn't exist
 
 	return <Outlet context={note} />; //renders what's inside this component, using data from context
+}
+
+//helper function for getting context
+export function useNote() {
+	return useOutletContext<Note>(); //useOutletContext() is used to get context in components that are inside the <Outlet />
 }
