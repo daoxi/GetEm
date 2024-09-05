@@ -16,5 +16,5 @@ export function NoteLayout({ notes }: NoteLayoutProps) {
 
 //helper function for getting context
 export function useNote() {
-	return useOutletContext<Note>(); //useOutletContext() is used to get context in components that are inside the <Outlet />
+	return useOutletContext<Note>(); //useOutletContext() is used to get context in components that are inside (i.e. are children of) <Outlet />
 }

@@ -10,6 +10,7 @@ import { v4 as uuidV4 } from "uuid";
 import { NoteList } from "./NoteList";
 import { NoteLayout } from "./NoteLayout";
 import { Note } from "./Note";
+import { EditNote } from "./EditNote";
 
 //Note data with the id
 export type Note = {
@@ -64,6 +65,20 @@ function App() {
 		});
 	}
 
+	//for updating a note, similar to when creating a note
+	function onUpdateNote(id: string, { tags, ...data }: NoteData) {
+		setNotes((prevNotes) => {
+			return prevNotes.map((note) => {
+				if (note.id === id) {
+					//saving existing note data ("...note") and overwriting with new note data ("...data"). tagIds conversion is similar to when creating a note
+					return { ...note, ...data, tagIds: tags.map((tag) => tag.id) };
+				} else {
+					return note;
+				}
+			});
+		});
+	}
+
 	function addTag(tag: Tag) {
 		setTags((prev) => [...prev, tag]);
 	}
@@ -90,7 +105,7 @@ function App() {
 				/>
 				<Route path="/:id" element={<NoteLayout notes={notesWithTags} />}>
 					<Route index element={<Note />} />
-					<Route path="edit" element={<h1>Edit</h1>} />
+					<Route path="edit" element={<EditNote onSubmit={onUpdateNote} onAddTag={addTag} availableTags={tags} />} />
 				</Route>
 				{/* fallback route that goes back to homepage for unrecognized route */}
 				<Route path="*" element={<Navigate to="/" />} />
