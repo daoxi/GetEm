@@ -8,18 +8,23 @@ import { NoteData, Tag } from "./App";
 import { v4 as uuidV4 } from "uuid";
 
 type NoteFormProps = {
-	onSubmit: (data: NoteData) => void,
-	onAddTag: (tag: Tag) => void,
-	availableTags: Tag[]
-};
+	onSubmit: (data: NoteData) => void;
+	onAddTag: (tag: Tag) => void;
+	availableTags: Tag[];
+} & Partial<NoteData>; // use Partial to make NoteData optional
 
-export function NoteForm({ onSubmit, onAddTag, availableTags }: NoteFormProps) {
+export function NoteForm({
+	onSubmit,
+	onAddTag,
+	availableTags,
+	title = "",
+	markdown = "",
+	tags = [],
+}: NoteFormProps) {
 	const titleRef = useRef<HTMLInputElement>(null);
 	const markdownRef = useRef<HTMLTextAreaElement>(null);
-	const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
-	const navigate= useNavigate();
-
-
+	const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
+	const navigate = useNavigate();
 
 	function handleSubmit(e: FormEvent) {
 		e.preventDefault();
@@ -43,7 +48,7 @@ export function NoteForm({ onSubmit, onAddTag, availableTags }: NoteFormProps) {
 						<Col>
 							<Form.Group controlId="title">
 								<Form.Label>Title</Form.Label>
-								<Form.Control ref={titleRef} required />
+								<Form.Control ref={titleRef} required defaultValue={title} />
 							</Form.Group>
 						</Col>
 						<Col>
@@ -62,8 +67,8 @@ export function NoteForm({ onSubmit, onAddTag, availableTags }: NoteFormProps) {
 										return { label: tag.label, value: tag.id };
 									})}
 									//when user creates a new tag, it does not fire onChange, instead it fires onCreateOption
-									options={availableTags.map(tags => {
-										return {label: tags.label, value: tags.id}
+									options={availableTags.map((tags) => {
+										return { label: tags.label, value: tags.id };
 									})}
 									onChange={(tags) => {
 										setSelectedTags(
@@ -80,7 +85,13 @@ export function NoteForm({ onSubmit, onAddTag, availableTags }: NoteFormProps) {
 					</Row>
 					<Form.Group controlId="markdown">
 						<Form.Label>Body</Form.Label>
-						<Form.Control required as="textarea" ref={markdownRef} rows={18} />
+						<Form.Control
+							defaultValue={markdown}
+							required
+							as="textarea"
+							ref={markdownRef}
+							rows={18}
+						/>
 					</Form.Group>
 					<Stack direction="horizontal" gap={3} className="justify-content-end">
 						<Button type="submit" variant="primary">

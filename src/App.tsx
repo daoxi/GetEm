@@ -61,7 +61,10 @@ function App() {
 	function onCreateNote({ tags, ...data }: NoteData) {
 		setNotes((prevNotes) => {
 			//basically converting from NoteData to RawNote
-			return [...prevNotes, { ...data, id: uuidV4(), tagIds: tags.map((tag) => tag.id) }];
+			return [
+				...prevNotes,
+				{ ...data, id: uuidV4(), tagIds: tags.map((tag) => tag.id) },
+			];
 		});
 	}
 
@@ -99,13 +102,26 @@ function App() {
 					path="/new"
 					element={
 						<>
-							<NewNote onSubmit={onCreateNote} onAddTag={addTag} availableTags={tags} />
+							<NewNote
+								onSubmit={onCreateNote}
+								onAddTag={addTag}
+								availableTags={tags}
+							/>
 						</>
 					}
 				/>
 				<Route path="/:id" element={<NoteLayout notes={notesWithTags} />}>
 					<Route index element={<Note />} />
-					<Route path="edit" element={<EditNote onSubmit={onUpdateNote} onAddTag={addTag} availableTags={tags} />} />
+					<Route
+						path="edit"
+						element={
+							<EditNote
+								onSubmit={onUpdateNote}
+								onAddTag={addTag}
+								availableTags={tags}
+							/>
+						}
+					/>
 				</Route>
 				{/* fallback route that goes back to homepage for unrecognized route */}
 				<Route path="*" element={<Navigate to="/" />} />
