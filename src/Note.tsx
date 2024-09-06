@@ -1,10 +1,15 @@
 import { Badge, Button, Col, Row, Stack } from "react-bootstrap";
 import { useNote } from "./NoteLayout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 
-export function Note() {
+type NoteProps = {
+	onDelete: (id: string) => void;
+};
+
+export function Note({ onDelete }: NoteProps) {
 	const note = useNote();
+	const navigate = useNavigate();
 
 	return (
 		<>
@@ -14,28 +19,39 @@ export function Note() {
 					{note.tags.length > 0 && (
 						<Stack gap={1} direction="horizontal" className="flex-wrap">
 							{note.tags.map((tag) => (
-								<Badge className="text-truncate" /* prevents long text overflow */ key={tag.id}>
+								<Badge
+									className="text-truncate"
+									/* prevents long text overflow */ key={tag.id}
+								>
 									{tag.label}
 								</Badge>
 							))}
 						</Stack>
 					)}
 				</Col>
-				<Col xs="auto" /* use this to push the buttons all the way to the right side */>
+				<Col
+					xs="auto" /* use this to push the buttons all the way to the right side */
+				>
 					<Stack gap={2} direction="horizontal">
 						<Link to={`/${note.id}/edit`}>
 							<Button variant="primary">Edit</Button>
 						</Link>
-						<Button variant="outline-danger">Delete</Button>
+						<Button
+							onClick={() => {
+								onDelete(note.id);
+								navigate("/");
+							}}
+							variant="outline-danger"
+						>
+							Delete
+						</Button>
 						<Link to="/">
 							<Button variant="outline-secondary">Back</Button>
 						</Link>
 					</Stack>
 				</Col>
 			</Row>
-			<ReactMarkdown>
-				{note.markdown}
-			</ReactMarkdown>
+			<ReactMarkdown>{note.markdown}</ReactMarkdown>
 		</>
 	);
 }
