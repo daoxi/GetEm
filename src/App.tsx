@@ -92,6 +92,8 @@ function App() {
 		setTags((prev) => [...prev, tag]);
 	}
 
+
+
 	return (
 		<Container className="my-4">
 			<Routes>
@@ -117,7 +119,7 @@ function App() {
 					}
 				/>
 				<Route path="/:id" element={<NoteLayout notes={notesWithTags} />}>
-					<Route index element={<Note onDelete={onDeleteNote}/>} />
+					<Route index element={<Note onDelete={onDeleteNote} />} />
 					<Route
 						path="edit"
 						element={
