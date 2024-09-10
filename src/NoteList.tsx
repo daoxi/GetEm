@@ -23,15 +23,24 @@ type SimplifiedNote = {
 type NoteListProps = {
 	availableTags: Tag[];
 	notes: SimplifiedNote[];
+	onUpdateTag: (id: string, label: string) => void;
+	onDeleteTag: (id: string) => void;
 };
 
 type EditTagsModalProps = {
 	show: boolean;
 	availableTags: Tag[];
 	handleClose: () => void;
+	onUpdateTag: (id: string, label: string) => void;
+	onDeleteTag: (id: string) => void;
 };
 
-export function NoteList({ availableTags, notes }: NoteListProps) {
+export function NoteList({
+	availableTags,
+	notes,
+	onUpdateTag,
+	onDeleteTag,
+}: NoteListProps) {
 	const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
 	const [title, setTitle] = useState("");
 	const [editTagsModalIsOpen, setEditTagsModalIsOpen] = useState(false);
@@ -131,6 +140,8 @@ export function NoteList({ availableTags, notes }: NoteListProps) {
 				show={editTagsModalIsOpen}
 				handleClose={() => setEditTagsModalIsOpen(false)}
 				availableTags={availableTags}
+				onUpdateTag={onUpdateTag}
+				onDeleteTag={onDeleteTag}
 			/>
 		</>
 	);
@@ -175,6 +186,8 @@ function EditTagsModal({
 	availableTags,
 	show,
 	handleClose,
+	onUpdateTag,
+	onDeleteTag,
 }: EditTagsModalProps) {
 	return (
 		<Modal show={show} onHide={handleClose}>
@@ -187,10 +200,19 @@ function EditTagsModal({
 						{availableTags.map((tag) => (
 							<Row key={tag.id}>
 								<Col>
-									<Form.Control type="text" value={tag.label} />
+									<Form.Control
+										type="text"
+										value={tag.label}
+										onChange={(e) => onUpdateTag(tag.id, e.target.value)}
+									/>
 								</Col>
 								<Col xs="auto">
-									<Button variant="outline-danger">✕</Button>
+									<Button
+										onClick={() => onDeleteTag(tag.id)}
+										variant="outline-danger"
+									>
+										✕
+									</Button>
 								</Col>
 							</Row>
 						))}

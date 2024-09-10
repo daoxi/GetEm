@@ -1,5 +1,5 @@
-//Bootstrap allows styling using className, also contains default styling for most elements, which will be applied to all components
 import "bootstrap/dist/css/bootstrap.min.css";
+//Bootstrap allows styling using className, also contains default styling for most elements, which will be applied to all components
 import { Routes, Route, Navigate } from "react-router-dom";
 import Checklist from "./Checklist";
 import { Container } from "react-bootstrap";
@@ -73,7 +73,7 @@ function App() {
 		setNotes((prevNotes) => {
 			return prevNotes.map((note) => {
 				if (note.id === id) {
-					//saving existing note data ("...note") and overwriting with new note data ("...data"). tagIds conversion is similar to when creating a note
+					//keeping existing note data ("...note") and overwriting with new note data ("...data"). tagIds conversion is similar to when creating a note
 					return { ...note, ...data, tagIds: tags.map((tag) => tag.id) };
 				} else {
 					return note;
@@ -92,7 +92,24 @@ function App() {
 		setTags((prev) => [...prev, tag]);
 	}
 
+	function updateTag(id: string, label: string) {
+		setTags((prevTags) => {
+			return prevTags.map((tag) => {
+				if (tag.id === id) {
+					//keeping all existing tag data, except that the label property will be updated to the value of label (from function argument), "label: label" can be written as simply "label"
+					return { ...tag, label };
+				} else {
+					return tag;
+				}
+			});
+		});
+	}
 
+	function deleteTag(id: string) {
+		setTags((prevTags) => {
+			return prevTags.filter((tag) => tag.id !== id); //keeping all notes that are not supposed to be deleted
+		});
+	}
 
 	return (
 		<Container className="my-4">
@@ -101,7 +118,12 @@ function App() {
 					path="/"
 					element={
 						<>
-							<NoteList notes={notesWithTags} availableTags={tags} />
+							<NoteList
+								notes={notesWithTags}
+								availableTags={tags}
+								onUpdateTag={updateTag}
+								onDeleteTag={deleteTag}
+							/>
 							<Checklist />
 						</>
 					}
