@@ -1,7 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 //Bootstrap allows styling using className, also contains default styling for most elements, which will be applied to all components
 import { Routes, Route, Navigate } from "react-router-dom";
-import Checklist from "./Checklist";
 import { Container } from "react-bootstrap";
 import { NewNote } from "./NewNote";
 import { useLocalStorage } from "./useLocalStorage";
@@ -115,7 +114,8 @@ function App() {
 		<Container className="my-4">
 			<Routes>
 				<Route
-					path="/"
+					index
+					/* path="/" */
 					element={
 						<>
 							<NoteList
@@ -124,7 +124,6 @@ function App() {
 								onUpdateTag={updateTag}
 								onDeleteTag={deleteTag}
 							/>
-							<Checklist />
 						</>
 					}
 				/>
