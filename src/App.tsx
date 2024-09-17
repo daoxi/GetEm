@@ -10,6 +10,7 @@ import { NoteList } from "./NoteList";
 import { NoteLayout } from "./NoteLayout";
 import { Note } from "./Note";
 import { EditNote } from "./EditNote";
+import { Demo } from "./Demo";
 
 //Note data with the id
 export type Note = {
@@ -87,11 +88,11 @@ function App() {
 		});
 	}
 
-	function addTag(tag: Tag) {
+	function onAddTag(tag: Tag) {
 		setTags((prev) => [...prev, tag]);
 	}
 
-	function updateTag(id: string, label: string) {
+	function onUpdateTag(id: string, label: string) {
 		setTags((prevTags) => {
 			return prevTags.map((tag) => {
 				if (tag.id === id) {
@@ -104,8 +105,9 @@ function App() {
 		});
 	}
 
-	function deleteTag(id: string) {
+	function onDeleteTag(id: string) {
 		setTags((prevTags) => {
+			onUpdateTag;
 			return prevTags.filter((tag) => tag.id !== id); //keeping all notes that are not supposed to be deleted
 		});
 	}
@@ -115,14 +117,20 @@ function App() {
 			<Routes>
 				<Route
 					index
+					/* this Route is the homepage */
 					/* path="/" */
 					element={
 						<>
+							<Demo
+								onCreateNote={onCreateNote}
+								onAddTag={onAddTag}
+								availableTags={tags}
+							/>
 							<NoteList
 								notes={notesWithTags}
 								availableTags={tags}
-								onUpdateTag={updateTag}
-								onDeleteTag={deleteTag}
+								onUpdateTag={onUpdateTag}
+								onDeleteTag={onDeleteTag}
 							/>
 						</>
 					}
@@ -133,7 +141,7 @@ function App() {
 						<>
 							<NewNote
 								onSubmit={onCreateNote}
-								onAddTag={addTag}
+								onAddTag={onAddTag}
 								availableTags={tags}
 							/>
 						</>
@@ -146,7 +154,7 @@ function App() {
 						element={
 							<EditNote
 								onSubmit={onUpdateNote}
-								onAddTag={addTag}
+								onAddTag={onAddTag}
 								availableTags={tags}
 							/>
 						}
