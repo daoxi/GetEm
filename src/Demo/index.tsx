@@ -1,6 +1,7 @@
 import { Button } from "react-bootstrap";
 import { NoteData, Tag } from "../App";
 import { v4 as uuidV4 } from "uuid";
+//import * as demoData from "./demodata.json";
 
 type DemoProps = {
 	onCreateNote: ({ tags, ...data }: NoteData) => void;
@@ -11,6 +12,9 @@ type DemoProps = {
 export function Demo({ onCreateNote, onAddTag, availableTags }: DemoProps) {
 	function handleDemo() {
 		console.log("demo on");
+
+		//let demoData = require("./demodata.json");
+		//console.log(demoData);
 
 		function addIdToTagLabel(tagLabels: string[], availableTags: Tag[]) {
 			return tagLabels.map((tagLabel) => {
@@ -33,16 +37,16 @@ export function Demo({ onCreateNote, onAddTag, availableTags }: DemoProps) {
 			});
 		}
 
-		const demoData = {
+		const demoDataTest = {
 			title: "Test1",
 			body: "test1 BODY",
 			tagLabels: ["test1tag", "test2b"],
 		};
 
 		const demoNote = {
-			title: demoData.title,
-			body: demoData.body,
-			tags: addIdToTagLabel(demoData.tagLabels, availableTags),
+			title: demoDataTest.title,
+			body: demoDataTest.body,
+			tags: addIdToTagLabel(demoDataTest.tagLabels, availableTags),
 		};
 
 		onCreateNote(demoNote);
