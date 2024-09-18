@@ -1,7 +1,7 @@
 import { Button } from "react-bootstrap";
 import { NoteData, Tag } from "../App";
 import { v4 as uuidV4 } from "uuid";
-//import * as demoData from "./demodata.json";
+import * as demoData from "./demodata.json";
 
 type DemoProps = {
 	onCreateNote: ({ tags, ...data }: NoteData) => void;
