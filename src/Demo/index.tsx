@@ -1,5 +1,5 @@
 import { Button } from "react-bootstrap";
-import { NoteData, Tag } from "./App";
+import { NoteData, Tag } from "../App";
 import { v4 as uuidV4 } from "uuid";
 
 type DemoProps = {
@@ -10,7 +10,7 @@ type DemoProps = {
 
 export function Demo({ onCreateNote, onAddTag, availableTags }: DemoProps) {
 	function handleDemo() {
-		console.log("demoed");
+		console.log("demo on");
 
 		function addIdToTagLabel(tagLabels: string[], availableTags: Tag[]) {
 			return tagLabels.map((tagLabel) => {
