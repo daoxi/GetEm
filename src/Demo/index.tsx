@@ -35,13 +35,13 @@ export function Demo({ onCreateNote, onAddTag, availableTags }: DemoProps) {
 
 		const demoData = {
 			title: "Test1",
-			markdown: "test1 BODY",
+			body: "test1 BODY",
 			tagLabels: ["test1tag", "test2b"],
 		};
 
 		const demoNote = {
 			title: demoData.title,
-			markdown: demoData.markdown,
+			body: demoData.body,
 			tags: addIdToTagLabel(demoData.tagLabels, availableTags),
 		};
 

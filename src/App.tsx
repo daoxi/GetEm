@@ -20,7 +20,7 @@ export type Note = {
 //Note data without the id
 export type NoteData = {
 	title: string;
-	markdown: string;
+	body: string;
 	tags: Tag[];
 };
 
@@ -32,7 +32,7 @@ export type RawNote = {
 //Raw note data without the id
 export type RawNoteData = {
 	title: string;
-	markdown: string;
+	body: string;
 	//store only the ids of the tags, so that when tags' values change, there's no need to update each note
 	tagIds: string[];
 };

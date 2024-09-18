@@ -18,11 +18,11 @@ export function NoteForm({
 	onAddTag,
 	availableTags,
 	title = "",
-	markdown = "",
+	body = "",
 	tags = [],
 }: NoteFormProps) {
 	const titleRef = useRef<HTMLInputElement>(null);
-	const markdownRef = useRef<HTMLTextAreaElement>(null);
+	const bodyRef = useRef<HTMLTextAreaElement>(null);
 	const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
 	const navigate = useNavigate();
 
@@ -32,7 +32,7 @@ export function NoteForm({
 		onSubmit({
 			//these values can't be null because they're required (as specified in the <Form.Control/> components), hence the non-null type assertion
 			title: titleRef.current!.value,
-			markdown: markdownRef.current!.value,
+			body: bodyRef.current!.value,
 			tags: selectedTags,
 		});
 
@@ -83,13 +83,13 @@ export function NoteForm({
 							</Form.Group>
 						</Col>
 					</Row>
-					<Form.Group controlId="markdown">
+					<Form.Group controlId="body">
 						<Form.Label>Body</Form.Label>
 						<Form.Control
-							defaultValue={markdown}
+							defaultValue={body}
 							required
 							as="textarea"
-							ref={markdownRef}
+							ref={bodyRef}
 							rows={18}
 						/>
 					</Form.Group>

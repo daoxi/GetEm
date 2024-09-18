@@ -16,7 +16,7 @@ export function EditNote({ onSubmit, onAddTag, availableTags }: EditNoteProps) {
 			<h1 className="mb-4">Edit Note</h1>
 			<NoteForm
 				title={note.title}
-				markdown={note.markdown}
+				body={note.body}
 				tags={note.tags}
 				onSubmit={(data) => onSubmit(note.id, data)}
 				/* can't just pass props in as "onSubmit={onSubmit}", due to different props type in EditNote and NoteForm */

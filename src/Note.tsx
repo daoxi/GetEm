@@ -51,7 +51,7 @@ export function Note({ onDelete }: NoteProps) {
 					</Stack>
 				</Col>
 			</Row>
-			<ReactMarkdown>{note.markdown}</ReactMarkdown>
+			<ReactMarkdown>{note.body}</ReactMarkdown>
 		</>
 	);
 }
