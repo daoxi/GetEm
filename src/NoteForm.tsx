@@ -79,6 +79,7 @@ export function NoteForm({
 										);
 									}}
 									isMulti
+									inputId="tags" //matches controlId from parent component <Form.Group>
 								/>
 							</Form.Group>
 						</Col>
