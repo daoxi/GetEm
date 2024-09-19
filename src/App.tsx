@@ -89,8 +89,17 @@ function App() {
 	}
 
 	function onAddTag(tag: Tag) {
+		//console.log("onAddTag: id=" + tag.id + ", label=" + tag.label);
 		setTags((prev) => [...prev, tag]);
 	}
+
+	/*
+	//note that this function doesn't check whether the tags already exist
+	function onAddMultipleTags (tags: Tag[]) {
+		console.log("onAddMultipleTags");
+		setTags((prev) => [...prev, ...tags]);
+	}
+	*/
 
 	function onUpdateTag(id: string, label: string) {
 		setTags((prevTags) => {
