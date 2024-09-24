@@ -51,7 +51,7 @@ export function Note({ onDelete }: NoteProps) {
 					</Stack>
 				</Col>
 			</Row>
-			<ReactMarkdown>{note.body}</ReactMarkdown>
+			<ReactMarkdown /* checkboxes are part of GitHub Flavored Markdown (GFM), check react-markdown for more info on how to enabled it through a plugin */>{note.body}</ReactMarkdown>
 		</>
 	);
 }

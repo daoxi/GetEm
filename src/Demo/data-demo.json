@@ -1,19 +1,19 @@
 {
 	"allNotesData": [
 		{
-			"title": "Test Note 1",
-			"body": "test1 BODY",
-			"tagLabels": ["test1 tag", "test1 tagb", "demo"]
+			"title": "Markdown Note Examples",
+			"body": "This note lists some common examples for a Markdown note, see below:  \n## Headings  \n# h1 Heading  \n## h2 Heading  \n### h3 Heading  \n#### etc.  \n\n## Emphasis  \n**This is bold text**  \n__This is bold text__  \n*This is italic text*  \n_This is italic text_  \n~~Strikethrough~~  \n\n## Lists  \n##### Unordered  \n+ You can use `+`, `-`, or `*`  \n- to create your unordered list  \n* just like this  \n##### ordered  \n1. item one  \n2. item two  \n1. item three  \n\n## Links  \n[link text](https://github.com/)  \n[link with title](https://github.com/ \"title text!\")  \n\n## Images  \n(require online source to work)  \nwithout title:  \n![Total Eclipse](https://octodex.github.com/images/total-eclipse-of-the-octocat.jpg)  \nwith title:  \n![Nyantocat](https://octodex.github.com/images/nyantocat.gif \"The Nyantocat\")  \n\n## Horizontal Rules  \n___  \n---  \n***",
+			"tagLabels": ["demo", "markdown", "common tag"]
 		},
 		{
-			"title": "Test Note 2",
-			"body": "test2 BODY",
-			"tagLabels": ["test2 tag", "test2 common", "demo"]
+			"title": "Common Tags Demo",
+			"body": "This note shares some common tags with other notes, try to add/delete/edit/search tags to see how it works",
+			"tagLabels": ["demo", "common tag"]
 		},
 		{
-			"title": "Test Note 3",
-			"body": "test3 BODY",
-			"tagLabels": ["test3 tag", "test2 common", "demo"]
+			"title": "Another Note Demo",
+			"body": "This is some example note content",
+			"tagLabels": ["another tag", "demo"]
 		}
 	]
 }
