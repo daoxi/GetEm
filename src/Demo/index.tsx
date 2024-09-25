@@ -59,6 +59,8 @@ export function Demo({ onCreateNote, onAddTag, availableTags }: DemoProps) {
 				tags: tags,
 			});
 		});
+
+		addIdToTagLabel(["tag not used"], availableTagsDemo); //add an unused tag as an example
 	}
 
 	return (
@@ -71,9 +73,19 @@ export function Demo({ onCreateNote, onAddTag, availableTags }: DemoProps) {
 				}}
 				dismissible
 			>
-				Would you like to add some new notes data for demo/test purpose? (this won't overwrite your existing data)
+				Would you like to add some new notes data for demo/test purpose? (this
+				won't overwrite your existing data)
 				<br />
-				<Row xs={1} sm={1} md={1} lg={1} xl={5} xxl={6} /* avoid having only 2 items on each row when there're 3 items in total */>
+				<Row
+					xs={1}
+					sm={1}
+					md={1}
+					lg={1}
+					xl={5}
+					xxl={
+						6
+					} /* avoid having only 2 items on each row when there're 3 items in total */
+				>
 					<Button
 						onClick={() => {
 							handleDemo();

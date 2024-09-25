@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
 	Row,
 	Col,
@@ -8,6 +8,10 @@ import {
 	Card,
 	Badge,
 	Modal,
+	InputGroup,
+	Alert,
+	Tooltip,
+	Overlay,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ReactSelect from "react-select";
@@ -29,8 +33,9 @@ type NoteListProps = {
 
 type EditTagsModalProps = {
 	show: boolean;
-	availableTags: Tag[];
 	handleClose: () => void;
+	availableTags: Tag[];
+	notes: SimplifiedNote[];
 	onUpdateTag: (id: string, label: string) => void;
 	onDeleteTag: (id: string) => void;
 };
@@ -41,9 +46,18 @@ export function NoteList({
 	onUpdateTag,
 	onDeleteTag,
 }: NoteListProps) {
+	const availableTagsUsedByNotes = availableTags.filter((tag) =>
+		notes.some((note) => note.tags.some((notetag) => notetag.id === tag.id))
+	); //this stores tags that are used by note(s) (i.e. excluding tags that don't belong to any note)
 	const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+
 	const [title, setTitle] = useState("");
+
 	const [editTagsModalIsOpen, setEditTagsModalIsOpen] = useState(false);
+
+	//both for displaying Bootstrap <Tooltip>
+	const tagsSelectRef = useRef(null);
+	const [showTagsSelectTooltip, setShowTagsSelectTooltip] = useState(false);
 
 	const filteredNotes = useMemo(() => {
 		return notes.filter((note) => {
@@ -72,58 +86,93 @@ export function NoteList({
 				>
 					<Stack gap={2} direction="horizontal">
 						<Link to="/new">
-							<Button variant="primary">Create</Button>
+							<Button variant="success">Create New Note</Button>
 						</Link>
-						<Button
-							onClick={() => setEditTagsModalIsOpen(true)}
-							variant="outline-secondary"
-						>
-							Edit Tags
-						</Button>
 					</Stack>
 				</Col>
 			</Row>
-			<Form>
-				<Row className="mb-4">
-					<Col>
-						<Form.Group controlId="title">
-							<Form.Label>Title</Form.Label>
-							<Form.Control
-								type="text"
-								value={title}
-								onChange={(e) => setTitle(e.target.value)}
-							/>
-						</Form.Group>
-					</Col>
-					<Col>
-						<Form.Group controlId="tags">
-							<Form.Label>Search Tags</Form.Label>
+			<Card className="mb-3">
+				<Card.Body>
+					<Card.Title>Search 🔍</Card.Title>
+					<Form>
+						<Stack gap={3}>
+							<Form.Group controlId="title">
+								<InputGroup>
+									<InputGroup.Text>Title</InputGroup.Text>
+									<Form.Control
+										type="text"
+										value={title}
+										onChange={(e) => setTitle(e.target.value)}
+										disabled={notes.length === 0}
+										placeholder={
+											notes.length === 0
+												? "You haven't added any note yet"
+												: "Search as you type"
+										}
+									/>
+								</InputGroup>
+							</Form.Group>
+							<Form.Group controlId="tags">
+								<InputGroup>
+									<InputGroup.Text>Tags</InputGroup.Text>
+									<Col
+										ref={tagsSelectRef}
+										/* Use <Col> to wrap <ReactSelect> in order to properly display the Bootstrap <Tooltip> */
+									>
+										<ReactSelect
+											//Chose ReactSelect component here (instead of CreatableReactSelect), because no new tag will be created
 
-							<ReactSelect
-								//Chose ReactSelect component here (instead of CreatableReactSelect), because no new tag will be created
-
-								value={selectedTags.map((tag) => {
-									//CreatableReactSelect expects a label and an id
-									return { label: tag.label, value: tag.id };
-								})}
-								options={availableTags.map((tags) => {
-									return { label: tags.label, value: tags.id };
-								})}
-								onChange={(tags) => {
-									setSelectedTags(
-										tags.map((tag) => {
-											//This is what is actually stored, which can be converted from what CreatableReactSelect expects
-											return { label: tag.label, id: tag.value };
-										})
-									);
-								}}
-								isMulti
-								inputId="tags" //matches controlId from parent component <Form.Group>
-							/>
-						</Form.Group>
-					</Col>
-				</Row>
-			</Form>
+											value={selectedTags.map((tag) => {
+												//CreatableReactSelect expects a label and an id
+												return { label: tag.label, value: tag.id };
+											})}
+											options={availableTagsUsedByNotes.map((tag) => {
+												return { label: tag.label, value: tag.id };
+											})}
+											onChange={(tags) => {
+												setSelectedTags(
+													tags.map((tag) => {
+														//This is what is actually stored, which can be converted from what CreatableReactSelect expects
+														return { label: tag.label, id: tag.value };
+													})
+												);
+											}}
+											isMulti
+											inputId="tags" //matches controlId from parent component <Form.Group>
+											className="flex-fill" //use flex-fill to grow to match the remaining width (not mandatory if the component is already wrapped by <Col>)
+											isDisabled={availableTagsUsedByNotes.length === 0}
+											placeholder={
+												availableTagsUsedByNotes.length === 0
+													? "You haven't added any tags to any note yet"
+													: "Select one from the dropdown or search"
+											}
+											noOptionsMessage={(userinput) =>
+												userinput.inputValue === ""
+													? "You haven't added any tags to any note yet"
+													: 'No tags were found from your search "' +
+													  userinput.inputValue +
+													  '"'
+											}
+											onFocus={() => {
+												setShowTagsSelectTooltip(true);
+											}}
+											onBlur={() => {
+												setShowTagsSelectTooltip(false);
+											}}
+										/>
+									</Col>
+									<Button
+										onClick={() => setEditTagsModalIsOpen(true)}
+										variant="primary"
+									>
+										Edit All Tags
+									</Button>
+								</InputGroup>
+							</Form.Group>
+						</Stack>
+					</Form>
+				</Card.Body>
+			</Card>
 			<Row
 				xs={1}
 				sm={2}
@@ -141,9 +190,24 @@ export function NoteList({
 				show={editTagsModalIsOpen}
 				handleClose={() => setEditTagsModalIsOpen(false)}
 				availableTags={availableTags}
+				notes={notes}
 				onUpdateTag={onUpdateTag}
 				onDeleteTag={onDeleteTag}
 			/>
+			<Overlay //fundamental component for positioning and controlling <Tooltip> visibility
+				target={tagsSelectRef.current}
+				show={showTagsSelectTooltip}
+				placement="top"
+			>
+				{
+					//passing injected props from <Overlay> directly to the <Tooltip> component
+					(props) => (
+						<Tooltip id="tags-select-overlay" {...props}>
+							Unused tags are excluded
+						</Tooltip>
+					)
+				}
+			</Overlay>
 		</>
 	);
 }
@@ -184,27 +248,44 @@ function NoteCard({ id, title, tags }: SimplifiedNote) {
 }
 
 function EditTagsModal({
-	availableTags,
 	show,
 	handleClose,
+	availableTags,
+	notes,
 	onUpdateTag,
 	onDeleteTag,
 }: EditTagsModalProps) {
+	const availableTagsWithNotesInfo = availableTags.map((tag) => {
+		if (
+			notes.some((note) => note.tags.some((notetag) => notetag.id === tag.id))
+		) {
+			return { ...tag, isUsedByNotes: true };
+		} else {
+			return { ...tag, isUsedByNotes: false };
+		}
+	}); //this new array of tags has an additional boolean property to track whether the tag belongs to any note(s)
+
 	return (
 		<Modal show={show} onHide={handleClose}>
 			<Modal.Header closeButton>
-				<Modal.Title>Edit Tags</Modal.Title>
+				<Modal.Title>Edit All Tags</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
 				<Form>
 					<Stack gap={2}>
-						{availableTags.map((tag) => (
+						{availableTagsWithNotesInfo.map((tag) => (
 							<Row key={tag.id}>
 								<Col>
 									<Form.Control
 										type="text"
 										value={tag.label}
 										onChange={(e) => onUpdateTag(tag.id, e.target.value)}
+										className={
+											"" +
+											(tag.isUsedByNotes
+												? "border-secondary"
+												: "border-warning")
+										} //use warning border for tags not being used by any note
 									/>
 								</Col>
 								<Col xs="auto">
@@ -219,6 +300,22 @@ function EditTagsModal({
 						))}
 					</Stack>
 				</Form>
+				{availableTagsWithNotesInfo.length === 0 ? (
+					<Alert variant="danger">You haven't added any tags yet.</Alert>
+				) : (
+					<p className="mt-3">
+						<span>( </span>
+						<span className="border rounded border-warning py-1 px-2">
+							Warning border
+						</span>
+						<span>
+							{" "}
+							(if any) indicates the tag is not currently being used by any
+							note.{" "}
+						</span>
+						<span>Tags with the same name (duplicates) are not allowed. )</span>
+					</p>
+				)}
 			</Modal.Body>
 		</Modal>
 	);

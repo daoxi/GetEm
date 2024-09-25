@@ -80,6 +80,10 @@ export function NoteForm({
 									}}
 									isMulti
 									inputId="tags" //matches controlId from parent component <Form.Group>
+									placeholder="Add tags"
+									noOptionsMessage={(userinput) =>
+										(userinput.inputValue === "") ? ("No selectable tags, start typing to add a new one") : ("No tags were found from your search \"" + userinput.inputValue + "\"")
+									}
 								/>
 							</Form.Group>
 						</Col>
