@@ -1,4 +1,4 @@
-import { NoteData, Tag } from "./App";
+import { NoteData, Tag, TagWithNoteInfo } from "./App";
 import { NoteForm } from "./NoteForm";
 import { useNote } from "./NoteLayout";
 
@@ -6,10 +6,10 @@ type EditNoteProps = {
 	//similar to NoteForm
 	onSubmit: (id: string, data: NoteData) => void;
 	onAddTag: (tag: Tag) => void;
-	availableTags: Tag[];
+	tagsWithNotesInfo: TagWithNoteInfo[];
 };
 
-export function EditNote({ onSubmit, onAddTag, availableTags }: EditNoteProps) {
+export function EditNote({ onSubmit, onAddTag, tagsWithNotesInfo }: EditNoteProps) {
 	const note = useNote();
 	return (
 		<>
@@ -21,7 +21,7 @@ export function EditNote({ onSubmit, onAddTag, availableTags }: EditNoteProps) {
 				onSubmit={(data) => onSubmit(note.id, data)}
 				/* can't just pass props in as "onSubmit={onSubmit}", due to different props type in EditNote and NoteForm */
 				onAddTag={onAddTag}
-				availableTags={availableTags}
+				tagsWithNotesInfo={tagsWithNotesInfo}
 			/>
 		</>
 	);

@@ -4,19 +4,19 @@ import { FormEvent, useRef, useState } from "react";
 import { Form, Stack, Col, Row, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import CreatableReactSelect from "react-select/creatable";
-import { NoteData, Tag } from "./App";
+import { NoteData, Tag, TagWithNoteInfo } from "./App";
 import { v4 as uuidV4 } from "uuid";
 
 type NoteFormProps = {
 	onSubmit: (data: NoteData) => void;
 	onAddTag: (tag: Tag) => void;
-	availableTags: Tag[];
+	tagsWithNotesInfo: TagWithNoteInfo[];
 } & Partial<NoteData>; // use Partial to make NoteData optional
 
 export function NoteForm({
 	onSubmit,
 	onAddTag,
-	availableTags,
+	tagsWithNotesInfo,
 	title = "",
 	body = "",
 	tags = [],
@@ -67,7 +67,7 @@ export function NoteForm({
 										return { label: tag.label, value: tag.id };
 									})}
 									//when user creates a new tag, it does not fire onChange, instead it fires onCreateOption
-									options={availableTags.map((tags) => {
+									options={tagsWithNotesInfo.map((tags) => {
 										return { label: tags.label, value: tags.id };
 									})}
 									onChange={(tags) => {

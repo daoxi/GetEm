@@ -8,31 +8,31 @@ import { useLocalStorage } from "../useLocalStorage";
 type DemoProps = {
 	onCreateNote: ({ tags, ...data }: NoteData) => void;
 	onAddTag: (tag: Tag) => void;
-	availableTags: Tag[];
+	tags: Tag[];
 };
 
-export function Demo({ onCreateNote, onAddTag, availableTags }: DemoProps) {
+export function Demo({ onCreateNote, onAddTag, tags }: DemoProps) {
 	const [showDemo, setShowDemo] = useState(true);
 	const [showDemoPerm, setShowDemoPerm] = useLocalStorage("SHOWDEMO", true);
 
 	//generate all the notes for demo by using data from JSON
 	function handleDemo() {
-		//availableTags comes from parent component's state which is updated asynchronously (due to how setState() works),
+		//tags comes from parent component's state which is updated asynchronously (due to how setState() works),
 		//so it's not ideal for tracking data in a loop in which the state might not have already been updated in the next iteration,
-		//therefore a local array is made by using a shallow copy of the availableTags prop, this makes sure the existing tags are tracked properly
-		const availableTagsDemo = [...availableTags];
+		//therefore a local array is made by using a shallow copy of the tags prop, this makes sure the existing tags are tracked properly
+		const tagsDemo = [...tags];
 
-		function addIdToTagLabel(tagLabels: string[], availableTagsDemo: Tag[]) {
+		function addIdToTagLabel(tagLabels: string[], tagsDemo: Tag[]) {
 			return tagLabels.map((tagLabel) => {
 				if (
-					availableTagsDemo.some(
-						(availableTag) => availableTag.label === tagLabel
+					tagsDemo.some(
+						(tag) => tag.label === tagLabel
 					) //check if the tag label already exists
 				) {
 					return {
 						//using the existing tag id
-						id: availableTagsDemo.find(
-							(availableTag) => availableTag.label === tagLabel
+						id: tagsDemo.find(
+							(tag) => tag.label === tagLabel
 						)!.id, //used the non-null operator here because the tag match has already been checked in the if statement's condition
 						label: tagLabel,
 					};
@@ -41,7 +41,7 @@ export function Demo({ onCreateNote, onAddTag, availableTags }: DemoProps) {
 					const newTag = { id: uuidV4(), label: tagLabel };
 
 					//update the local variable
-					availableTagsDemo.push(newTag);
+					tagsDemo.push(newTag);
 					//also update the state in parent component using callback function in parent component
 					onAddTag(newTag);
 
@@ -52,7 +52,7 @@ export function Demo({ onCreateNote, onAddTag, availableTags }: DemoProps) {
 
 		//loop through array from JSON and generate each note
 		demoData.allNotesData.forEach((noteData) => {
-			let tags = addIdToTagLabel(noteData.tagLabels, availableTagsDemo);
+			let tags = addIdToTagLabel(noteData.tagLabels, tagsDemo);
 			onCreateNote({
 				title: noteData.title,
 				body: noteData.body,
@@ -60,7 +60,7 @@ export function Demo({ onCreateNote, onAddTag, availableTags }: DemoProps) {
 			});
 		});
 
-		addIdToTagLabel(["tag not used"], availableTagsDemo); //add an unused tag as an example
+		addIdToTagLabel(["tag not used"], tagsDemo); //add an unused tag as an example
 	}
 
 	return (
