@@ -4,13 +4,14 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import { NewNote } from "./NewNote";
 import { useLocalStorage } from "./useLocalStorage";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { v4 as uuidV4 } from "uuid";
 import { NoteList } from "./NoteList";
 import { NoteLayout } from "./NoteLayout";
 import { Note } from "./Note";
 import { EditNote } from "./EditNote";
 import { Demo } from "./Demo";
+import { EditTagsModal } from "./EditTagsModal";
 
 //Raw note data with the id
 export type RawNote = {
@@ -71,6 +72,9 @@ function App() {
 			}
 		});
 	}, [notes, tags]);
+
+	//tracks whether the modal for editing tags should be open
+	const [editTagsModalIsOpen, setEditTagsModalIsOpen] = useState(false);
 
 	//handles creation of a note
 	function onCreateNote({ tags, ...data }: NoteData) {
@@ -137,6 +141,7 @@ function App() {
 	}
 
 	return (
+		<>
 		<Container className="my-4">
 			<Routes>
 				<Route
@@ -153,8 +158,7 @@ function App() {
 							<NoteList
 								notes={notesWithTags}
 								tagsWithNotesInfo={tagsWithNotesInfo}
-								onUpdateTag={onUpdateTag}
-								onDeleteTag={onDeleteTag}
+								setEditTagsModalIsOpen={setEditTagsModalIsOpen}
 							/>
 						</>
 					}
@@ -166,9 +170,8 @@ function App() {
 							<NewNote
 								onSubmit={onCreateNote}
 								onAddTag={onAddTag}
-								onUpdateTag={onUpdateTag}
-								onDeleteTag={onDeleteTag}
 								tagsWithNotesInfo={tagsWithNotesInfo}
+								setEditTagsModalIsOpen={setEditTagsModalIsOpen}
 							/>
 						</>
 					}
@@ -181,9 +184,8 @@ function App() {
 							<EditNote
 								onSubmit={onUpdateNote}
 								onAddTag={onAddTag}
-								onUpdateTag={onUpdateTag}
-								onDeleteTag={onDeleteTag}
 								tagsWithNotesInfo={tagsWithNotesInfo}
+								setEditTagsModalIsOpen={setEditTagsModalIsOpen}
 							/>
 						}
 					/>
@@ -192,6 +194,12 @@ function App() {
 				<Route path="*" element={<Navigate to="/" />} />
 			</Routes>
 		</Container>
+		<EditTagsModal show={editTagsModalIsOpen}
+				handleClose={() => setEditTagsModalIsOpen(false)}
+				tagsWithNotesInfo={tagsWithNotesInfo}
+				onUpdateTag={onUpdateTag}
+				onDeleteTag={onDeleteTag}/>
+		</>
 	);
 }
 

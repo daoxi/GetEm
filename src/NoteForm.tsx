@@ -6,22 +6,19 @@ import { Link, useNavigate } from "react-router-dom";
 import CreatableReactSelect from "react-select/creatable";
 import { NoteData, Tag, TagWithNoteInfo } from "./App";
 import { v4 as uuidV4 } from "uuid";
-import { EditTagsModal } from "./EditTagsModal";
 
 type NoteFormProps = {
 	onSubmit: (data: NoteData) => void;
 	onAddTag: (tag: Tag) => void;
-	onUpdateTag: (id: string, label: string) => void;
-	onDeleteTag: (id: string) => void;
 	tagsWithNotesInfo: TagWithNoteInfo[];
+	setEditTagsModalIsOpen: (newEditTagsModalIsOpen: boolean) => void;
 } & Partial<NoteData>; // use Partial to make NoteData optional
 
 export function NoteForm({
 	onSubmit,
 	onAddTag,
-	onUpdateTag,
-	onDeleteTag,
 	tagsWithNotesInfo,
+	setEditTagsModalIsOpen,
 	title = "",
 	body = "",
 	tags = [],
@@ -30,7 +27,6 @@ export function NoteForm({
 	const bodyRef = useRef<HTMLTextAreaElement>(null);
 	const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
 	const navigate = useNavigate();
-	const [editTagsModalIsOpen, setEditTagsModalIsOpen] = useState(false);
 
 	function handleSubmit(e: FormEvent) {
 		e.preventDefault();
@@ -137,13 +133,7 @@ export function NoteForm({
 					</Stack>
 				</Stack>
 			</Form>
-			<EditTagsModal
-				show={editTagsModalIsOpen}
-				handleClose={() => setEditTagsModalIsOpen(false)}
-				tagsWithNotesInfo={tagsWithNotesInfo}
-				onUpdateTag={onUpdateTag}
-				onDeleteTag={onDeleteTag}
-			/>
+			
 		</>
 	);
 }

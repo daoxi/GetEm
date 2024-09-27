@@ -15,20 +15,17 @@ import { Link } from "react-router-dom";
 import ReactSelect from "react-select";
 import { Note, Tag, TagWithNoteInfo } from "./App";
 import styles from "./NoteList.module.css";
-import { EditTagsModal } from "./EditTagsModal";
 
 type NoteListProps = {
-	tagsWithNotesInfo: TagWithNoteInfo[];
 	notes: Note[];
-	onUpdateTag: (id: string, label: string) => void;
-	onDeleteTag: (id: string) => void;
+	tagsWithNotesInfo: TagWithNoteInfo[];
+	setEditTagsModalIsOpen: (newEditTagsModalIsOpen: boolean) => void;
 };
 
 export function NoteList({
-	tagsWithNotesInfo,
 	notes,
-	onUpdateTag,
-	onDeleteTag,
+	tagsWithNotesInfo,
+	setEditTagsModalIsOpen,
 }: NoteListProps) {
 	const tagsUsedByNotes = tagsWithNotesInfo.filter(
 		(tag) => tag.isUsedByNotes === true
@@ -36,8 +33,6 @@ export function NoteList({
 	const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
 
 	const [title, setTitle] = useState("");
-
-	const [editTagsModalIsOpen, setEditTagsModalIsOpen] = useState(false);
 
 	//both for displaying Bootstrap <Tooltip>
 	const tagsSelectRef = useRef(null);
@@ -182,13 +177,6 @@ export function NoteList({
 					</Col>
 				))}
 			</Row>
-			<EditTagsModal
-				show={editTagsModalIsOpen}
-				handleClose={() => setEditTagsModalIsOpen(false)}
-				tagsWithNotesInfo={tagsWithNotesInfo}
-				onUpdateTag={onUpdateTag}
-				onDeleteTag={onDeleteTag}
-			/>
 			<Overlay //fundamental component for positioning and controlling <Tooltip> visibility
 				target={tagsSelectRef.current}
 				show={showTagsSelectTooltip}

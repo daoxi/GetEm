@@ -5,17 +5,15 @@ type NewNoteProps = {
 	//same as NoteForm
 	onSubmit: (data: NoteData) => void;
 	onAddTag: (tag: Tag) => void;
-	onUpdateTag: (id: string, label: string) => void;
-	onDeleteTag: (id: string) => void;
 	tagsWithNotesInfo: TagWithNoteInfo[];
+	setEditTagsModalIsOpen: (newEditTagsModalIsOpen: boolean) => void;
 };
 
 export function NewNote({
 	onSubmit,
 	onAddTag,
-	onUpdateTag,
-	onDeleteTag,
 	tagsWithNotesInfo,
+	setEditTagsModalIsOpen,
 }: NewNoteProps) {
 	return (
 		<>
@@ -23,9 +21,8 @@ export function NewNote({
 			<NoteForm
 				onSubmit={onSubmit}
 				onAddTag={onAddTag}
-				onUpdateTag={onUpdateTag}
-				onDeleteTag={onDeleteTag}
 				tagsWithNotesInfo={tagsWithNotesInfo}
+				setEditTagsModalIsOpen={setEditTagsModalIsOpen}
 			/>
 		</>
 	);
