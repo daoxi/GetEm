@@ -1,5 +1,6 @@
-import { TagWithNoteInfo } from "./App";
-import { Row, Col, Stack, Button, Form, Modal, Alert } from "react-bootstrap";
+import { TagWithNoteInfo } from "../App";
+import { Stack, Form, Modal, Alert } from "react-bootstrap";
+import { TagEditItem } from "./TagEditItem";
 
 type EditTagsModalProps = {
 	show: boolean;
@@ -25,29 +26,11 @@ export function EditTagsModal({
 				<Form>
 					<Stack gap={2}>
 						{tagsWithNotesInfo.map((tag) => (
-							<Row key={tag.id}>
-								<Col>
-									<Form.Control
-										type="text"
-										value={tag.label}
-										onChange={(e) => onUpdateTag(tag.id, e.target.value)}
-										className={
-											"" +
-											(tag.isUsedByNotes
-												? "border-secondary"
-												: "border-warning")
-										} //use warning border for tags not being used by any note
-									/>
-								</Col>
-								<Col xs="auto">
-									<Button
-										onClick={() => onDeleteTag(tag.id)}
-										variant="outline-danger"
-									>
-										✕
-									</Button>
-								</Col>
-							</Row>
+							<TagEditItem
+								tag={tag}
+								onUpdateTag={onUpdateTag}
+								onDeleteTag={onDeleteTag}
+							/>
 						))}
 					</Stack>
 				</Form>
@@ -56,7 +39,9 @@ export function EditTagsModal({
 				) : (
 					<Stack gap={0.3} className="mt-3">
 						<h6>Please Note:</h6>
-						<p>Editing a tag affects <strong>all</strong> notes that use the tag.</p>
+						<p>
+							Editing a tag affects <strong>all</strong> notes that use the tag.
+						</p>
 						<p>
 							<span className="border rounded border-warning py-1 px-2">
 								Warning border
