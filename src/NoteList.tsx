@@ -123,7 +123,7 @@ export function NoteList({
 											}}
 											isMulti
 											inputId="tags" //matches controlId from parent component <Form.Group>
-											className="flex-fill" //use flex-fill to grow to match the remaining width (not mandatory if the component is already wrapped by <Col>)
+											className="rounded-0 flex-fill" //use flex-fill to grow to match the remaining width (not mandatory if the component is already wrapped by <Col>)
 											isDisabled={tagsUsedByNotes.length === 0}
 											placeholder={
 												tagsUsedByNotes.length === 0
@@ -142,6 +142,13 @@ export function NoteList({
 											}}
 											onBlur={() => {
 												setShowTagsSelectTooltip(false);
+											}}
+											styles={{
+												control: (baseStyles) => ({
+													...baseStyles,
+													//remove rounded corners on left and right side to align with elements on both sides better
+													borderRadius: 0,
+												}),
 											}}
 										/>
 									</Col>

@@ -6,10 +6,12 @@ type EditNoteProps = {
 	//similar to NoteForm
 	onSubmit: (id: string, data: NoteData) => void;
 	onAddTag: (tag: Tag) => void;
+	onUpdateTag: (id: string, label: string) => void;
+	onDeleteTag: (id: string) => void;
 	tagsWithNotesInfo: TagWithNoteInfo[];
 };
 
-export function EditNote({ onSubmit, onAddTag, tagsWithNotesInfo }: EditNoteProps) {
+export function EditNote({ onSubmit, onAddTag, onUpdateTag, onDeleteTag, tagsWithNotesInfo }: EditNoteProps) {
 	const note = useNote();
 	return (
 		<>
@@ -21,6 +23,8 @@ export function EditNote({ onSubmit, onAddTag, tagsWithNotesInfo }: EditNoteProp
 				onSubmit={(data) => onSubmit(note.id, data)}
 				/* can't just pass props in as "onSubmit={onSubmit}", due to different props type in EditNote and NoteForm */
 				onAddTag={onAddTag}
+				onUpdateTag={onUpdateTag}
+				onDeleteTag={onDeleteTag}
 				tagsWithNotesInfo={tagsWithNotesInfo}
 			/>
 		</>

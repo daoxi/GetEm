@@ -166,6 +166,8 @@ function App() {
 							<NewNote
 								onSubmit={onCreateNote}
 								onAddTag={onAddTag}
+								onUpdateTag={onUpdateTag}
+								onDeleteTag={onDeleteTag}
 								tagsWithNotesInfo={tagsWithNotesInfo}
 							/>
 						</>
@@ -179,6 +181,8 @@ function App() {
 							<EditNote
 								onSubmit={onUpdateNote}
 								onAddTag={onAddTag}
+								onUpdateTag={onUpdateTag}
+								onDeleteTag={onDeleteTag}
 								tagsWithNotesInfo={tagsWithNotesInfo}
 							/>
 						}

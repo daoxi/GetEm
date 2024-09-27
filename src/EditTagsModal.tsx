@@ -16,7 +16,6 @@ export function EditTagsModal({
 	onUpdateTag,
 	onDeleteTag,
 }: EditTagsModalProps) {
-
 	return (
 		<Modal show={show} onHide={handleClose}>
 			<Modal.Header closeButton>
@@ -55,18 +54,21 @@ export function EditTagsModal({
 				{tagsWithNotesInfo.length === 0 ? (
 					<Alert variant="danger">You haven't added any tags yet.</Alert>
 				) : (
-					<p className="mt-3">
-						<span>( </span>
-						<span className="border rounded border-warning py-1 px-2">
-							Warning border
-						</span>
-						<span>
-							{" "}
-							(if any) indicates the tag is not currently being used by any
-							note.{" "}
-						</span>
-						<span>Tags with the same name (duplicates) are not allowed. )</span>
-					</p>
+					<Stack gap={0.3} className="mt-3">
+						<h6>Please Note:</h6>
+						<p>Editing a tag affects <strong>all</strong> notes that use the tag.</p>
+						<p>
+							<span className="border rounded border-warning py-1 px-2">
+								Warning border
+							</span>
+							<span>
+								{" "}
+								(if any) indicates the tag is not currently being used by any
+								note.
+							</span>
+						</p>
+						<p>Tags with the same name (duplicates) are not allowed.</p>
+					</Stack>
 				)}
 			</Modal.Body>
 		</Modal>

@@ -1,21 +1,26 @@
 //Used for both creating new and and editing existing notes
 
 import { FormEvent, useRef, useState } from "react";
-import { Form, Stack, Col, Row, Button } from "react-bootstrap";
+import { Form, Stack, Col, Row, Button, InputGroup } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import CreatableReactSelect from "react-select/creatable";
 import { NoteData, Tag, TagWithNoteInfo } from "./App";
 import { v4 as uuidV4 } from "uuid";
+import { EditTagsModal } from "./EditTagsModal";
 
 type NoteFormProps = {
 	onSubmit: (data: NoteData) => void;
 	onAddTag: (tag: Tag) => void;
+	onUpdateTag: (id: string, label: string) => void;
+	onDeleteTag: (id: string) => void;
 	tagsWithNotesInfo: TagWithNoteInfo[];
 } & Partial<NoteData>; // use Partial to make NoteData optional
 
 export function NoteForm({
 	onSubmit,
 	onAddTag,
+	onUpdateTag,
+	onDeleteTag,
 	tagsWithNotesInfo,
 	title = "",
 	body = "",
@@ -25,6 +30,7 @@ export function NoteForm({
 	const bodyRef = useRef<HTMLTextAreaElement>(null);
 	const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
 	const navigate = useNavigate();
+	const [editTagsModalIsOpen, setEditTagsModalIsOpen] = useState(false);
 
 	function handleSubmit(e: FormEvent) {
 		e.preventDefault();
@@ -54,37 +60,58 @@ export function NoteForm({
 						<Col>
 							<Form.Group controlId="tags">
 								<Form.Label>Tags</Form.Label>
-								<CreatableReactSelect
-									//onCreateOption is fired when user creates a new tag, label is the input that the user typed in
-									onCreateOption={(label) => {
-										const newTag = { id: uuidV4(), label };
-										onAddTag(newTag);
-										//automatically add new tag to the currently selected tags by default
-										setSelectedTags((prev) => [...prev, newTag]);
-									}}
-									value={selectedTags.map((tag) => {
-										//CreatableReactSelect expects a label and an id
-										return { label: tag.label, value: tag.id };
-									})}
-									//when user creates a new tag, it does not fire onChange, instead it fires onCreateOption
-									options={tagsWithNotesInfo.map((tags) => {
-										return { label: tags.label, value: tags.id };
-									})}
-									onChange={(tags) => {
-										setSelectedTags(
-											tags.map((tag) => {
-												//This is what is actually stored, which can be converted from what CreatableReactSelect expects
-												return { label: tag.label, id: tag.value };
-											})
-										);
-									}}
-									isMulti
-									inputId="tags" //matches controlId from parent component <Form.Group>
-									placeholder="Add tags"
-									noOptionsMessage={(userinput) =>
-										(userinput.inputValue === "") ? ("No selectable tags, start typing to add a new one") : ("No tags were found from your search \"" + userinput.inputValue + "\"")
-									}
-								/>
+								<InputGroup>
+									<CreatableReactSelect
+										//onCreateOption is fired when user creates a new tag, label is the input that the user typed in
+										onCreateOption={(label) => {
+											const newTag = { id: uuidV4(), label };
+											onAddTag(newTag);
+											//automatically add new tag to the currently selected tags by default
+											setSelectedTags((prev) => [...prev, newTag]);
+										}}
+										value={selectedTags.map((tag) => {
+											//CreatableReactSelect expects a label and an id
+											return { label: tag.label, value: tag.id };
+										})}
+										//when user creates a new tag, it does not fire onChange, instead it fires onCreateOption
+										options={tagsWithNotesInfo.map((tags) => {
+											return { label: tags.label, value: tags.id };
+										})}
+										onChange={(tags) => {
+											setSelectedTags(
+												tags.map((tag) => {
+													//This is what is actually stored, which can be converted from what CreatableReactSelect expects
+													return { label: tag.label, id: tag.value };
+												})
+											);
+										}}
+										isMulti
+										inputId="tags" //matches controlId from parent component <Form.Group>
+										className="flex-fill" //use flex-fill to grow to match the remaining width (not mandatory if the component is already wrapped by <Col>)
+										placeholder="Add tags"
+										noOptionsMessage={(userinput) =>
+											userinput.inputValue === ""
+												? "No selectable tags, start typing to add a new one"
+												: 'No tags were found from your search "' +
+												  userinput.inputValue +
+												  '"'
+										}
+										styles={{
+											control: (baseStyles) => ({
+												...baseStyles,
+												//remove rounded corners on right side to align with the button better
+												borderTopRightRadius: 0,
+												borderBottomRightRadius: 0,
+											}),
+										}}
+									/>
+									<Button
+										onClick={() => setEditTagsModalIsOpen(true)}
+										variant="primary"
+									>
+										Edit All Tags
+									</Button>
+								</InputGroup>
 							</Form.Group>
 						</Col>
 					</Row>
@@ -110,6 +137,13 @@ export function NoteForm({
 					</Stack>
 				</Stack>
 			</Form>
+			<EditTagsModal
+				show={editTagsModalIsOpen}
+				handleClose={() => setEditTagsModalIsOpen(false)}
+				tagsWithNotesInfo={tagsWithNotesInfo}
+				onUpdateTag={onUpdateTag}
+				onDeleteTag={onDeleteTag}
+			/>
 		</>
 	);
 }
