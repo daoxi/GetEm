@@ -12,6 +12,19 @@ import { Note } from "./Note";
 import { EditNote } from "./EditNote";
 import { Demo } from "./Demo";
 
+//Raw note data with the id
+export type RawNote = {
+	id: string;
+} & RawNoteData;
+
+//Raw note data without the id
+export type RawNoteData = {
+	title: string;
+	body: string;
+	//store only the ids of the tags, so that when tags' label change, there's no need to update each note
+	tagIds: string[];
+};
+
 //Note data with the id
 export type Note = {
 	id: string;
@@ -24,19 +37,6 @@ export type NoteData = {
 	tags: Tag[];
 };
 
-//Raw note data with the id
-export type RawNote = {
-	id: string;
-} & RawNoteData;
-
-//Raw note data without the id
-export type RawNoteData = {
-	title: string;
-	body: string;
-	//store only the ids of the tags, so that when tags' values change, there's no need to update each note
-	tagIds: string[];
-};
-
 export type Tag = {
 	id: string;
 	label: string;
@@ -47,7 +47,7 @@ function App() {
 	const [tags, setTags] = useLocalStorage<Tag[]>("TAGS", []);
 
 	//convert raw note into actual note with tags (instead of just with ids of tags), and update it whenever there's any change on the notes or tags
-	const notesWithTags = useMemo(() => {
+	const notesWithTags: Note[] = useMemo(() => {
 		return notes.map((note) => {
 			//add all the tags (that have matching tag ids) to the raw note
 			return {
