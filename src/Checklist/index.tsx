@@ -1,3 +1,10 @@
+/*
+
+Note: This legacy component was built before fully moving development into the TypeScript+Bootstrap stack, and is now used for reference only
+
+*/
+
+
 import { useState, useEffect } from "react";
 import { NewItemForm } from "./NewItemForm";
 import { ItemList } from "./ItemList";
