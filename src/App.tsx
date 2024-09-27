@@ -42,6 +42,10 @@ export type Tag = {
 	label: string;
 };
 
+export type TagWithNoteInfo = {
+	isUsedByNotes: boolean;
+} & Tag;
+
 function App() {
 	const [notes, setNotes] = useLocalStorage<RawNote[]>("NOTES", []);
 	const [tags, setTags] = useLocalStorage<Tag[]>("TAGS", []);
@@ -54,6 +58,17 @@ function App() {
 				...note,
 				tags: tags.filter((tag) => note.tagIds.includes(tag.id)),
 			};
+		});
+	}, [notes, tags]);
+
+	//this new array of tags has an additional boolean property to track whether the tag belongs to any note(s)
+	const tagsWithNotesInfo: TagWithNoteInfo[] = useMemo(() => {
+		return tags.map((tag) => {
+			if (notes.some((note) => note.tagIds.some((tagid) => tagid === tag.id))) {
+				return { ...tag, isUsedByNotes: true };
+			} else {
+				return { ...tag, isUsedByNotes: false };
+			}
 		});
 	}, [notes, tags]);
 
@@ -137,7 +152,7 @@ function App() {
 							/>
 							<NoteList
 								notes={notesWithTags}
-								availableTags={tags}
+								tagsWithNotesInfo={tagsWithNotesInfo}
 								onUpdateTag={onUpdateTag}
 								onDeleteTag={onDeleteTag}
 							/>

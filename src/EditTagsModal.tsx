@@ -1,11 +1,10 @@
-import { Note, Tag } from "./App";
+import { TagWithNoteInfo } from "./App";
 import { Row, Col, Stack, Button, Form, Modal, Alert } from "react-bootstrap";
 
 type EditTagsModalProps = {
 	show: boolean;
 	handleClose: () => void;
-	availableTags: Tag[];
-	notes: Note[];
+	tagsWithNotesInfo: TagWithNoteInfo[];
 	onUpdateTag: (id: string, label: string) => void;
 	onDeleteTag: (id: string) => void;
 };
@@ -13,20 +12,10 @@ type EditTagsModalProps = {
 export function EditTagsModal({
 	show,
 	handleClose,
-	availableTags,
-	notes,
+	tagsWithNotesInfo,
 	onUpdateTag,
 	onDeleteTag,
 }: EditTagsModalProps) {
-	const availableTagsWithNotesInfo = availableTags.map((tag) => {
-		if (
-			notes.some((note) => note.tags.some((notetag) => notetag.id === tag.id))
-		) {
-			return { ...tag, isUsedByNotes: true };
-		} else {
-			return { ...tag, isUsedByNotes: false };
-		}
-	}); //this new array of tags has an additional boolean property to track whether the tag belongs to any note(s)
 
 	return (
 		<Modal show={show} onHide={handleClose}>
@@ -36,7 +25,7 @@ export function EditTagsModal({
 			<Modal.Body>
 				<Form>
 					<Stack gap={2}>
-						{availableTagsWithNotesInfo.map((tag) => (
+						{tagsWithNotesInfo.map((tag) => (
 							<Row key={tag.id}>
 								<Col>
 									<Form.Control
@@ -63,7 +52,7 @@ export function EditTagsModal({
 						))}
 					</Stack>
 				</Form>
-				{availableTagsWithNotesInfo.length === 0 ? (
+				{tagsWithNotesInfo.length === 0 ? (
 					<Alert variant="danger">You haven't added any tags yet.</Alert>
 				) : (
 					<p className="mt-3">

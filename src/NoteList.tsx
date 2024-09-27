@@ -13,26 +13,26 @@ import {
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ReactSelect from "react-select";
-import { Note, Tag } from "./App";
+import { Note, Tag, TagWithNoteInfo } from "./App";
 import styles from "./NoteList.module.css";
 import { EditTagsModal } from "./EditTagsModal";
 
 type NoteListProps = {
-	availableTags: Tag[];
+	tagsWithNotesInfo: TagWithNoteInfo[];
 	notes: Note[];
 	onUpdateTag: (id: string, label: string) => void;
 	onDeleteTag: (id: string) => void;
 };
 
 export function NoteList({
-	availableTags,
+	tagsWithNotesInfo,
 	notes,
 	onUpdateTag,
 	onDeleteTag,
 }: NoteListProps) {
-	const availableTagsUsedByNotes = availableTags.filter((tag) =>
-		notes.some((note) => note.tags.some((notetag) => notetag.id === tag.id))
-	); //this stores tags that are used by note(s) (i.e. excluding tags that don't belong to any note)
+	const tagsUsedByNotes = tagsWithNotesInfo.filter(
+		(tag) => tag.isUsedByNotes === true
+	); //this stores only tags that are used by note(s) (i.e. excluding tags that don't belong to any note)
 	const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
 
 	const [title, setTitle] = useState("");
@@ -110,7 +110,7 @@ export function NoteList({
 												//CreatableReactSelect expects a label and an id
 												return { label: tag.label, value: tag.id };
 											})}
-											options={availableTagsUsedByNotes.map((tag) => {
+											options={tagsUsedByNotes.map((tag) => {
 												return { label: tag.label, value: tag.id };
 											})}
 											onChange={(tags) => {
@@ -124,9 +124,9 @@ export function NoteList({
 											isMulti
 											inputId="tags" //matches controlId from parent component <Form.Group>
 											className="flex-fill" //use flex-fill to grow to match the remaining width (not mandatory if the component is already wrapped by <Col>)
-											isDisabled={availableTagsUsedByNotes.length === 0}
+											isDisabled={tagsUsedByNotes.length === 0}
 											placeholder={
-												availableTagsUsedByNotes.length === 0
+												tagsUsedByNotes.length === 0
 													? "You haven't added any tags to any note yet"
 													: "Select one from the dropdown or search"
 											}
@@ -178,8 +178,7 @@ export function NoteList({
 			<EditTagsModal
 				show={editTagsModalIsOpen}
 				handleClose={() => setEditTagsModalIsOpen(false)}
-				availableTags={availableTags}
-				notes={notes}
+				tagsWithNotesInfo={tagsWithNotesInfo}
 				onUpdateTag={onUpdateTag}
 				onDeleteTag={onDeleteTag}
 			/>
