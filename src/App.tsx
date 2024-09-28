@@ -142,63 +142,66 @@ function App() {
 
 	return (
 		<>
-		<Container className="my-4">
-			<Routes>
-				<Route
-					index
-					/* this Route is the homepage */
-					/* path="/" */
-					element={
-						<>
-							<Demo
-								onCreateNote={onCreateNote}
-								onAddTag={onAddTag}
-								tags={tags}
-							/>
-							<NoteList
-								notes={notesWithTags}
-								tagsWithNotesInfo={tagsWithNotesInfo}
-								setEditTagsModalIsOpen={setEditTagsModalIsOpen}
-							/>
-						</>
-					}
-				/>
-				<Route
-					path="/new"
-					element={
-						<>
-							<NewNote
-								onSubmit={onCreateNote}
-								onAddTag={onAddTag}
-								tagsWithNotesInfo={tagsWithNotesInfo}
-								setEditTagsModalIsOpen={setEditTagsModalIsOpen}
-							/>
-						</>
-					}
-				/>
-				<Route path="/:id" element={<NoteLayout notes={notesWithTags} />}>
-					<Route index element={<Note onDelete={onDeleteNote} />} />
+			<Container className="my-4">
+				<Routes>
 					<Route
-						path="edit"
+						index
+						/* this Route is the homepage */
+						/* path="/" */
 						element={
-							<EditNote
-								onSubmit={onUpdateNote}
-								onAddTag={onAddTag}
-								tagsWithNotesInfo={tagsWithNotesInfo}
-								setEditTagsModalIsOpen={setEditTagsModalIsOpen}
-							/>
+							<>
+								<Demo
+									onCreateNote={onCreateNote}
+									onAddTag={onAddTag}
+									tags={tags}
+								/>
+								<NoteList
+									notes={notesWithTags}
+									tagsWithNotesInfo={tagsWithNotesInfo}
+									setEditTagsModalIsOpen={setEditTagsModalIsOpen}
+								/>
+							</>
 						}
 					/>
-				</Route>
-				{/* fallback route that goes back to homepage for unrecognized route */}
-				<Route path="*" element={<Navigate to="/" />} />
-			</Routes>
-		</Container>
-		<EditTagsModal show={editTagsModalIsOpen}
+					<Route
+						path="/new"
+						element={
+							<>
+								<NewNote
+									onSubmit={onCreateNote}
+									onAddTag={onAddTag}
+									tagsWithNotesInfo={tagsWithNotesInfo}
+									setEditTagsModalIsOpen={setEditTagsModalIsOpen}
+								/>
+							</>
+						}
+					/>
+					<Route path="/:id" element={<NoteLayout notes={notesWithTags} />}>
+						<Route index element={<Note onDelete={onDeleteNote} />} />
+						<Route
+							path="edit"
+							element={
+								<EditNote
+									onSubmit={onUpdateNote}
+									onAddTag={onAddTag}
+									tagsWithNotesInfo={tagsWithNotesInfo}
+									setEditTagsModalIsOpen={setEditTagsModalIsOpen}
+								/>
+							}
+						/>
+					</Route>
+					{/* fallback route that goes back to homepage for unrecognized route */}
+					<Route path="*" element={<Navigate to="/" />} />
+				</Routes>
+			</Container>
+			<EditTagsModal
+				show={editTagsModalIsOpen}
 				handleClose={() => setEditTagsModalIsOpen(false)}
 				tagsWithNotesInfo={tagsWithNotesInfo}
 				onUpdateTag={onUpdateTag}
-				onDeleteTag={onDeleteTag}/>
+				onDeleteTag={onDeleteTag}
+				setTags={setTags}
+			/>
 		</>
 	);
 }

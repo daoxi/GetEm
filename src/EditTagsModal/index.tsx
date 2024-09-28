@@ -1,6 +1,22 @@
-import { TagWithNoteInfo } from "../App";
+import { Tag, TagWithNoteInfo } from "../App";
 import { Stack, Form, Modal, Alert } from "react-bootstrap";
-import { TagEditItem } from "./TagEditItem";
+import { SortableTagEditItem } from "./SortableTagEditItem";
+
+import {
+	DndContext,
+	closestCenter,
+	KeyboardSensor,
+	PointerSensor,
+	useSensor,
+	useSensors,
+	DragEndEvent,
+} from "@dnd-kit/core";
+import {
+	arrayMove,
+	SortableContext,
+	sortableKeyboardCoordinates,
+	verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 
 type EditTagsModalProps = {
 	show: boolean;
@@ -8,6 +24,7 @@ type EditTagsModalProps = {
 	tagsWithNotesInfo: TagWithNoteInfo[];
 	onUpdateTag: (id: string, label: string) => void;
 	onDeleteTag: (id: string) => void;
+	setTags: (newTags: Tag[] | ((newTags: Tag[]) => Tag[])) => void;
 };
 
 export function EditTagsModal({
@@ -16,7 +33,35 @@ export function EditTagsModal({
 	tagsWithNotesInfo,
 	onUpdateTag,
 	onDeleteTag,
+	setTags,
 }: EditTagsModalProps) {
+	const sensors = useSensors(
+		useSensor(PointerSensor),
+		useSensor(KeyboardSensor, {
+			coordinateGetter: sortableKeyboardCoordinates,
+		})
+	);
+
+	const handleDragEnd = (event: DragEndEvent) => {
+		const { active, over } = event;
+
+		if (over === null) {
+			//stop here if it's null
+			return;
+		} else if (active.id !== over.id) {
+			//instead of setting tagsWithNotesInfo directly, use setTags to set "tags" state in the parent component, which will cause update to tagsWithNotesInfo accordingly
+			setTags((prevTags) => {
+				const oldIndex = prevTags.findIndex(
+					(prevTag) => prevTag.id === active.id.toString()
+				);
+				const newIndex = prevTags.findIndex(
+					(prevTag) => prevTag.id === over!.id.toString() //using non-null type assertion here because it's already been checked to not be null
+				);
+				return arrayMove(prevTags, oldIndex, newIndex);
+			});
+		}
+	};
+
 	return (
 		<Modal show={show} onHide={handleClose}>
 			<Modal.Header closeButton>
@@ -24,15 +69,27 @@ export function EditTagsModal({
 			</Modal.Header>
 			<Modal.Body>
 				<Form>
-					<Stack gap={2}>
-						{tagsWithNotesInfo.map((tag) => (
-							<TagEditItem
-								tag={tag}
-								onUpdateTag={onUpdateTag}
-								onDeleteTag={onDeleteTag}
-							/>
-						))}
-					</Stack>
+					<DndContext
+						sensors={sensors}
+						collisionDetection={closestCenter}
+						onDragEnd={handleDragEnd}
+					>
+						<SortableContext
+							items={tagsWithNotesInfo}
+							strategy={verticalListSortingStrategy}
+						>
+							<Stack gap={2}>
+								{tagsWithNotesInfo.map((tagWithNotesInfo) => (
+									<SortableTagEditItem
+										key={tagWithNotesInfo.id}
+										tagWithNotesInfo={tagWithNotesInfo}
+										onUpdateTag={onUpdateTag}
+										onDeleteTag={onDeleteTag}
+									/>
+								))}
+							</Stack>
+						</SortableContext>
+					</DndContext>
 				</Form>
 				{tagsWithNotesInfo.length === 0 ? (
 					<Alert variant="danger">You haven't added any tags yet.</Alert>
