@@ -1,10 +1,10 @@
-import { Row, Col, Button, Form } from "react-bootstrap";
-import { TagWithNoteInfo } from "../App";
-
+//The following imports are referenced from the dnd-kit web-documentation "Sortable" template
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { TagEditItem } from "./TagEditItem";
+import { TagWithNoteInfo } from "../App";
 
-type TagEditItemProps = {
+type SortableTagEditItemProps = {
 	tagWithNotesInfo: TagWithNoteInfo;
 	onUpdateTag: (id: string, label: string) => void;
 	onDeleteTag: (id: string) => void;
@@ -14,44 +14,25 @@ export function SortableTagEditItem({
 	tagWithNotesInfo,
 	onUpdateTag,
 	onDeleteTag,
-}: TagEditItemProps) {
+}: SortableTagEditItemProps) {
+	//The following declarations are referenced from the dnd-kit web-documentation "Sortable" template
 	const { attributes, listeners, setNodeRef, transform, transition } =
 		useSortable({ id: tagWithNotesInfo.id });
-
 	const style = {
 		transform: CSS.Transform.toString(transform),
 		transition,
 	};
 
 	return (
-		<Row
-			key={tagWithNotesInfo.id}
+		<TagEditItem
+			tagWithNotesInfo={tagWithNotesInfo}
+			onUpdateTag={onUpdateTag}
+			onDeleteTag={onDeleteTag}
+			/* the following are for dnd kit */
 			ref={setNodeRef}
 			style={style}
 			{...attributes}
 			{...listeners}
-		>
-			<Col>
-				<Form.Control
-					type="text"
-					value={tagWithNotesInfo.label}
-					onChange={(e) => onUpdateTag(tagWithNotesInfo.id, e.target.value)}
-					className={
-						"" +
-						(tagWithNotesInfo.isUsedByNotes
-							? "border-secondary"
-							: "border-warning")
-					} //use warning border for tags not being used by any note
-				/>
-			</Col>
-			<Col xs="auto">
-				<Button
-					onClick={() => onDeleteTag(tagWithNotesInfo.id)}
-					variant="outline-danger"
-				>
-					✕
-				</Button>
-			</Col>
-		</Row>
+		></TagEditItem>
 	);
 }

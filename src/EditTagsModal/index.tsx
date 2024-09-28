@@ -1,7 +1,3 @@
-import { Tag, TagWithNoteInfo } from "../App";
-import { Stack, Form, Modal, Alert } from "react-bootstrap";
-import { SortableTagEditItem } from "./SortableTagEditItem";
-
 import {
 	DndContext,
 	closestCenter,
@@ -9,7 +5,9 @@ import {
 	PointerSensor,
 	useSensor,
 	useSensors,
+	DragStartEvent,
 	DragEndEvent,
+	DragOverlay,
 } from "@dnd-kit/core";
 import {
 	arrayMove,
@@ -17,6 +15,12 @@ import {
 	sortableKeyboardCoordinates,
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+
+import { Tag, TagWithNoteInfo } from "../App";
+import { Stack, Form, Modal, Alert } from "react-bootstrap";
+import { useState } from "react";
+import { SortableTagEditItem } from "./SortableTagEditItem";
+import { TagEditItem } from "./TagEditItem";
 
 type EditTagsModalProps = {
 	show: boolean;
@@ -42,9 +46,18 @@ export function EditTagsModal({
 		})
 	);
 
+	const [activeId, setActiveId] = useState<string | null>(null); //null implies no tag is being dragged now
+	const activeTagWithNotesInfo: TagWithNoteInfo | undefined =
+		tagsWithNotesInfo.find((tag) => tag.id == activeId); //find the tag that's being dragged, returns undefined if not found
+
+	function handleDragStart(event: DragStartEvent) {
+		const { active } = event;
+
+		setActiveId(active.id.toString());
+	}
+
 	const handleDragEnd = (event: DragEndEvent) => {
 		const { active, over } = event;
-
 		if (over === null) {
 			//stop here if it's null
 			return;
@@ -60,6 +73,8 @@ export function EditTagsModal({
 				return arrayMove(prevTags, oldIndex, newIndex);
 			});
 		}
+
+		setActiveId(null);
 	};
 
 	return (
@@ -72,6 +87,7 @@ export function EditTagsModal({
 					<DndContext
 						sensors={sensors}
 						collisionDetection={closestCenter}
+						onDragStart={handleDragStart}
 						onDragEnd={handleDragEnd}
 					>
 						<SortableContext
@@ -89,6 +105,26 @@ export function EditTagsModal({
 								))}
 							</Stack>
 						</SortableContext>
+						<DragOverlay /* use DragOverlay component, otherwise the modal (for editing tags) will have unexpected movement when dragging a tag near edges of the window */
+						>
+							{activeId ? (
+								<TagEditItem /* this is just for the visual element (i.e. tag) that you're seeing and holding onto while dragging */
+									tagWithNotesInfo={
+										activeTagWithNotesInfo
+											? activeTagWithNotesInfo
+											: {
+													/* object for fallback label message (e.g. for debugging) when undefined */
+													id: "id not found",
+													label: "drag and drop me",
+													isUsedByNotes: false,
+											  }
+									}
+									onUpdateTag={onUpdateTag}
+									onDeleteTag={onDeleteTag}
+									id={activeId}
+								/>
+							) : null}
+						</DragOverlay>
 					</DndContext>
 				</Form>
 				{tagsWithNotesInfo.length === 0 ? (
