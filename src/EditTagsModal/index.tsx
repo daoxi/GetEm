@@ -121,7 +121,8 @@ export function EditTagsModal({
 									}
 									onUpdateTag={onUpdateTag}
 									onDeleteTag={onDeleteTag}
-									id={activeId}
+									/* id={activeId} //not needed because id is being extracted from "tagWithNotesInfo" instead */
+									isBeingDragged
 								/>
 							) : null}
 						</DragOverlay>
