@@ -1,7 +1,8 @@
 import { forwardRef } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, InputGroup, Row } from "react-bootstrap";
 import { TagWithNoteInfo } from "../App";
 import styles from "./TagEditItem.module.css";
+import { LuArrowUpDown } from "react-icons/lu";
 
 type TagEditItemProps = {
 	tagWithNotesInfo: TagWithNoteInfo;
@@ -29,30 +30,34 @@ export const TagEditItem = forwardRef(
 		return (
 			<Container>
 				<Row ref={ref} style={props.style}>
-					<Col
-						{...props.attributes}
-						{...props.listeners}
-						xs="auto"
-						className={
-							isBeingDragged
-								? `${styles.grabbableHandleIconActive}`
-								: `${styles.grabbableHandleIcon}`
-						}
-					>
-						⣿
-					</Col>
 					<Col>
-						<Form.Control
-							type="text"
-							value={tagWithNotesInfo.label}
-							onChange={(e) => onUpdateTag(tagWithNotesInfo.id, e.target.value)}
-							className={
-								"" +
-								(tagWithNotesInfo.isUsedByNotes
-									? "border-secondary"
-									: "border-warning")
-							} //use warning border for tags not being used by any note
-						/>
+						<InputGroup>
+							<InputGroup.Text
+								variant="outline-secondary"
+								{...props.attributes}
+								{...props.listeners}
+								className={
+									isBeingDragged
+										? `${styles.grabbableHandleIconActive}`
+										: `${styles.grabbableHandleIcon}`
+								}
+							>
+								<LuArrowUpDown />
+							</InputGroup.Text>
+							<Form.Control
+								type="text"
+								value={tagWithNotesInfo.label}
+								onChange={(e) =>
+									onUpdateTag(tagWithNotesInfo.id, e.target.value)
+								}
+								className={
+									"" +
+									(tagWithNotesInfo.isUsedByNotes
+										? "border-secondary"
+										: "border-warning")
+								} //use warning border for tags not being used by any note
+							/>
+						</InputGroup>
 					</Col>
 					<Col xs="auto" className={isBeingDraggedClassName}>
 						<Button
