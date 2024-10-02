@@ -13,12 +13,12 @@ import {
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ReactSelect from "react-select";
-import { Note, Tag, TagWithNoteInfo } from "./App";
+import { Note, Tag, TagWithNotesInfo } from "./App";
 import styles from "./NoteList.module.css";
 
 type NoteListProps = {
 	notes: Note[];
-	tagsWithNotesInfo: TagWithNoteInfo[];
+	tagsWithNotesInfo: TagWithNotesInfo[];
 	setEditTagsModalIsOpen: (newEditTagsModalIsOpen: boolean) => void;
 };
 

@@ -16,20 +16,24 @@ import {
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
-import { Tag, TagWithNoteInfo } from "../App";
+import { Tag, TagWithNotesInfo } from "../App";
 import { Stack, Form, Modal, Alert } from "react-bootstrap";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SortableTagEditItem } from "./SortableTagEditItem";
 import { TagEditItem } from "./TagEditItem";
 
 type EditTagsModalProps = {
 	show: boolean;
 	handleClose: () => void;
-	tagsWithNotesInfo: TagWithNoteInfo[];
+	tagsWithNotesInfo: TagWithNotesInfo[];
 	onUpdateTag: (id: string, label: string) => void;
 	onDeleteTag: (id: string) => void;
 	setTags: (newTags: Tag[] | ((newTags: Tag[]) => Tag[])) => void;
 };
+
+export type TagInputWithStatus = {
+	status: string;
+} & TagWithNotesInfo;
 
 export function EditTagsModal({
 	show,
@@ -39,6 +43,88 @@ export function EditTagsModal({
 	onDeleteTag,
 	setTags,
 }: EditTagsModalProps) {
+	/*
+	const tagsInput = tagsWithNotesInfo.map((tagWithNotesInfo) => {
+		return { ...tagWithNotesInfo };
+	});
+	*/
+	//const [tagsInput, setTagsInput] = useState<TagWithNotesInfo[]>(structuredClone(tagsWithNotesInfo));
+	const [tagsInput, setTagsInput] = useState<TagWithNotesInfo[]>(
+		tagsWithNotesInfo.map((tagWithNotesInfo) => {
+			return { ...tagWithNotesInfo };
+		})
+	); //using a seperate deep cloned copy of the array tagsWithNotesInfo, React doesn't automatically update child state if it's cloned (which is the intended behavior)
+
+	//update tagsInput whenever tagsWithNotesInfo is updated, each tag is conditionally updated (see below for more details)
+	useEffect(() => {
+		setTagsInput((prevTagsInput) => {
+			return tagsWithNotesInfo.map((tagWithNotesInfo) => {
+				if (
+					prevTagsInput.find(
+						(prevTagInput) => prevTagInput.id === tagWithNotesInfo.id
+					) //if the tag already exists in tagsInput
+				) {
+					//keeping label the same as previously
+					return {
+						...tagWithNotesInfo,
+						label: prevTagsInput.find(
+							(prevTagInput) => prevTagInput.id === tagWithNotesInfo.id
+						)!.label, //used non-null type assertion operator because it's already been checked to not be null in the earlier condition
+					};
+				} else {
+					{
+						//for any tag that doesn't exist in tagsInput, add it using the tag from tagsWithNotesInfo
+						return { ...tagWithNotesInfo };
+					}
+				}
+			});
+		});
+	}, [tagsWithNotesInfo]);
+
+	function onUpdateTagInput(id: string, label: string) {
+		setTagsInput((prevTags) => {
+			return prevTags.map((tag) => {
+				if (tag.id === id) {
+					//keeping all existing tag data, except that the label property will be updated to the value of label (from function argument), "label: label" can be written as simply "label"
+					return { ...tag, label };
+				} else {
+					return tag;
+				}
+			});
+		});
+	}
+
+	const tagsInputWithStatus: TagInputWithStatus[] = useMemo(() => {
+		return tagsInput.map((tagInput) => {
+			let status = "unknown";
+			if (tagInput.label === "") {
+				status = "empty";
+			} else if (
+				tagsInput
+					.filter((tagsInputElement) => tagsInputElement.id !== tagInput.id)
+					.some(
+						(tagsInputRemainingElement) =>
+							tagsInputRemainingElement.label === tagInput.label
+					) //check if there's another tag with the same label as tagInput
+			) {
+				status = "duplicate";
+			} else if (
+				tagInput.label !==
+				(tagsWithNotesInfo.find(
+					(tagWithNotesInfo) => tagWithNotesInfo.id === tagInput.id
+				) &&
+					tagsWithNotesInfo.find(
+						(tagWithNotesInfo) => tagWithNotesInfo.id === tagInput.id
+					)!.label) //use short-circuiting to first check it's not undefined before using it with non-null type assertion operator
+			) {
+				status = "unsaved";
+			} else {
+				status = "good";
+			}
+			return { ...tagInput, status: status };
+		});
+	}, [tagsInput, tagsWithNotesInfo]);
+
 	const sensors = useSensors(
 		useSensor(PointerSensor),
 		useSensor(KeyboardSensor, {
@@ -47,8 +133,8 @@ export function EditTagsModal({
 	);
 
 	const [activeId, setActiveId] = useState<string | null>(null); //null implies no tag is being dragged now
-	const activeTagWithNotesInfo: TagWithNoteInfo | undefined =
-		tagsWithNotesInfo.find((tag) => tag.id == activeId); //find the tag that's being dragged, returns undefined if not found
+	const activeTagWithNotesInfo: TagWithNotesInfo | undefined =
+		tagsInputWithStatus.find((tag) => tag.id == activeId); //find the tag that's being dragged, returns undefined if not found
 
 	function handleDragStart(event: DragStartEvent) {
 		const { active } = event;
@@ -62,7 +148,41 @@ export function EditTagsModal({
 			//stop here if it's null
 			return;
 		} else if (active.id !== over.id) {
-			//instead of setting tagsWithNotesInfo directly, use setTags to set "tags" state in the parent component, which will cause update to tagsWithNotesInfo accordingly
+			function arrayMoveHelper(
+				prevStateArray: any[],
+				activeId: string,
+				overId: string
+			) {
+				const oldIndex = prevStateArray.findIndex(
+					(prevStateArrayElement) => prevStateArrayElement.id === activeId
+				);
+				const newIndex = prevStateArray.findIndex(
+					(prevStateArrayElement) => prevStateArrayElement.id === overId //using non-null type assertion here because it's already been checked to not be null
+				);
+				return arrayMove(prevStateArray, oldIndex, newIndex);
+			}
+
+			//if only using setTags() to only update the tags state (from parent component), the tagsInput state will still be updated accordingly, however the dnd-kit drop animation will behave unexpectedly;
+			//therefore, instead, use setTagsInput() first so that the drop animation behaves properly, then use setTags() AFTER that.
+			setTagsInput((prevTags) =>
+				arrayMoveHelper(prevTags, active.id.toString(), over!.id.toString())
+			); //using non-null type assertion here because it's already been checked to not be null
+			setTags((prevTags) =>
+				arrayMoveHelper(prevTags, active.id.toString(), over!.id.toString())
+			); //using non-null type assertion here because it's already been checked to not be null
+
+			/*
+			//legacy code for when not grouping similar code into a single callback function
+
+			setTagsInput((prevTags) => {
+				const oldIndex = prevTags.findIndex(
+					(prevTag) => prevTag.id === active.id.toString()
+				);
+				const newIndex = prevTags.findIndex(
+					(prevTag) => prevTag.id === over!.id.toString() //using non-null type assertion here because it's already been checked to not be null
+				);
+				return arrayMove(prevTags, oldIndex, newIndex);
+			});
 			setTags((prevTags) => {
 				const oldIndex = prevTags.findIndex(
 					(prevTag) => prevTag.id === active.id.toString()
@@ -72,6 +192,7 @@ export function EditTagsModal({
 				);
 				return arrayMove(prevTags, oldIndex, newIndex);
 			});
+			*/
 		}
 
 		setActiveId(null);
@@ -91,14 +212,15 @@ export function EditTagsModal({
 						onDragEnd={handleDragEnd}
 					>
 						<SortableContext
-							items={tagsWithNotesInfo}
+							items={tagsInputWithStatus}
 							strategy={verticalListSortingStrategy}
 						>
 							<Stack gap={2}>
-								{tagsWithNotesInfo.map((tagWithNotesInfo) => (
+								{tagsInputWithStatus.map((tagInputWithStatus) => (
 									<SortableTagEditItem
-										key={tagWithNotesInfo.id}
-										tagWithNotesInfo={tagWithNotesInfo}
+										key={tagInputWithStatus.id}
+										tagInputWithStatus={tagInputWithStatus}
+										onUpdateTagInput={onUpdateTagInput}
 										onUpdateTag={onUpdateTag}
 										onDeleteTag={onDeleteTag}
 									/>
@@ -109,7 +231,7 @@ export function EditTagsModal({
 						>
 							{activeId ? (
 								<TagEditItem /* this is just for the visual element (i.e. tag) that you're seeing and holding onto while dragging */
-									tagWithNotesInfo={
+									tagInputWithStatus={
 										activeTagWithNotesInfo
 											? activeTagWithNotesInfo
 											: {
@@ -117,11 +239,10 @@ export function EditTagsModal({
 													id: "id not found",
 													label: "drag and drop me",
 													isUsedByNotes: false,
+													status: "unknown",
 											  }
 									}
-									onUpdateTag={onUpdateTag}
-									onDeleteTag={onDeleteTag}
-									/* id={activeId} //not needed because id is being extracted from "tagWithNotesInfo" instead */
+									/* id={activeId} //not needed because id is being extracted from "tagInputWithStatus" instead */
 									isBeingDragged
 								/>
 							) : null}

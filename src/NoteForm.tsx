@@ -4,13 +4,13 @@ import { FormEvent, useRef, useState } from "react";
 import { Form, Stack, Col, Row, Button, InputGroup } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import CreatableReactSelect from "react-select/creatable";
-import { NoteData, Tag, TagWithNoteInfo } from "./App";
+import { NoteData, Tag, TagWithNotesInfo } from "./App";
 import { v4 as uuidV4 } from "uuid";
 
 type NoteFormProps = {
 	onSubmit: (data: NoteData) => void;
 	onAddTag: (tag: Tag) => void;
-	tagsWithNotesInfo: TagWithNoteInfo[];
+	tagsWithNotesInfo: TagWithNotesInfo[];
 	setEditTagsModalIsOpen: (newEditTagsModalIsOpen: boolean) => void;
 } & Partial<NoteData>; // use Partial to make NoteData optional
 

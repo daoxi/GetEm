@@ -2,16 +2,18 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { TagEditItem } from "./TagEditItem";
-import { TagWithNoteInfo } from "../App";
+import { TagInputWithStatus } from ".";
 
 type SortableTagEditItemProps = {
-	tagWithNotesInfo: TagWithNoteInfo;
+	tagInputWithStatus: TagInputWithStatus;
+	onUpdateTagInput: (id: string, label: string) => void;
 	onUpdateTag: (id: string, label: string) => void;
 	onDeleteTag: (id: string) => void;
 };
 
 export function SortableTagEditItem({
-	tagWithNotesInfo,
+	tagInputWithStatus,
+	onUpdateTagInput,
 	onUpdateTag,
 	onDeleteTag,
 }: SortableTagEditItemProps) {
@@ -23,7 +25,7 @@ export function SortableTagEditItem({
 		transform,
 		transition,
 		isDragging,
-	} = useSortable({ id: tagWithNotesInfo.id });
+	} = useSortable({ id: tagInputWithStatus.id });
 	const style = {
 		transform: CSS.Transform.toString(transform),
 		transition,
@@ -32,7 +34,8 @@ export function SortableTagEditItem({
 
 	return (
 		<TagEditItem
-			tagWithNotesInfo={tagWithNotesInfo}
+			tagInputWithStatus={tagInputWithStatus}
+			onUpdateTagInput={onUpdateTagInput}
 			onUpdateTag={onUpdateTag}
 			onDeleteTag={onDeleteTag}
 			/* the following attributes are referenced from the dnd-kit web-documentation "Sortable" template */

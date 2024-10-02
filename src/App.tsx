@@ -43,7 +43,7 @@ export type Tag = {
 	label: string;
 };
 
-export type TagWithNoteInfo = {
+export type TagWithNotesInfo = {
 	isUsedByNotes: boolean;
 } & Tag;
 
@@ -63,7 +63,7 @@ function App() {
 	}, [notes, tags]);
 
 	//this new array of tags has an additional boolean property to track whether the tag belongs to any note(s)
-	const tagsWithNotesInfo: TagWithNoteInfo[] = useMemo(() => {
+	const tagsWithNotesInfo: TagWithNotesInfo[] = useMemo(() => {
 		return tags.map((tag) => {
 			if (notes.some((note) => note.tagIds.some((tagid) => tagid === tag.id))) {
 				return { ...tag, isUsedByNotes: true };

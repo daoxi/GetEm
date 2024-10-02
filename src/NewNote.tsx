@@ -1,11 +1,11 @@
-import { NoteData, Tag, TagWithNoteInfo } from "./App";
+import { NoteData, Tag, TagWithNotesInfo } from "./App";
 import { NoteForm } from "./NoteForm";
 
 type NewNoteProps = {
 	//same as NoteForm
 	onSubmit: (data: NoteData) => void;
 	onAddTag: (tag: Tag) => void;
-	tagsWithNotesInfo: TagWithNoteInfo[];
+	tagsWithNotesInfo: TagWithNotesInfo[];
 	setEditTagsModalIsOpen: (newEditTagsModalIsOpen: boolean) => void;
 };
 
