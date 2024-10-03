@@ -2,7 +2,7 @@
 import { LuArrowUpDown } from "react-icons/lu";
 import { FaSave } from "react-icons/fa";
 //Icon imports end
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
 import {
 	Button,
 	Col,
@@ -20,11 +20,12 @@ type TagEditItemProps = {
 } & Partial<TagEditItemPropsOptional>;
 
 type TagEditItemPropsOptional = {
-	//the "on*" events below are not needed when using this component inside <DragOverlay> as visual element
+	//below are not needed when using this component inside <DragOverlay> as visual element
+	maxtagInputLength: number;
 	onUpdateTagInput: (id: string, label: string) => void;
 	onUpdateTag: (id: string, label: string) => void;
 	onDeleteTag: (id: string) => void;
-
+	//"below" end
 	isBeingDragged: boolean;
 	[propName: string]: any; //use this to represent all remaining props of any type
 };
@@ -33,6 +34,7 @@ export const TagEditItem = forwardRef(
 	(
 		{
 			tagInputWithStatus,
+			maxtagInputLength,
 			onUpdateTagInput,
 			onUpdateTag,
 			onDeleteTag,
@@ -41,6 +43,8 @@ export const TagEditItem = forwardRef(
 		}: TagEditItemProps,
 		ref
 	) => {
+		const [isFocused, setIsFocused] = useState(false);
+
 		const isBeingDraggedClassName = isBeingDragged ? "invisible" : "";
 
 		let borderClassName = "";
@@ -48,6 +52,7 @@ export const TagEditItem = forwardRef(
 			borderClassName = "border-info";
 		} else if (
 			tagInputWithStatus.status === "empty" ||
+			tagInputWithStatus.status === "overlong" ||
 			tagInputWithStatus.status === "duplicate"
 		) {
 			borderClassName = "border-danger";
@@ -63,7 +68,8 @@ export const TagEditItem = forwardRef(
 			<Container>
 				<Row ref={ref} style={props.style}>
 					<Col>
-						<InputGroup hasValidation>
+						<InputGroup /* The hasValidation prop can make the second-last element in <InputGroup> has rounded-corners on the right side (useful for <Form.Control.Feedback>) */
+						>
 							<InputGroup.Text
 								variant="outline-secondary"
 								{...props.attributes}
@@ -78,15 +84,22 @@ export const TagEditItem = forwardRef(
 							</InputGroup.Text>
 							<Form.Control
 								type="text"
-								placeholder="empty tag is not allowed"
+								placeholder="Tag label"
 								value={tagInputWithStatus.label}
 								isInvalid={borderClassName === "border-danger"}
 								className={"" + borderClassName}
+								aria-describedby="tagInputTips"
 								onChange={
 									(e) =>
 										onUpdateTagInput &&
 										onUpdateTagInput(tagInputWithStatus.id, e.target.value) //used short-circuiting to first check the onUpdateTagInput is not undefined (because onUpdateTagInput is an optional prop)
 								}
+								onFocus={() => {
+									setIsFocused(true);
+								}}
+								onBlur={() => {
+									setIsFocused(false);
+								}}
 							/>
 							<Button
 								variant={
@@ -103,17 +116,33 @@ export const TagEditItem = forwardRef(
 							>
 								<FaSave />
 							</Button>
-							<Form.Control.Feedback
-								type={
-									tagInputWithStatus.status === "duplicate"
-										? "invalid"
-										: undefined
-								} //only show the feedback for "invalid" when the tag is a duplicate, otherwise hide the feedback by setting the type prop to undefined
-							>
-								Duplicate tags are not allowed.
-							</Form.Control.Feedback>
 						</InputGroup>
+						<Form.Text id="tagInputTips">
+							{tagInputWithStatus.status === "empty" ? (
+								<span className="text-danger">Tag label can't be empty.</span>
+							) : tagInputWithStatus.status === "overlong" ? (
+								<span className="text-danger">The tag label is too long.</span>
+							) : tagInputWithStatus.status === "duplicate" ? (
+								<span className="text-danger">
+									Duplicate tag labels are not allowed.
+								</span>
+							) : isFocused === true ? (
+								<span className="text-muted">
+									You can enter{" "}
+									{
+										maxtagInputLength &&
+											maxtagInputLength -
+												tagInputWithStatus.label
+													.length /* short-circuiting to check if it's undefined first */
+									}{" "}
+									more characters.
+								</span>
+							) : (
+								<span></span>
+							)}
+						</Form.Text>
 					</Col>
+
 					<Col xs="auto" className={isBeingDraggedClassName}>
 						<Stack direction="horizontal" gap={2}>
 							<Button

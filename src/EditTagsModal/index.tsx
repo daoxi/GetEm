@@ -101,11 +101,15 @@ export function EditTagsModal({
 		});
 	}
 
+	const maxtagInputLength = 30;
+
 	const tagsInputWithStatus: TagInputWithStatus[] = useMemo(() => {
 		return tagsInput.map((tagInput) => {
 			let status = "unknown";
 			if (tagInput.label === "") {
 				status = "empty";
+			} else if (tagInput.label.length > maxtagInputLength) {
+				status = "overlong";
 			} else if (
 				tagsInput
 					.filter((tagsInputElement) => tagsInputElement.id !== tagInput.id)
@@ -227,6 +231,7 @@ export function EditTagsModal({
 									<SortableTagEditItem
 										key={tagInputWithStatus.id}
 										tagInputWithStatus={tagInputWithStatus}
+										maxtagInputLength={maxtagInputLength}
 										onUpdateTagInput={onUpdateTagInput}
 										onUpdateTag={onUpdateTag}
 										onDeleteTag={onDeleteTag}
@@ -271,8 +276,9 @@ export function EditTagsModal({
 											the tag.
 										</p>
 										<p>
-											Empty or duplicate (i.e. same label) tags are{" "}
-											<strong>not allowed</strong>.
+											Empty, overlong ({">"}
+											{maxtagInputLength} chars.) or duplicate (same label) tags
+											are <strong>not allowed</strong>.
 										</p>
 										<p>Drag and drop tags to reorder them.</p>
 									</Stack>

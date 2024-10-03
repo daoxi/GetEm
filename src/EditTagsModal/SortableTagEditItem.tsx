@@ -6,6 +6,7 @@ import { TagInputWithStatus } from ".";
 
 type SortableTagEditItemProps = {
 	tagInputWithStatus: TagInputWithStatus;
+	maxtagInputLength: number;
 	onUpdateTagInput: (id: string, label: string) => void;
 	onUpdateTag: (id: string, label: string) => void;
 	onDeleteTag: (id: string) => void;
@@ -13,6 +14,7 @@ type SortableTagEditItemProps = {
 
 export function SortableTagEditItem({
 	tagInputWithStatus,
+	maxtagInputLength,
 	onUpdateTagInput,
 	onUpdateTag,
 	onDeleteTag,
@@ -35,6 +37,7 @@ export function SortableTagEditItem({
 	return (
 		<TagEditItem
 			tagInputWithStatus={tagInputWithStatus}
+			maxtagInputLength={maxtagInputLength}
 			onUpdateTagInput={onUpdateTagInput}
 			onUpdateTag={onUpdateTag}
 			onDeleteTag={onDeleteTag}
