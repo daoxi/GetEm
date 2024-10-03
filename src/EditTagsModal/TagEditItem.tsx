@@ -1,5 +1,6 @@
 //Icon imports start
 import { LuArrowUpDown } from "react-icons/lu";
+import { FaSave } from "react-icons/fa";
 //Icon imports end
 import { forwardRef } from "react";
 import {
@@ -62,7 +63,7 @@ export const TagEditItem = forwardRef(
 			<Container>
 				<Row ref={ref} style={props.style}>
 					<Col>
-						<InputGroup>
+						<InputGroup hasValidation>
 							<InputGroup.Text
 								variant="outline-secondary"
 								{...props.attributes}
@@ -77,22 +78,20 @@ export const TagEditItem = forwardRef(
 							</InputGroup.Text>
 							<Form.Control
 								type="text"
+								placeholder="empty tag is not allowed"
 								value={tagInputWithStatus.label}
+								isInvalid={borderClassName === "border-danger"}
+								className={"" + borderClassName}
 								onChange={
 									(e) =>
 										onUpdateTagInput &&
 										onUpdateTagInput(tagInputWithStatus.id, e.target.value) //used short-circuiting to first check the onUpdateTagInput is not undefined (because onUpdateTagInput is an optional prop)
 								}
-								className={"" + borderClassName}
 							/>
-						</InputGroup>
-					</Col>
-					<Col xs="auto" className={isBeingDraggedClassName}>
-						<Stack direction="horizontal" gap={2}>
 							<Button
 								variant={
 									tagInputWithStatus.status === "unsaved"
-										? "outline-primary"
+										? "primary"
 										: "outline-secondary"
 								}
 								disabled={!(tagInputWithStatus.status === "unsaved")}
@@ -102,8 +101,21 @@ export const TagEditItem = forwardRef(
 										onUpdateTag(tagInputWithStatus.id, tagInputWithStatus.label) //used short-circuiting to first check the onUpdateTag is not undefined (because onUpdateTag is an optional prop)
 								}
 							>
-								🖫
+								<FaSave />
 							</Button>
+							<Form.Control.Feedback
+								type={
+									tagInputWithStatus.status === "duplicate"
+										? "invalid"
+										: undefined
+								} //only show the feedback for "invalid" when the tag is a duplicate, otherwise hide the feedback by setting the type prop to undefined
+							>
+								Duplicate tags are not allowed.
+							</Form.Control.Feedback>
+						</InputGroup>
+					</Col>
+					<Col xs="auto" className={isBeingDraggedClassName}>
+						<Stack direction="horizontal" gap={2}>
 							<Button
 								variant={
 									tagInputWithStatus.isUsedByNotes
