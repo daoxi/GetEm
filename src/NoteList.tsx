@@ -14,7 +14,7 @@ import {
 import { Link } from "react-router-dom";
 import ReactSelect from "react-select";
 import { Note, Tag, TagWithNotesInfo } from "./App";
-import styles from "./NoteList.module.css";
+import styles from "./NoteList.module.scss";
 
 type NoteListProps = {
 	notes: Note[];

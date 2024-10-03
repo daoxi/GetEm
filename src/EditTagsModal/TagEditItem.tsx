@@ -12,7 +12,7 @@ import {
 	Stack,
 } from "react-bootstrap";
 import { TagInputWithStatus } from ".";
-import styles from "./TagEditItem.module.css";
+import styles from "./TagEditItem.module.scss";
 
 type TagEditItemProps = {
 	tagInputWithStatus: TagInputWithStatus;
