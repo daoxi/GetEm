@@ -57,50 +57,52 @@ export function NoteForm({
 							<Form.Group controlId="tags">
 								<Form.Label>Tags</Form.Label>
 								<InputGroup>
-									<CreatableReactSelect
-										//onCreateOption is fired when user creates a new tag, label is the input that the user typed in
-										onCreateOption={(label) => {
-											const newTag = { id: uuidV4(), label };
-											onAddTag(newTag);
-											//automatically add new tag to the currently selected tags by default
-											setSelectedTags((prev) => [...prev, newTag]);
-										}}
-										value={selectedTags.map((tag) => {
-											//CreatableReactSelect expects a label and an id
-											return { label: tag.label, value: tag.id };
-										})}
-										//when user creates a new tag, it does not fire onChange, instead it fires onCreateOption
-										options={tagsWithNotesInfo.map((tags) => {
-											return { label: tags.label, value: tags.id };
-										})}
-										onChange={(tags) => {
-											setSelectedTags(
-												tags.map((tag) => {
-													//This is what is actually stored, which can be converted from what CreatableReactSelect expects
-													return { label: tag.label, id: tag.value };
-												})
-											);
-										}}
-										isMulti
-										inputId="tags" //matches controlId from parent component <Form.Group>
-										className="flex-fill" //use flex-fill to grow to match the remaining width (not mandatory if the component is already wrapped by <Col>)
-										placeholder="Add tags"
-										noOptionsMessage={(userinput) =>
-											userinput.inputValue === ""
-												? "No selectable tags, start typing to add a new one"
-												: 'No tags were found from your search "' +
-												  userinput.inputValue +
-												  '"'
-										}
-										styles={{
-											control: (baseStyles) => ({
-												...baseStyles,
-												//remove rounded corners on right side to align with the button better
-												borderTopRightRadius: 0,
-												borderBottomRightRadius: 0,
-											}),
-										}}
-									/>
+									<Col>
+										<CreatableReactSelect
+											//onCreateOption is fired when user creates a new tag, label is the input that the user typed in
+											onCreateOption={(label) => {
+												const newTag = { id: uuidV4(), label };
+												onAddTag(newTag);
+												//automatically add new tag to the currently selected tags by default
+												setSelectedTags((prev) => [...prev, newTag]);
+											}}
+											value={selectedTags.map((tag) => {
+												//CreatableReactSelect expects a label and an id
+												return { label: tag.label, value: tag.id };
+											})}
+											//when user creates a new tag, it does not fire onChange, instead it fires onCreateOption
+											options={tagsWithNotesInfo.map((tags) => {
+												return { label: tags.label, value: tags.id };
+											})}
+											onChange={(tags) => {
+												setSelectedTags(
+													tags.map((tag) => {
+														//This is what is actually stored, which can be converted from what CreatableReactSelect expects
+														return { label: tag.label, id: tag.value };
+													})
+												);
+											}}
+											isMulti
+											inputId="tags" //matches controlId from parent component <Form.Group>
+											className="flex-fill" //use flex-fill to grow to match the remaining width (not mandatory if the component is already wrapped by <Col>)
+											placeholder="Add tags"
+											noOptionsMessage={(userinput) =>
+												userinput.inputValue === ""
+													? "No selectable tags, start typing to add a new one"
+													: 'No tags were found from your search "' +
+													  userinput.inputValue +
+													  '"'
+											}
+											styles={{
+												control: (baseStyles) => ({
+													...baseStyles,
+													//remove rounded corners on right side to align with the button better
+													borderTopRightRadius: 0,
+													borderBottomRightRadius: 0,
+												}),
+											}}
+										/>
+									</Col>
 									<Button
 										onClick={() => setEditTagsModalIsOpen(true)}
 										variant="primary"
@@ -133,7 +135,6 @@ export function NoteForm({
 					</Stack>
 				</Stack>
 			</Form>
-			
 		</>
 	);
 }
