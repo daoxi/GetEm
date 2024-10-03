@@ -17,7 +17,14 @@ import {
 } from "@dnd-kit/sortable";
 
 import { Tag, TagWithNotesInfo } from "../App";
-import { Stack, Form, Modal, Alert } from "react-bootstrap";
+import {
+	Stack,
+	Form,
+	Modal,
+	Alert,
+	Accordion,
+	Container,
+} from "react-bootstrap";
 import { useEffect, useMemo, useState } from "react";
 import { SortableTagEditItem } from "./SortableTagEditItem";
 import { TagEditItem } from "./TagEditItem";
@@ -252,23 +259,68 @@ export function EditTagsModal({
 				{tagsWithNotesInfo.length === 0 ? (
 					<Alert variant="danger">You haven't added any tags yet.</Alert>
 				) : (
-					<Stack gap={0.3} className="mt-3">
-						<h6>Please Note:</h6>
-						<p>
-							Editing a tag affects <strong>all</strong> notes that use the tag.
-						</p>
-						<p>
-							<span className="border rounded border-warning py-1 px-2">
-								Warning border
-							</span>
-							<span>
-								{" "}
-								(if any) indicates the tag is not currently being used by any
-								note.
-							</span>
-						</p>
-						<p>Tags with the same name (duplicates) are not allowed.</p>
-					</Stack>
+					<Container className="mt-3">
+						<h5 className="mb-3">Tips:</h5>
+						<Accordion defaultActiveKey="0">
+							<Accordion.Item eventKey="0">
+								<Accordion.Header>General</Accordion.Header>
+								<Accordion.Body>
+									<Stack gap={0.3}>
+										<p>
+											Editing a tag affects <strong>all</strong> notes that use
+											the tag.
+										</p>
+										<p>
+											Empty or duplicate (i.e. same label) tags are{" "}
+											<strong>not allowed</strong>.
+										</p>
+										<p>Drag and drop tags to reorder them.</p>
+									</Stack>
+								</Accordion.Body>
+							</Accordion.Item>
+							<Accordion.Item eventKey="1">
+								<Accordion.Header>Colors</Accordion.Header>
+								<Accordion.Body>
+									<h6>Tag label:</h6>
+									<p>
+										<span className="border border-success py-1 px-2">
+											Green border
+										</span>
+										<span>
+											{" "}
+											means the tag label is up to date with saved data.
+										</span>
+									</p>
+									<p>
+										<span className="border border-warning py-1 px-2">
+											Yellow border
+										</span>
+										<span>
+											{" "}
+											means the tag label is changed and can be saved, but
+											hasn't been saved yet.
+										</span>
+									</p>
+									<p>
+										<span className="border border-danger py-1 px-2">
+											Red border
+										</span>
+										<span>
+											{" "}
+											means the tag label is invalid (e.g. empty or duplicate),
+											and thus can't be saved.
+										</span>
+									</p>
+									<h6>Delete button:</h6>
+									<span className="text-warning border rounded border-warning py-0 px-1">
+										✕
+									</span>{" "}
+									(yellow delete button) means the tag is not currently being
+									used by any notes (thus deleting it won't affect any notes).
+								</Accordion.Body>
+							</Accordion.Item>
+						</Accordion>
+					</Container>
 				)}
 			</Modal.Body>
 		</Modal>
