@@ -1,3 +1,4 @@
+//The following imports are partially referenced from the dnd-kit web-documentation "Sortable" template
 import {
 	DndContext,
 	closestCenter,
@@ -15,6 +16,7 @@ import {
 	sortableKeyboardCoordinates,
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+//"The following" ends
 
 import { Tag, TagWithNotesInfo } from "../App";
 import {
@@ -50,12 +52,8 @@ export function EditTagsModal({
 	onDeleteTag,
 	setTags,
 }: EditTagsModalProps) {
-	/*
-	const tagsInput = tagsWithNotesInfo.map((tagWithNotesInfo) => {
-		return { ...tagWithNotesInfo };
-	});
-	*/
-	//const [tagsInput, setTagsInput] = useState<TagWithNotesInfo[]>(structuredClone(tagsWithNotesInfo));
+	
+	//const [tagsInput, setTagsInput] = useState<TagWithNotesInfo[]>(structuredClone(tagsWithNotesInfo)); //alternative deep clone
 	const [tagsInput, setTagsInput] = useState<TagWithNotesInfo[]>(
 		tagsWithNotesInfo.map((tagWithNotesInfo) => {
 			return { ...tagWithNotesInfo };
@@ -101,8 +99,10 @@ export function EditTagsModal({
 		});
 	}
 
+	//use a single constant to manage max length for input tag
 	const maxtagInputLength = 30;
 
+	//tagsInputWithStatus gets updated whenever tagsInput or tagsWithNotesInfo changes
 	const tagsInputWithStatus: TagInputWithStatus[] = useMemo(() => {
 		return tagsInput.map((tagInput) => {
 			let status = "unknown";
@@ -136,6 +136,7 @@ export function EditTagsModal({
 		});
 	}, [tagsInput, tagsWithNotesInfo]);
 
+	//referenced from the dnd-kit web-documentation "Sortable" template
 	const sensors = useSensors(
 		useSensor(PointerSensor),
 		useSensor(KeyboardSensor, {
@@ -149,7 +150,6 @@ export function EditTagsModal({
 
 	function handleDragStart(event: DragStartEvent) {
 		const { active } = event;
-
 		setActiveId(active.id.toString());
 	}
 

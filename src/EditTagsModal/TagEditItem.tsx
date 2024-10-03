@@ -26,6 +26,7 @@ type TagEditItemPropsOptional = {
 	onUpdateTag: (id: string, label: string) => void;
 	onDeleteTag: (id: string) => void;
 	//"below" end
+
 	isBeingDragged: boolean;
 	[propName: string]: any; //use this to represent all remaining props of any type
 };
@@ -43,10 +44,11 @@ export const TagEditItem = forwardRef(
 		}: TagEditItemProps,
 		ref
 	) => {
-		const [isFocused, setIsFocused] = useState(false);
+		const [isFocused, setIsFocused] = useState(false); //this is for the tag input field
 
 		const isBeingDraggedClassName = isBeingDragged ? "invisible" : "";
 
+		//this is for the tag input field border
 		let borderClassName = "";
 		if (tagInputWithStatus.status === "unknown") {
 			borderClassName = "border-info";
@@ -154,14 +156,6 @@ export const TagEditItem = forwardRef(
 								onClick={
 									() => onDeleteTag && onDeleteTag(tagInputWithStatus.id) //used short-circuiting to first check the onDeleteTag is not undefined (because onDeleteTag is an optional prop)
 								}
-								/*
-								className={
-									"" +
-									(tagInputWithStatus.isUsedByNotes
-										? "border-secondary"
-										: "border-warning")
-								} //use warning border for tags not being used by any note
-								*/
 							>
 								✕
 							</Button>
