@@ -15,16 +15,17 @@ import {
 import { Link } from "react-router-dom";
 import ReactSelect from "react-select";
 import { Note, Tag, TagWithNotesInfo } from "../App";
-import { NoteCard } from "./NoteCard";
+
+import { NotesList } from "./NotesList";
 
 type NoteListProps = {
-	notes: Note[];
+	notesWithTags: Note[];
 	tagsWithNotesInfo: TagWithNotesInfo[];
 	setEditTagsModalIsOpen: (newEditTagsModalIsOpen: boolean) => void;
 };
 
 export function NotesMain({
-	notes,
+	notesWithTags,
 	tagsWithNotesInfo,
 	setEditTagsModalIsOpen,
 }: NoteListProps) {
@@ -42,20 +43,20 @@ export function NotesMain({
 	const [showTagsSelectTooltip, setShowTagsSelectTooltip] = useState(false);
 
 	const filteredNotes = useMemo(() => {
-		return notes.filter((note) => {
+		return notesWithTags.filter((noteWithTags) => {
 			//checks for whether both the title and the tags match the search (if the search is empty, then always match it), returns a boolean
 			return (
 				//check for title, making it case-insensitive
 				(title === "" ||
-					note.title.toLowerCase().includes(title.toLowerCase())) &&
+					noteWithTags.title.toLowerCase().includes(title.toLowerCase())) &&
 				//check for tags, for "every" selected tag, it should match "some" (i.e. at least one) tag for the note
 				(selectedTags.length === 0 ||
 					selectedTags.every((tag) =>
-						note.tags.some((noteTag) => noteTag.id === tag.id)
+						noteWithTags.tags.some((noteTag) => noteTag.id === tag.id)
 					))
 			);
 		});
-	}, [title, selectedTags, notes]);
+	}, [title, selectedTags, notesWithTags]);
 
 	return (
 		<>
@@ -98,9 +99,9 @@ export function NotesMain({
 												type="text"
 												value={title}
 												onChange={(e) => setTitle(e.target.value)}
-												disabled={notes.length === 0}
+												disabled={notesWithTags.length === 0}
 												placeholder={
-													notes.length === 0
+													notesWithTags.length === 0
 														? "You haven't added any note yet"
 														: "Search as you type"
 												}
@@ -180,40 +181,24 @@ export function NotesMain({
 					Tab content for Manage
 				</Tab>
 			</Tabs>
-			<Row
-				xs={1}
-				sm={2}
-				lg={3}
-				xl={4}
-				/* Set number of columns for each screen size */ className="g-3" /* for gap */
-			>
-				{notes.length !== 0 ? (
-					activeTabKey === "search" ? (
-						filteredNotes.length !== 0 ? (
-							filteredNotes.map((note) => (
-								<Col key={note.id}>
-									<NoteCard
-										id={note.id}
-										title={note.title}
-										body={note.body}
-										tags={note.tags}
-									/>
-								</Col>
-							))
-						) : (
-							<p>Your search didn't match any notes.</p>
-						)
-					) : activeTabKey === "manage" ? (<>
-						<p>NoteCards List Here</p>
-						
-						</>
-					) : (
-						<p>You didn't select any tab.</p>
-					)
+			{activeTabKey === "search" ? (
+				filteredNotes.length !== 0 ? (
+					<NotesList notesMode="view" notesToList={filteredNotes} />
 				) : (
-					<p></p>
-				)}
-			</Row>
+					<p>Your search didn't match any notes.</p>
+				)
+			) : activeTabKey === "manage" ? (
+				notesWithTags.length !== 0 ? (
+					<>
+						<p>Manage List Below!</p>
+					</>
+				) : (
+					<p>You haven't added any notes yet.</p>
+				)
+			) : (
+				<p>You didn't select any tab.</p>
+			)}
+
 			<Overlay //fundamental component for positioning and controlling <Tooltip> visibility
 				target={tagsSelectRef.current}
 				show={showTagsSelectTooltip}
@@ -231,4 +216,3 @@ export function NotesMain({
 		</>
 	);
 }
-

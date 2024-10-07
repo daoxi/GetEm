@@ -156,7 +156,7 @@ function App() {
 									tags={tags}
 								/>
 								<NotesMain
-									notes={notesWithTags}
+									notesWithTags={notesWithTags}
 									tagsWithNotesInfo={tagsWithNotesInfo}
 									setEditTagsModalIsOpen={setEditTagsModalIsOpen}
 								/>
@@ -176,7 +176,7 @@ function App() {
 							</>
 						}
 					/>
-					<Route path="/:id" element={<NoteLayout notes={notesWithTags} />}>
+					<Route path="/:id" element={<NoteLayout notesWithTags={notesWithTags} />}>
 						<Route index element={<Note onDelete={onDeleteNote} />} />
 						<Route
 							path="edit"

@@ -2,12 +2,12 @@ import { Navigate, Outlet, useOutletContext, useParams } from "react-router-dom"
 import { Note } from "./App";
 
 type NoteLayoutProps = {
-	notes: Note[];
+	notesWithTags: Note[];
 };
 
-export function NoteLayout({ notes }: NoteLayoutProps) {
+export function NoteLayout({ notesWithTags }: NoteLayoutProps) {
 	const { id } = useParams(); // get id from the URL
-	const note = notes.find((note) => note.id === id); //find the note with matching id
+	const note = notesWithTags.find((noteWithTags) => noteWithTags.id === id); //find the note with matching id
 
 	if (note == null) return <Navigate to="/" replace />; //go back to homepage for non-matching ids, use "replace" to replace the URL in order to prevent going back to the page that doesn't exist
 
