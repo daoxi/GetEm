@@ -7,8 +7,8 @@ import { useLocalStorage } from "./useLocalStorage";
 import { useMemo, useState } from "react";
 import { v4 as uuidV4 } from "uuid";
 import { NotesMain } from "./NotesMain";
-import { NoteLayout } from "./NoteLayout";
-import { Note } from "./Note";
+import { NoteOutlet } from "./NoteOutlet";
+import { ViewNote } from "./ViewNote";
 import { EditNote } from "./EditNote";
 import { Demo } from "./Demo";
 import { EditTagsModal } from "./EditTagsModal";
@@ -176,8 +176,11 @@ function App() {
 							</>
 						}
 					/>
-					<Route path="/:id" element={<NoteLayout notesWithTags={notesWithTags} />}>
-						<Route index element={<Note onDelete={onDeleteNote} />} />
+					<Route
+						path="/:id"
+						element={<NoteOutlet notesWithTags={notesWithTags} />}
+					>
+						<Route index element={<ViewNote onDelete={onDeleteNote} />} />
 						<Route
 							path="edit"
 							element={
