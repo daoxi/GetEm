@@ -6,7 +6,7 @@ import { NewNote } from "./NewNote";
 import { useLocalStorage } from "./useLocalStorage";
 import { useMemo, useState } from "react";
 import { v4 as uuidV4 } from "uuid";
-import { NoteList } from "./NoteList";
+import { NotesMain } from "./NotesMain";
 import { NoteLayout } from "./NoteLayout";
 import { Note } from "./Note";
 import { EditNote } from "./EditNote";
@@ -155,7 +155,7 @@ function App() {
 									onAddTag={onAddTag}
 									tags={tags}
 								/>
-								<NoteList
+								<NotesMain
 									notes={notesWithTags}
 									tagsWithNotesInfo={tagsWithNotesInfo}
 									setEditTagsModalIsOpen={setEditTagsModalIsOpen}

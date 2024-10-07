@@ -23,7 +23,7 @@ type NoteListProps = {
 	setEditTagsModalIsOpen: (newEditTagsModalIsOpen: boolean) => void;
 };
 
-export function NoteList({
+export function NotesMain({
 	notes,
 	tagsWithNotesInfo,
 	setEditTagsModalIsOpen,
@@ -203,8 +203,10 @@ export function NoteList({
 						) : (
 							<p>Your search didn't match any notes.</p>
 						)
-					) : activeTabKey === "manage" ? (
-						<p>Manage NoteCards</p>
+					) : activeTabKey === "manage" ? (<>
+						<p>NoteCards List Here</p>
+						
+						</>
 					) : (
 						<p>You didn't select any tab.</p>
 					)
