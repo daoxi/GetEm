@@ -40,7 +40,7 @@ export function NoteList({
 
 	const filteredNotes = useMemo(() => {
 		return notes.filter((note) => {
-			//checks for whether both the title and the tags match the search, returns a boolean
+			//checks for whether both the title and the tags match the search (if the search is empty, then always match it), returns a boolean
 			return (
 				//check for title, making it case-insensitive
 				(title === "" ||
@@ -166,16 +166,24 @@ export function NoteList({
 				xl={4}
 				/* Set number of columns for each screen size */ className="g-3" /* for gap */
 			>
-				{filteredNotes.map((note) => (
-					<Col key={note.id}>
-						<NoteCard
-							id={note.id}
-							title={note.title}
-							body={note.body}
-							tags={note.tags}
-						/>
-					</Col>
-				))}
+				{notes.length !== 0 ? (
+					filteredNotes.length !== 0 ? (
+						filteredNotes.map((note) => (
+							<Col key={note.id}>
+								<NoteCard
+									id={note.id}
+									title={note.title}
+									body={note.body}
+									tags={note.tags}
+								/>
+							</Col>
+						))
+					) : (
+						<p>Your search didn't match any notes.</p>
+					)
+				) : (
+					<p>You don't have any notes to be searched for.</p>
+				)}
 			</Row>
 			<Overlay //fundamental component for positioning and controlling <Tooltip> visibility
 				target={tagsSelectRef.current}
