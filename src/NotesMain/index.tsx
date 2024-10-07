@@ -182,21 +182,24 @@ export function NotesMain({
 				</Tab>
 			</Tabs>
 			{activeTabKey === "search" ? (
-				filteredNotes.length !== 0 ? (
-					<NotesList notesMode="view" notesToList={filteredNotes} />
+				notesWithTags.length !== 0 ? (
+					filteredNotes.length !== 0 ? (
+						<NotesList notesMode="view" notesToList={filteredNotes} />
+					) : (
+						<p>Your search didn't match any notes.</p>
+					)
 				) : (
-					<p>Your search didn't match any notes.</p>
+					<p /* don't show any tip if the user hasn't added any notes, because the search field already shows the needed tip */
+					></p>
 				)
 			) : activeTabKey === "manage" ? (
 				notesWithTags.length !== 0 ? (
-					<>
-						<p>Manage List Below!</p>
-					</>
+					<NotesList notesMode="manage" notesToList={notesWithTags} />
 				) : (
 					<p>You haven't added any notes yet.</p>
 				)
 			) : (
-				<p>You didn't select any tab.</p>
+				<p>The active tab is unknown.</p>
 			)}
 
 			<Overlay //fundamental component for positioning and controlling <Tooltip> visibility

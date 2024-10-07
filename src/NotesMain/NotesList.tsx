@@ -8,24 +8,47 @@ type NotesListProps = {
 };
 
 export function NotesList({ notesMode, notesToList }: NotesListProps) {
-	return (
-		<Row
-			xs={1}
-			sm={2}
-			lg={3}
-			xl={4}
-			/* Set number of columns for each screen size */ className="g-3" /* for gap */
-		>
-			{notesToList.map((note) => (
-				<Col key={note.id}>
-					<NoteCard
-						id={note.id}
-						title={note.title}
-						body={note.body}
-						tags={note.tags}
-					/>
-				</Col>
-			))}
-		</Row>
-	);
+	if (notesMode === "view") {
+		return (
+			<Row
+				xs={1}
+				sm={2}
+				lg={3}
+				xl={4}
+				/* Set number of columns for each screen size */ className="g-3" /* for gap */
+			>
+				{notesToList.map((note) => (
+					<Col key={note.id}>
+						<NoteCard
+							id={note.id}
+							title={note.title}
+							body={note.body}
+							tags={note.tags}
+						/>
+					</Col>
+				))}
+			</Row>
+		);
+	} else if (notesMode === "manage") {
+		return (
+			<Row
+				xs={1}
+				sm={2}
+				lg={3}
+				xl={4}
+				/* Set number of columns for each screen size */ className="g-3" /* for gap */
+			>
+				{notesToList.map((note) => (
+					<Col key={note.id}>
+						<NoteCard
+							id={note.id}
+							title={note.title}
+							body={note.body}
+							tags={note.tags}
+						/>
+					</Col>
+				))}
+			</Row>
+		);
+	}
 }
