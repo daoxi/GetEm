@@ -14,18 +14,22 @@ import {
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ReactSelect from "react-select";
-import { Note, Tag, TagWithNotesInfo } from "../App";
+import { Note, RawNote, Tag, TagWithNotesInfo } from "../App";
 
 import { NotesList } from "./NotesList";
 
 type NoteListProps = {
 	notesWithTags: Note[];
+	setNotes: (
+		newNotes: RawNote[] | ((newNotes: RawNote[]) => RawNote[])
+	) => void;
 	tagsWithNotesInfo: TagWithNotesInfo[];
 	setEditTagsModalIsOpen: (newEditTagsModalIsOpen: boolean) => void;
 };
 
 export function NotesMain({
 	notesWithTags,
+	setNotes,
 	tagsWithNotesInfo,
 	setEditTagsModalIsOpen,
 }: NoteListProps) {
@@ -194,7 +198,11 @@ export function NotesMain({
 				)
 			) : activeTabKey === "manage" ? (
 				notesWithTags.length !== 0 ? (
-					<NotesList notesMode="manage" notesToList={notesWithTags} />
+					<NotesList
+						notesMode="manage"
+						notesToList={notesWithTags}
+						setNotes={setNotes}
+					/>
 				) : (
 					<p>You haven't added any notes yet.</p>
 				)
