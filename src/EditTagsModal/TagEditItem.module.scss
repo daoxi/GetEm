@@ -1,4 +1,4 @@
-.grabbableHandleIcon {
+.draggable-handle-icon {
 	cursor: move; /* fallback if grab cursor is unsupported */
 	cursor: grab;
 	cursor: -moz-grab;
@@ -11,7 +11,7 @@
 
 /* Apply a "closed-hand" cursor during drag operation. */
 /* Can't use ":active" here, because the active element is actually its own separate element */
-.grabbableHandleIconActive {
+.draggable-handle-icon-active {
 	cursor: grabbing;
 	cursor: -moz-grabbing;
 	cursor: -webkit-grabbing;

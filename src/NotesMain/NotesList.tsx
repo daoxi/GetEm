@@ -48,6 +48,7 @@ export function NotesList({
 			>
 				{notesToList.map((note) => (
 					<NoteCard
+						notesMode={notesMode}
 						key={note.id}
 						id={note.id}
 						title={note.title}
@@ -121,6 +122,7 @@ export function NotesList({
 					>
 						{notesToList.map((note) => (
 							<SortableNoteCard
+								notesMode={notesMode}
 								key={note.id}
 								id={note.id}
 								title={note.title}
@@ -134,10 +136,12 @@ export function NotesList({
 					{activeId ? (
 						activeNote ? (
 							<NoteCard /* this is just for the visual element (i.e. tag) that you're seeing and holding onto while dragging */
+								notesMode={notesMode}
 								id={activeId}
 								title={activeNote.title}
 								body={activeNote.body}
 								tags={activeNote.tags}
+								isBeingDragged
 							/>
 						) : (
 							<p /* fallback message (e.g. for debugging) when undefined */>

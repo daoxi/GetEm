@@ -20,6 +20,7 @@ export function ViewNote({ onDelete }: ViewNoteProps) {
 						<Stack gap={1} direction="horizontal" className="flex-wrap">
 							{note.tags.map((tag) => (
 								<Badge
+									bg="dark"
 									className="text-truncate"
 									/* prevents long text overflow */ key={tag.id}
 								>
@@ -51,7 +52,10 @@ export function ViewNote({ onDelete }: ViewNoteProps) {
 					</Stack>
 				</Col>
 			</Row>
-			<ReactMarkdown /* checkboxes are part of GitHub Flavored Markdown (GFM), check react-markdown for more info on how to enabled it through a plugin */>{note.body}</ReactMarkdown>
+			<ReactMarkdown /* checkboxes are part of GitHub Flavored Markdown (GFM), check react-markdown for more info on how to enabled it through a plugin */
+			>
+				{note.body}
+			</ReactMarkdown>
 		</>
 	);
 }

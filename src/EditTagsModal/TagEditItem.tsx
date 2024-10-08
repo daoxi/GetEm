@@ -78,8 +78,8 @@ export const TagEditItem = forwardRef(
 								{...props.listeners}
 								className={
 									isBeingDragged
-										? `${styles.grabbableHandleIconActive}`
-										: `${styles.grabbableHandleIcon}`
+										? `${styles["draggable-handle-icon-active"]}`
+										: `${styles["draggable-handle-icon"]}`
 								}
 							>
 								<LuArrowUpDown />

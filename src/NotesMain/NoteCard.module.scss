@@ -5,3 +5,34 @@
 		box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2);
 	}
 }
+
+.draggable-area {
+	background-image: radial-gradient(
+		circle at center,
+		rgba(0, 0, 0, 0.1) 0.25rem,
+		transparent 0
+	);
+	&:hover {
+		background-image: radial-gradient(
+			circle at center,
+			rgba(0, 0, 0, 0.4) 0.25rem,
+			transparent 0
+		);
+	}
+	background-size: 1rem 1rem;
+	background-repeat: round; // the repeated dots will stretch until there is room for another one to be added (this prevents partial dots)
+
+	&.drag-cursor {
+		cursor: move; /* fallback if grab cursor is unsupported */
+		cursor: grab;
+		cursor: -moz-grab;
+		cursor: -webkit-grab;
+	}
+	/* Apply a "closed-hand" cursor during drag operation. */
+	/* Can't use ":active" here, because the active element is actually its own separate element */
+	&.drag-cursor-active {
+		cursor: grabbing;
+		cursor: -moz-grabbing;
+		cursor: -webkit-grabbing;
+	}
+}

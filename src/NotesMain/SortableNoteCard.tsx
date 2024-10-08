@@ -4,24 +4,33 @@ import { CSS } from "@dnd-kit/utilities";
 import { NoteCard } from "./NoteCard";
 import { Note } from "../App";
 
-type SortableNoteCardProps = {} & Note;
+type SortableNoteCardProps = { notesMode: string } & Note;
 
 export function SortableNoteCard({
+	notesMode,
 	id,
 	title,
 	body,
 	tags,
 }: SortableNoteCardProps) {
-	const { attributes, listeners, setNodeRef, transform, transition } =
-		useSortable({ id: id });
+	const {
+		attributes,
+		listeners,
+		setNodeRef,
+		transform,
+		transition,
+		isDragging,
+	} = useSortable({ id: id });
 
 	const style = {
 		transform: CSS.Transform.toString(transform),
 		transition,
+		opacity: isDragging ? 0.2 : 1, //make the note's position display element semi-transparent while that note is being dragged
 	};
 
 	return (
 		<NoteCard
+			notesMode={notesMode}
 			id={id}
 			title={title}
 			body={body}
