@@ -63,7 +63,16 @@ export function NoteForm({
 						<Col>
 							<Form.Group controlId="title">
 								<Form.Label>Title</Form.Label>
-								<Form.Control ref={titleRef} required defaultValue={title} />
+								<Form.Control
+									ref={titleRef}
+									required
+									defaultValue={title}
+									maxLength={100}
+									aria-describedby="titleInputHelp"
+								/>
+								<Form.Text id="titleInputHelp" muted>
+									You can enter up to 100 characters.
+								</Form.Text>
 							</Form.Group>
 						</Col>
 						<Col>

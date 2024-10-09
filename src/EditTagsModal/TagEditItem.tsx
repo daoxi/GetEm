@@ -90,6 +90,7 @@ export const TagEditItem = forwardRef(
 								value={tagInputWithStatus.label}
 								isInvalid={borderClassName === "border-danger"}
 								className={"" + borderClassName}
+								maxLength={maxtagInputLength}
 								aria-describedby="tagInputTips"
 								onChange={
 									(e) =>
@@ -129,16 +130,21 @@ export const TagEditItem = forwardRef(
 									Duplicate tag labels are not allowed.
 								</span>
 							) : isFocused === true ? (
-								<span className="text-muted">
-									You can enter{" "}
-									{
-										maxtagInputLength &&
-											maxtagInputLength -
-												tagInputWithStatus.label
-													.length /* short-circuiting to check if it's undefined first */
-									}{" "}
-									more characters.
-								</span>
+								maxtagInputLength &&
+								/* short-circuiting to check if it's undefined first */ tagInputWithStatus
+									.label.length < maxtagInputLength ? (
+									<span className="text-muted">
+										You can enter{" "}
+										{maxtagInputLength - tagInputWithStatus.label.length} more
+										characters.
+									</span>
+								) : tagInputWithStatus.label.length === maxtagInputLength ? (
+									<span className="text-muted">
+										You have entered the maximum number of characters.
+									</span>
+								) : (
+									<span>You have entered too many characters (which shouldn't be possible).</span>
+								)
 							) : (
 								<span></span>
 							)}

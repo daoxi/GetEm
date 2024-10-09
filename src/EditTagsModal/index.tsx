@@ -313,7 +313,7 @@ export function EditTagsModal({
 										</span>
 										<span>
 											{" "}
-											means the tag label is invalid (e.g. empty or duplicate),
+											means the tag label is invalid (e.g. empty/duplicate),
 											and thus can't be saved.
 										</span>
 									</p>
