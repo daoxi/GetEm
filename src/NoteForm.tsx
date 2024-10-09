@@ -2,7 +2,7 @@
 
 import { FormEvent, useRef, useState } from "react";
 import { Form, Stack, Col, Row, Button, InputGroup } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import CreatableReactSelect from "react-select/creatable";
 import { NoteData, Tag, TagWithNotesInfo } from "./App";
 import { v4 as uuidV4 } from "uuid";
@@ -26,7 +26,21 @@ export function NoteForm({
 	const titleRef = useRef<HTMLInputElement>(null);
 	const bodyRef = useRef<HTMLTextAreaElement>(null);
 	const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
+
 	const navigate = useNavigate();
+	const location = useLocation();
+	function navigateBack() {
+		if (
+			location.key === "default"
+			/* this checks whether the react-router history stack is empty, which implies the previously-visited page is outside of the app (e.g. when manually copying app URL into address bar) */
+		) {
+			navigate("/"); /* navigate back to homepage */
+		} else {
+			navigate(
+				-1
+			); /* navigate back to the previous visited page (which should be within the app, thanks to the condition checking) */
+		}
+	}
 
 	function handleSubmit(e: FormEvent) {
 		e.preventDefault();
@@ -38,8 +52,7 @@ export function NoteForm({
 			tags: selectedTags,
 		});
 
-		//navigate to the previously visited page
-		navigate(-1);
+		navigateBack();
 	}
 
 	return (
@@ -130,9 +143,7 @@ export function NoteForm({
 						<Button
 							type="button"
 							variant="outline-secondary"
-							onClick={() =>
-								navigate(-1)
-							} /* navigate back to the previous visited page */
+							onClick={() => navigateBack()}
 						>
 							Cancel
 						</Button>
