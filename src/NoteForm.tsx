@@ -2,7 +2,7 @@
 
 import { FormEvent, useRef, useState } from "react";
 import { Form, Stack, Col, Row, Button, InputGroup } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import CreatableReactSelect from "react-select/creatable";
 import { NoteData, Tag, TagWithNotesInfo } from "./App";
 import { v4 as uuidV4 } from "uuid";
@@ -39,7 +39,7 @@ export function NoteForm({
 		});
 
 		//navigate to the previously visited page
-		navigate("..");
+		navigate(-1);
 	}
 
 	return (
@@ -127,11 +127,15 @@ export function NoteForm({
 						<Button type="submit" variant="primary">
 							Save
 						</Button>
-						<Link to=".." /* go back to the previous visited page */>
-							<Button type="button" variant="outline-secondary">
-								Cancel
-							</Button>
-						</Link>
+						<Button
+							type="button"
+							variant="outline-secondary"
+							onClick={() =>
+								navigate(-1)
+							} /* navigate back to the previous visited page */
+						>
+							Cancel
+						</Button>
 					</Stack>
 				</Stack>
 			</Form>
