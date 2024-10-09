@@ -17,5 +17,5 @@ To build for deployment:
 ```bash
 npm run build
 ```
-this creates a `dist` folder for deployment, relative path was used in this project so it can be deployed to any domain/route.
+this creates a `dist` folder for deployment.
 
