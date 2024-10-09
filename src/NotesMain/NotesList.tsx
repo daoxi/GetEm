@@ -30,12 +30,14 @@ type NotesListPropsOptional = {
 	setNotes: (
 		newNotes: RawNote[] | ((newNotes: RawNote[]) => RawNote[])
 	) => void; //only needed for "manage" mode
+	onDeleteNote: (id: string) => void; //only needed for "manage" mode
 };
 
 export function NotesList({
 	notesMode,
 	notesToList,
 	setNotes,
+	onDeleteNote,
 }: NotesListProps) {
 	if (notesMode === "view") {
 		return (
@@ -128,6 +130,7 @@ export function NotesList({
 								title={note.title}
 								body={note.body}
 								tags={note.tags}
+								onDeleteNote={onDeleteNote!} //using non-null type assertion operator because "manage" mode is designed to always have this prop
 							/>
 						))}
 					</Row>

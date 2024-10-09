@@ -158,6 +158,7 @@ function App() {
 								<NotesMain
 									notesWithTags={notesWithTags}
 									setNotes={setNotes}
+									onDeleteNote={onDeleteNote}
 									tagsWithNotesInfo={tagsWithNotesInfo}
 									setEditTagsModalIsOpen={setEditTagsModalIsOpen}
 								/>

@@ -23,6 +23,7 @@ type NoteListProps = {
 	setNotes: (
 		newNotes: RawNote[] | ((newNotes: RawNote[]) => RawNote[])
 	) => void;
+	onDeleteNote: (id: string) => void;
 	tagsWithNotesInfo: TagWithNotesInfo[];
 	setEditTagsModalIsOpen: (newEditTagsModalIsOpen: boolean) => void;
 };
@@ -30,6 +31,7 @@ type NoteListProps = {
 export function NotesMain({
 	notesWithTags,
 	setNotes,
+	onDeleteNote,
 	tagsWithNotesInfo,
 	setEditTagsModalIsOpen,
 }: NoteListProps) {
@@ -202,6 +204,7 @@ export function NotesMain({
 						notesMode="manage"
 						notesToList={notesWithTags}
 						setNotes={setNotes}
+						onDeleteNote={onDeleteNote}
 					/>
 				) : (
 					<p>You haven't added any notes yet.</p>

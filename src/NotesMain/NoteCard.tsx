@@ -9,6 +9,7 @@ type NoteCardProps = { notesMode: string } & Note &
 
 type NoteCardPropsOptional = {
 	isBeingDragged: boolean;
+	onDeleteNote: (id: string) => void;
 	[propName: string]: any; //use this to represent all remaining props of any type
 };
 
@@ -21,6 +22,7 @@ export const NoteCard = forwardRef(
 			title,
 			tags,
 			isBeingDragged,
+			onDeleteNote,
 			...props
 		}: NoteCardProps,
 		ref
@@ -75,12 +77,21 @@ export const NoteCard = forwardRef(
 					<Card.Footer className={`${notesMode !== "manage" && "d-none"}`}>
 						<Row>
 							<Col>
-								<Button variant="primary" size="sm" className="w-100">
-									Edit
-								</Button>
+								<Link to={`/${id}/edit`}>
+									<Button variant="primary" size="sm" className="w-100">
+										Edit
+									</Button>
+								</Link>
 							</Col>
 							<Col>
-								<Button variant="danger" size="sm" className="w-100">
+								<Button
+									variant="danger"
+									size="sm"
+									className="w-100"
+									onClick={() => {
+										onDeleteNote!(id); //using non-null type assertion operator because "manage" mode is designed to always have this prop
+									}}
+								>
 									Delete
 								</Button>
 							</Col>
