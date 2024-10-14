@@ -39,8 +39,6 @@ export function NotesMain({
 	tagsWithNotesInfo,
 	setEditTagsModalIsOpen,
 }: NoteListProps) {
-	const [activeTabKey, setActiveTabKey] = useState("search");
-
 	const tagsUsedByNotes = tagsWithNotesInfo.filter(
 		(tag) => tag.isUsedByNotes === true
 	); //this stores only tags that are used by note(s) (i.e. excluding tags that don't belong to any note)
@@ -86,10 +84,13 @@ export function NotesMain({
 			</Row>
 			<Tabs
 				id="controlled-tab-notes"
-				activeKey={activeTabKey}
+				activeKey={
+					options.activeMainTabKey ? options.activeMainTabKey : "search"
+				} //default to "search" when this option hasn't been set yet
 				onSelect={
 					(k) =>
-						setActiveTabKey(
+						onUpdateOptions(
+							"activeMainTabKey",
 							k!
 						) /* Used non-null operator because every <Tab> has the eventKey attribute */
 				}
@@ -201,7 +202,9 @@ export function NotesMain({
 					</Form>
 				</Tab>
 			</Tabs>
-			{activeTabKey === "search" ? (
+			{options.activeMainTabKey === undefined ||
+			options.activeMainTabKey ===
+				"search" /* default to "search" when this option hasn't been set yet */ ? (
 				notesWithTags.length !== 0 ? (
 					filteredNotes.length !== 0 ? (
 						<NotesList notesMode="view" notesToList={filteredNotes} />
@@ -212,7 +215,7 @@ export function NotesMain({
 					<p /* don't show any tip if the user hasn't added any notes, because the search field already shows the needed tip */
 					></p>
 				)
-			) : activeTabKey === "manage" ? (
+			) : options.activeMainTabKey === "manage" ? (
 				notesWithTags.length !== 0 ? (
 					<NotesList
 						notesMode="manage"
