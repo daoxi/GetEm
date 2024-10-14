@@ -19,6 +19,8 @@ import { Note, RawNote, Tag, TagWithNotesInfo } from "../App";
 import { NotesList } from "./NotesList";
 
 type NoteListProps = {
+	options: { [optionName: string]: any };
+	onUpdateOptions: (optionName: string, newValue: any) => void;
 	notesWithTags: Note[];
 	setNotes: (
 		newNotes: RawNote[] | ((newNotes: RawNote[]) => RawNote[])
@@ -29,6 +31,8 @@ type NoteListProps = {
 };
 
 export function NotesMain({
+	options,
+	onUpdateOptions,
 	notesWithTags,
 	setNotes,
 	onDeleteNote,
@@ -184,7 +188,17 @@ export function NotesMain({
 					</Card>
 				</Tab>
 				<Tab eventKey="manage" title="Manage">
-					Tab content for Manage
+					<Form>
+						<Form.Check
+							type={`checkbox`}
+							id={`manage-mode-tab-toggle-hideDemoPerm`}
+							label={`Never show demo reminder`}
+							checked={options.hideDemoPerm || false} //the "checked" prop can't be undefined (hence the "|| false" to fix this), or else this input will initially be considered uncontrolled by React
+							onChange={() => {
+								onUpdateOptions("hideDemoPerm", !options.hideDemoPerm);
+							}}
+						/>
+					</Form>
 				</Tab>
 			</Tabs>
 			{activeTabKey === "search" ? (

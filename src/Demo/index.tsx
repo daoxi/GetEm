@@ -3,17 +3,23 @@ import { NoteData, Tag } from "../App";
 import { v4 as uuidV4 } from "uuid";
 import demoData from "./data-demo.json";
 import { useState } from "react";
-import { useLocalStorage } from "../useLocalStorage";
 
 type DemoProps = {
+	options: { [optionName: string]: any };
+	onUpdateOptions: (optionName: string, newValue: any) => void;
 	onCreateNote: ({ tags, ...data }: NoteData) => void;
 	onAddTag: (tag: Tag) => void;
 	tags: Tag[];
 };
 
-export function Demo({ onCreateNote, onAddTag, tags }: DemoProps) {
-	const [showDemo, setShowDemo] = useState(true);
-	const [showDemoPerm, setShowDemoPerm] = useLocalStorage("SHOWDEMO", true);
+export function Demo({
+	options,
+	onUpdateOptions,
+	onCreateNote,
+	onAddTag,
+	tags,
+}: DemoProps) {
+	const [showDemoTemp, setShowDemoTemp] = useState(true); //the "Temp" implies the state is reset (i.e. not permanently stored) the next time this page gets visited
 
 	//generate all the notes for demo by using data from JSON
 	function handleDemo() {
@@ -25,15 +31,11 @@ export function Demo({ onCreateNote, onAddTag, tags }: DemoProps) {
 		function addIdToTagLabel(tagLabels: string[], tagsDemo: Tag[]) {
 			return tagLabels.map((tagLabel) => {
 				if (
-					tagsDemo.some(
-						(tag) => tag.label === tagLabel
-					) //check if the tag label already exists
+					tagsDemo.some((tag) => tag.label === tagLabel) //check if the tag label already exists
 				) {
 					return {
 						//using the existing tag id
-						id: tagsDemo.find(
-							(tag) => tag.label === tagLabel
-						)!.id, //used the non-null operator here because the tag match has already been checked in the if statement's condition
+						id: tagsDemo.find((tag) => tag.label === tagLabel)!.id, //used the non-null operator here because the tag match has already been checked in the if statement's condition
 						label: tagLabel,
 					};
 				} else {
@@ -67,9 +69,10 @@ export function Demo({ onCreateNote, onAddTag, tags }: DemoProps) {
 		<>
 			<Alert
 				variant="success"
-				show={showDemo && showDemoPerm} //as long as 1 of the states is false, it won't be shown
+				/* as long as 1 of the sub-conditions is false, the demo won't be shown. "options.hideDemoPerm" works for both false and undefined (which is also falsy and happens when the object property is non-existent) */
+				show={showDemoTemp && !options.hideDemoPerm}
 				onClose={() => {
-					setShowDemo(false);
+					setShowDemoTemp(false);
 				}}
 				dismissible
 			>
@@ -89,15 +92,16 @@ export function Demo({ onCreateNote, onAddTag, tags }: DemoProps) {
 					<Button
 						onClick={() => {
 							handleDemo();
+							onUpdateOptions("hideDemoPerm", true);
 						}}
 						variant="success"
 						className="mx-2 my-2"
 					>
-						Add Once
+						Add
 					</Button>
 					<Button
 						onClick={() => {
-							setShowDemo(false);
+							setShowDemoTemp(false);
 						}}
 						variant="outline-secondary"
 						className="mx-2 my-2"
@@ -106,7 +110,7 @@ export function Demo({ onCreateNote, onAddTag, tags }: DemoProps) {
 					</Button>
 					<Button
 						onClick={() => {
-							setShowDemoPerm(false);
+							onUpdateOptions("hideDemoPerm", true);
 						}}
 						variant="outline-danger"
 						className="mx-2 my-2"

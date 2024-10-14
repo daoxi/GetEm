@@ -48,8 +48,15 @@ export type TagWithNotesInfo = {
 } & Tag;
 
 function App() {
+	const [options, setOptions] = useLocalStorage("OPTIONS", {});
 	const [notes, setNotes] = useLocalStorage<RawNote[]>("NOTES", []);
 	const [tags, setTags] = useLocalStorage<Tag[]>("TAGS", []);
+
+	function onUpdateOptions(optionName: string, newValue: any) {
+		setOptions((prevOptions) => {
+			return { ...prevOptions, [optionName]: newValue };
+		});
+	}
 
 	//convert raw note into actual note with tags (instead of just with ids of tags), and update it whenever there's any change on the notes or tags
 	const notesWithTags: Note[] = useMemo(() => {
@@ -151,11 +158,15 @@ function App() {
 						element={
 							<>
 								<Demo
+									options={options}
+									onUpdateOptions={onUpdateOptions}
 									onCreateNote={onCreateNote}
 									onAddTag={onAddTag}
 									tags={tags}
 								/>
 								<NotesMain
+									options={options}
+									onUpdateOptions={onUpdateOptions}
 									notesWithTags={notesWithTags}
 									setNotes={setNotes}
 									onDeleteNote={onDeleteNote}
