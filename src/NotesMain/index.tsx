@@ -14,18 +14,18 @@ import {
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ReactSelect from "react-select";
-import { Note, RawNote, Tag, TagWithNotesInfo } from "../App";
+import { Note, Options, RawNote, Tag, TagWithNotesInfo } from "../App";
 
 import { NotesList } from "./NotesList";
 
 type NoteListProps = {
-	options: { [optionName: string]: any };
+	options: Options;
 	onUpdateOptions: (optionName: string, newValue: any) => void;
 	notesWithTags: Note[];
 	setNotes: (
 		newNotes: RawNote[] | ((newNotes: RawNote[]) => RawNote[])
 	) => void;
-	onDeleteNote: (id: string) => void;
+	onDeleteNoteWithConfirm: (id: string) => void;
 	tagsWithNotesInfo: TagWithNotesInfo[];
 	setEditTagsModalIsOpen: (newEditTagsModalIsOpen: boolean) => void;
 };
@@ -35,7 +35,7 @@ export function NotesMain({
 	onUpdateOptions,
 	notesWithTags,
 	setNotes,
-	onDeleteNote,
+	onDeleteNoteWithConfirm,
 	tagsWithNotesInfo,
 	setEditTagsModalIsOpen,
 }: NoteListProps) {
@@ -195,8 +195,21 @@ export function NotesMain({
 							id={`manage-mode-tab-toggle-hideDemoPerm`}
 							label={`Never show demo reminder`}
 							checked={options.hideDemoPerm || false} //the "checked" prop can't be undefined (hence the "|| false" to fix this), or else this input will initially be considered uncontrolled by React
-							onChange={() => {
-								onUpdateOptions("hideDemoPerm", !options.hideDemoPerm);
+							onChange={(e) => {
+								onUpdateOptions("hideDemoPerm", e.target.checked);
+							}}
+						/>
+						<Form.Check
+							type={`checkbox`}
+							id={`manage-mode-tab-toggle-deleteNoteRequireConfirm`}
+							label={`Requires confirmation when deleting a note`}
+							checked={
+								options.deleteNoteRequireConfirm === undefined
+									? true
+									: options.deleteNoteRequireConfirm
+							} //default value is assumed to be true when undefined
+							onChange={(e) => {
+								onUpdateOptions("deleteNoteRequireConfirm", e.target.checked);
 							}}
 						/>
 					</Form>
@@ -221,7 +234,7 @@ export function NotesMain({
 						notesMode="manage"
 						notesToList={notesWithTags}
 						setNotes={setNotes}
-						onDeleteNote={onDeleteNote}
+						onDeleteNoteWithConfirm={onDeleteNoteWithConfirm}
 					/>
 				) : (
 					<p>You haven't added any notes yet.</p>

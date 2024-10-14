@@ -1,11 +1,11 @@
 import { Alert, Button, Row } from "react-bootstrap";
-import { NoteData, Tag } from "../App";
+import { NoteData, Options, Tag } from "../App";
 import { v4 as uuidV4 } from "uuid";
 import demoData from "./data-demo.json";
 import { useState } from "react";
 
 type DemoProps = {
-	options: { [optionName: string]: any };
+	options: Options;
 	onUpdateOptions: (optionName: string, newValue: any) => void;
 	onCreateNote: ({ tags, ...data }: NoteData) => void;
 	onAddTag: (tag: Tag) => void;
@@ -106,7 +106,7 @@ export function Demo({
 						variant="outline-secondary"
 						className="mx-2 my-2"
 					>
-						Dismiss
+						Ask Later
 					</Button>
 					<Button
 						onClick={() => {

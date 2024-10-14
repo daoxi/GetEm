@@ -1,15 +1,14 @@
 import { Badge, Button, Col, Row, Stack } from "react-bootstrap";
 import { useNote } from "./NoteOutlet";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 
 type ViewNoteProps = {
-	onDelete: (id: string) => void;
+	onDeleteNoteWithConfirm: (id: string) => void;
 };
 
-export function ViewNote({ onDelete }: ViewNoteProps) {
+export function ViewNote({ onDeleteNoteWithConfirm }: ViewNoteProps) {
 	const note = useNote();
-	const navigate = useNavigate();
 
 	return (
 		<>
@@ -39,8 +38,7 @@ export function ViewNote({ onDelete }: ViewNoteProps) {
 						</Link>
 						<Button
 							onClick={() => {
-								onDelete(note.id);
-								navigate("/");
+								onDeleteNoteWithConfirm(note.id);
 							}}
 							variant="outline-danger"
 						>

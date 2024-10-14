@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 //Bootstrap allows styling using className, also contains default styling for most elements, which will be applied to all components
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import { NewNote } from "./NewNote";
 import { useLocalStorage } from "./useLocalStorage";
@@ -12,6 +12,11 @@ import { ViewNote } from "./ViewNote";
 import { EditNote } from "./EditNote";
 import { Demo } from "./Demo";
 import { EditTagsModal } from "./EditTagsModal";
+import { DeleteConfirmModal } from "./DeleteConfirmModal";
+
+export type Options = {
+	[optionName: string]: any; //this allows any string as option name and stores any type of value
+};
 
 //Raw note data with the id
 export type RawNote = {
@@ -48,15 +53,22 @@ export type TagWithNotesInfo = {
 } & Tag;
 
 function App() {
-	const [options, setOptions] = useLocalStorage("OPTIONS", {});
+	const navigate = useNavigate();
+
+	const [options, setOptions] = useLocalStorage<Options>("OPTIONS", {});
+	//default values are assumed for all undefined (i.e. not set yet) properties in options, and they are:
+	//hideDemoPerm : false; activeMainTabKey : "search"; deleteNoteRequireConfirm: true;
+
 	const [notes, setNotes] = useLocalStorage<RawNote[]>("NOTES", []);
 	const [tags, setTags] = useLocalStorage<Tag[]>("TAGS", []);
 
-	function onUpdateOptions(optionName: string, newValue: any) {
-		setOptions((prevOptions) => {
-			return { ...prevOptions, [optionName]: newValue };
-		});
-	}
+	//tracks whether the modal for editing tags should be open
+	const [editTagsModalIsOpen, setEditTagsModalIsOpen] = useState(false);
+	//tracks whether the modal for confirming note deletion should be open
+	const [deleteConfirmModalIsOpen, setDeleteConfirmModalIsOpen] =
+		useState(false);
+	//tracks the id for the note to be deleted from Modal
+	const [deleteConfirmModalNoteId, setDeleteConfirmModalNoteId] = useState("");
 
 	//convert raw note into actual note with tags (instead of just with ids of tags), and update it whenever there's any change on the notes or tags
 	const notesWithTags: Note[] = useMemo(() => {
@@ -80,8 +92,11 @@ function App() {
 		});
 	}, [notes, tags]);
 
-	//tracks whether the modal for editing tags should be open
-	const [editTagsModalIsOpen, setEditTagsModalIsOpen] = useState(false);
+	function onUpdateOptions(optionName: string, newValue: any) {
+		setOptions((prevOptions) => {
+			return { ...prevOptions, [optionName]: newValue };
+		});
+	}
 
 	//handles creation of a note
 	function onCreateNote({ tags, ...data }: NoteData) {
@@ -106,6 +121,20 @@ function App() {
 				}
 			});
 		});
+	}
+
+	function onDeleteNoteWithConfirm(id: string) {
+		if (
+			options.deleteNoteRequireConfirm === undefined ||
+			options.deleteNoteRequireConfirm ===
+				true /* this option is assumed to be true when undefined (i.e. not set yet) */
+		) {
+			setDeleteConfirmModalNoteId(id);
+			setDeleteConfirmModalIsOpen(true);
+		} else {
+			onDeleteNote(id);
+			navigate("/");
+		}
 	}
 
 	function onDeleteNote(id: string) {
@@ -169,7 +198,7 @@ function App() {
 									onUpdateOptions={onUpdateOptions}
 									notesWithTags={notesWithTags}
 									setNotes={setNotes}
-									onDeleteNote={onDeleteNote}
+									onDeleteNoteWithConfirm={onDeleteNoteWithConfirm}
 									tagsWithNotesInfo={tagsWithNotesInfo}
 									setEditTagsModalIsOpen={setEditTagsModalIsOpen}
 								/>
@@ -193,7 +222,12 @@ function App() {
 						path="/:id"
 						element={<NoteOutlet notesWithTags={notesWithTags} />}
 					>
-						<Route index element={<ViewNote onDelete={onDeleteNote} />} />
+						<Route
+							index
+							element={
+								<ViewNote onDeleteNoteWithConfirm={onDeleteNoteWithConfirm} />
+							}
+						/>
 						<Route
 							path="edit"
 							element={
@@ -217,6 +251,12 @@ function App() {
 				onUpdateTag={onUpdateTag}
 				onDeleteTag={onDeleteTag}
 				setTags={setTags}
+			/>
+			<DeleteConfirmModal
+				show={deleteConfirmModalIsOpen}
+				handleClose={() => setDeleteConfirmModalIsOpen(false)}
+				id={deleteConfirmModalNoteId}
+				onDeleteNote={onDeleteNote}
 			/>
 		</>
 	);

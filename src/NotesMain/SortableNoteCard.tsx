@@ -6,7 +6,7 @@ import { Note } from "../App";
 
 type SortableNoteCardProps = {
 	notesMode: string;
-	onDeleteNote: (id: string) => void;
+	onDeleteNoteWithConfirm: (id: string) => void;
 } & Note;
 
 export function SortableNoteCard({
@@ -15,7 +15,7 @@ export function SortableNoteCard({
 	title,
 	body,
 	tags,
-	onDeleteNote,
+	onDeleteNoteWithConfirm,
 }: SortableNoteCardProps) {
 	const {
 		attributes,
@@ -39,7 +39,7 @@ export function SortableNoteCard({
 			title={title}
 			body={body}
 			tags={tags}
-			onDeleteNote={onDeleteNote}
+			onDeleteNoteWithConfirm={onDeleteNoteWithConfirm}
 			/* the following attributes are partially referenced from the dnd-kit web-documentation "Sortable" template */
 			ref={setNodeRef}
 			style={style}

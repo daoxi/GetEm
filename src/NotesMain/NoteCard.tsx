@@ -9,7 +9,7 @@ type NoteCardProps = { notesMode: string } & Note &
 
 type NoteCardPropsOptional = {
 	isBeingDragged: boolean;
-	onDeleteNote: (id: string) => void;
+	onDeleteNoteWithConfirm: (id: string) => void;
 	[propName: string]: any; //use this to represent all remaining props of any type
 };
 
@@ -22,7 +22,7 @@ export const NoteCard = forwardRef(
 			title,
 			tags,
 			isBeingDragged,
-			onDeleteNote,
+			onDeleteNoteWithConfirm,
 			...props
 		}: NoteCardProps,
 		ref
@@ -89,7 +89,7 @@ export const NoteCard = forwardRef(
 									size="sm"
 									className="w-100"
 									onClick={() => {
-										onDeleteNote!(id); //using non-null type assertion operator because "manage" mode is designed to always have this prop
+										onDeleteNoteWithConfirm!(id); //using non-null type assertion operator because "manage" mode is designed to always have this prop
 									}}
 								>
 									Delete
