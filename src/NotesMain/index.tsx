@@ -5,7 +5,6 @@ import {
 	Stack,
 	Button,
 	Form,
-	Card,
 	InputGroup,
 	Tooltip,
 	Overlay,
@@ -94,101 +93,104 @@ export function NotesMain({
 							k!
 						) /* Used non-null operator because every <Tab> has the eventKey attribute */
 				}
-				className="mb-3"
+				className=""
 				justify
 			>
-				<Tab eventKey="search" title="Search" className="">
-					<Card className="mb-3">
-						<Card.Body>
-							<Card.Title>Search 🔍</Card.Title>
-							<Form>
-								<Stack gap={3}>
-									<Form.Group controlId="title">
-										<InputGroup>
-											<InputGroup.Text>Title</InputGroup.Text>
-											<Form.Control
-												type="text"
-												value={title}
-												onChange={(e) => setTitle(e.target.value)}
-												disabled={notesWithTags.length === 0}
-												placeholder={
-													notesWithTags.length === 0
-														? "You haven't added any note yet"
-														: "Search as you type"
-												}
-											/>
-										</InputGroup>
-									</Form.Group>
-									<Form.Group controlId="tags">
-										<InputGroup>
-											<InputGroup.Text>Tags</InputGroup.Text>
-											<Col
-												ref={tagsSelectRef}
-												/* Use <Col> to wrap <ReactSelect> in order to properly display the Bootstrap <Tooltip> */
-											>
-												<ReactSelect
-													//Chose ReactSelect component here (instead of CreatableReactSelect), because no new tag will be created
+				<Tab
+					eventKey="search"
+					title={<b>Search</b>}
+					className="mb-3 p-3 border border-top-0 rounded rounded-top-0"
+				>
+					<Form>
+						<Stack gap={3}>
+							<Form.Group controlId="title">
+								<InputGroup>
+									<InputGroup.Text>Title</InputGroup.Text>
+									<Form.Control
+										type="text"
+										value={title}
+										onChange={(e) => setTitle(e.target.value)}
+										disabled={notesWithTags.length === 0}
+										placeholder={
+											notesWithTags.length === 0
+												? "You haven't added any note yet"
+												: "Search as you type"
+										}
+									/>
+								</InputGroup>
+							</Form.Group>
+							<Form.Group controlId="tags">
+								<InputGroup>
+									<InputGroup.Text>Tags</InputGroup.Text>
+									<Col
+										ref={tagsSelectRef}
+										/* Use <Col> to wrap <ReactSelect> in order to properly display the Bootstrap <Tooltip> */
+									>
+										<ReactSelect
+											//Chose ReactSelect component here (instead of CreatableReactSelect), because no new tag will be created
 
-													value={selectedTags.map((tag) => {
-														//CreatableReactSelect expects a label and an id
-														return { label: tag.label, value: tag.id };
-													})}
-													options={tagsUsedByNotes.map((tag) => {
-														return { label: tag.label, value: tag.id };
-													})}
-													onChange={(tags) => {
-														setSelectedTags(
-															tags.map((tag) => {
-																//This is what is actually stored, which can be converted from what CreatableReactSelect expects
-																return { label: tag.label, id: tag.value };
-															})
-														);
-													}}
-													isMulti
-													inputId="tags" //matches controlId from parent component <Form.Group>
-													className="rounded-0 flex-fill" //use flex-fill to grow to match the remaining width (not mandatory if the component is already wrapped by <Col>)
-													isDisabled={tagsUsedByNotes.length === 0}
-													placeholder={
-														tagsUsedByNotes.length === 0
-															? "You haven't added any tags to any note yet"
-															: "Select one from the dropdown or search"
-													}
-													noOptionsMessage={(userinput) =>
-														userinput.inputValue === ""
-															? "You haven't added any tags to any note yet"
-															: 'No tags were found from your search "' +
-															  userinput.inputValue +
-															  '"'
-													}
-													onFocus={() => {
-														setShowTagsSelectTooltip(true);
-													}}
-													onBlur={() => {
-														setShowTagsSelectTooltip(false);
-													}}
-													styles={{
-														control: (baseStyles) => ({
-															...baseStyles,
-															//remove rounded corners on left and right side to align with elements on both sides better
-															borderRadius: 0,
-														}),
-													}}
-												/>
-											</Col>
-											<Button
-												onClick={() => setEditTagsModalIsOpen(true)}
-												variant="primary"
-											>
-												Edit All Tags
-											</Button>
-										</InputGroup>
-									</Form.Group>
-								</Stack>
-							</Form>
-						</Card.Body>
-					</Card>
+											value={selectedTags.map((tag) => {
+												//CreatableReactSelect expects a label and an id
+												return { label: tag.label, value: tag.id };
+											})}
+											options={tagsUsedByNotes.map((tag) => {
+												return { label: tag.label, value: tag.id };
+											})}
+											onChange={(tags) => {
+												setSelectedTags(
+													tags.map((tag) => {
+														//This is what is actually stored, which can be converted from what CreatableReactSelect expects
+														return { label: tag.label, id: tag.value };
+													})
+												);
+											}}
+											isMulti
+											inputId="tags" //matches controlId from parent component <Form.Group>
+											className="rounded-0 flex-fill" //use flex-fill to grow to match the remaining width (not mandatory if the component is already wrapped by <Col>)
+											isDisabled={tagsUsedByNotes.length === 0}
+											placeholder={
+												tagsUsedByNotes.length === 0
+													? "You haven't added any tags to any note yet"
+													: "Select one from the dropdown or search"
+											}
+											noOptionsMessage={(userinput) =>
+												userinput.inputValue === ""
+													? "You haven't added any tags to any note yet"
+													: 'No tags were found from your search "' +
+													  userinput.inputValue +
+													  '"'
+											}
+											onFocus={() => {
+												setShowTagsSelectTooltip(true);
+											}}
+											onBlur={() => {
+												setShowTagsSelectTooltip(false);
+											}}
+											styles={{
+												control: (baseStyles) => ({
+													...baseStyles,
+													//remove rounded corners on left and right side to align with elements on both sides better
+													borderRadius: 0,
+												}),
+											}}
+										/>
+									</Col>
+									<Button
+										onClick={() => setEditTagsModalIsOpen(true)}
+										variant="primary"
+									>
+										Edit All Tags
+									</Button>
+								</InputGroup>
+							</Form.Group>
+						</Stack>
+					</Form>
 				</Tab>
-				<Tab eventKey="manage" title="Manage">
+				<Tab
+					eventKey="manage"
+					title={<b>Manage</b>}
+					className="mb-3 p-3 border border-top-0 rounded rounded-top-0"
+				>
 					<Form>
 						<Form.Check
 							type={`checkbox`}
