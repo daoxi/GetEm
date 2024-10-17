@@ -90,7 +90,13 @@ export function NotesMain({
 								</Stack>
 							</Button>
 						</Link>
-						<Button variant="dark" onClick={() => {setOptionsModalIsOpen(true)}} className="">
+						<Button
+							variant="dark"
+							onClick={() => {
+								setOptionsModalIsOpen(true);
+							}}
+							className=""
+						>
 							<Stack gap={1} direction="horizontal">
 								<span>Options</span>
 								<div className="d-flex align-items-center">
@@ -212,15 +218,6 @@ export function NotesMain({
 					className="mb-3 p-3 border border-top-0 rounded rounded-top-0"
 				>
 					<Form>
-						<Form.Check
-							type={`checkbox`}
-							id={`manage-mode-tab-toggle-hideDemoPerm`}
-							label={`Never show demo reminder`}
-							checked={options.hideDemoPerm || false} //the "checked" prop can't be undefined (hence the "|| false" to fix this), or else this input will initially be considered uncontrolled by React
-							onChange={(e) => {
-								onUpdateOptions("hideDemoPerm", e.target.checked);
-							}}
-						/>
 						<Form.Check
 							type={`checkbox`}
 							id={`manage-mode-tab-toggle-deleteNoteRequireConfirm`}

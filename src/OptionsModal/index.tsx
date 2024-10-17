@@ -1,4 +1,4 @@
-import { Modal } from "react-bootstrap";
+import { Form, Modal } from "react-bootstrap";
 import { Options } from "../App";
 
 type OptionsModalProps = {
@@ -19,7 +19,19 @@ export function OptionsModal({
 			<Modal.Header closeButton>
 				<Modal.Title>Options</Modal.Title>
 			</Modal.Header>
-			<Modal.Body>Body here</Modal.Body>
+			<Modal.Body>
+				<Form>
+					<Form.Check
+						type={`checkbox`}
+						id={`options-toggle-hideDemoPerm`}
+						label={`Never show demo reminder`}
+						checked={options.hideDemoPerm || false} //the "checked" prop can't be undefined (hence the "|| false" to fix this), or else this input will initially be considered uncontrolled by React
+						onChange={(e) => {
+							onUpdateOptions("hideDemoPerm", e.target.checked);
+						}}
+					/>
+				</Form>
+			</Modal.Body>
 		</Modal>
 	);
 }
