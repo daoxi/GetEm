@@ -13,6 +13,7 @@ import { EditNote } from "./EditNote";
 import { Demo } from "./Demo";
 import { EditTagsModal } from "./EditTagsModal";
 import { DeleteConfirmModal } from "./DeleteConfirmModal";
+import { OptionsModal } from "./OptionsModal";
 
 export type Options = {
 	[optionName: string]: any; //this allows any string as option name and stores any type of value
@@ -62,6 +63,8 @@ function App() {
 	const [notes, setNotes] = useLocalStorage<RawNote[]>("NOTES", []);
 	const [tags, setTags] = useLocalStorage<Tag[]>("TAGS", []);
 
+	//tracks whether the modal for changing options should be open
+	const [optionsModalIsOpen, setOptionsModalIsOpen] = useState(false);
 	//tracks whether the modal for editing tags should be open
 	const [editTagsModalIsOpen, setEditTagsModalIsOpen] = useState(false);
 	//tracks whether the modal for confirming note deletion should be open
@@ -196,6 +199,7 @@ function App() {
 								<NotesMain
 									options={options}
 									onUpdateOptions={onUpdateOptions}
+									setOptionsModalIsOpen={setOptionsModalIsOpen}
 									notesWithTags={notesWithTags}
 									setNotes={setNotes}
 									onDeleteNoteWithConfirm={onDeleteNoteWithConfirm}
@@ -244,6 +248,12 @@ function App() {
 					<Route path="*" element={<Navigate to="/" />} />
 				</Routes>
 			</Container>
+			<OptionsModal
+				show={optionsModalIsOpen}
+				handleClose={() => setOptionsModalIsOpen(false)}
+				options={options}
+				onUpdateOptions={onUpdateOptions}
+			/>
 			<EditTagsModal
 				show={editTagsModalIsOpen}
 				handleClose={() => setEditTagsModalIsOpen(false)}

@@ -1,6 +1,6 @@
 //Icon imports start
-import { LuArrowUpDown } from "react-icons/lu";
-import { FaSave } from "react-icons/fa";
+import { MdReorder } from "react-icons/md";
+import { MdSave } from "react-icons/md";
 //Icon imports end
 import { forwardRef, useState } from "react";
 import {
@@ -81,8 +81,9 @@ export const TagEditItem = forwardRef(
 										? `${styles["draggable-handle-icon-active"]}`
 										: `${styles["draggable-handle-icon"]}`
 								}
+								style={{ padding: "0.25rem 0.5rem" }}
 							>
-								<LuArrowUpDown />
+								<MdReorder className="fs-4" />
 							</InputGroup.Text>
 							<Form.Control
 								type="text"
@@ -116,8 +117,11 @@ export const TagEditItem = forwardRef(
 										onUpdateTag &&
 										onUpdateTag(tagInputWithStatus.id, tagInputWithStatus.label) //used short-circuiting to first check the onUpdateTag is not undefined (because onUpdateTag is an optional prop)
 								}
+								style={{ padding: "0.25rem 0.5rem" }}
 							>
-								<FaSave />
+								<div className="d-flex align-items-center">
+									<MdSave className="fs-4" />
+								</div>
 							</Button>
 						</InputGroup>
 						<Form.Text id="tagInputTips">
@@ -143,7 +147,10 @@ export const TagEditItem = forwardRef(
 										You have entered the maximum number of characters.
 									</span>
 								) : (
-									<span>You have entered too many characters (which shouldn't be possible).</span>
+									<span>
+										You have entered too many characters (which shouldn't be
+										possible).
+									</span>
 								)
 							) : (
 								<span></span>
@@ -163,7 +170,7 @@ export const TagEditItem = forwardRef(
 									() => onDeleteTag && onDeleteTag(tagInputWithStatus.id) //used short-circuiting to first check the onDeleteTag is not undefined (because onDeleteTag is an optional prop)
 								}
 							>
-								✕
+								<strong>✕</strong>
 							</Button>
 						</Stack>
 					</Col>

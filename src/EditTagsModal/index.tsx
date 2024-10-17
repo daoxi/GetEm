@@ -52,7 +52,6 @@ export function EditTagsModal({
 	onDeleteTag,
 	setTags,
 }: EditTagsModalProps) {
-	
 	//const [tagsInput, setTagsInput] = useState<TagWithNotesInfo[]>(structuredClone(tagsWithNotesInfo)); //alternative deep clone
 	const [tagsInput, setTagsInput] = useState<TagWithNotesInfo[]>(
 		tagsWithNotesInfo.map((tagWithNotesInfo) => {
@@ -272,6 +271,9 @@ export function EditTagsModal({
 								<Accordion.Body>
 									<Stack gap={0.3}>
 										<p>
+											<strong>Drag and drop</strong> tags to reorder them.
+										</p>
+										<p>
 											Editing a tag affects <strong>all</strong> notes that use
 											the tag.
 										</p>
@@ -280,7 +282,6 @@ export function EditTagsModal({
 											{maxtagInputLength} chars.) or duplicate (same label) tags
 											are <strong>not allowed</strong>.
 										</p>
-										<p>Drag and drop tags to reorder them.</p>
 									</Stack>
 								</Accordion.Body>
 							</Accordion.Item>
@@ -313,8 +314,8 @@ export function EditTagsModal({
 										</span>
 										<span>
 											{" "}
-											means the tag label is invalid (e.g. empty/duplicate),
-											and thus can't be saved.
+											means the tag label is invalid (e.g. empty/duplicate), and
+											thus can't be saved.
 										</span>
 									</p>
 									<h6>Delete button:</h6>

@@ -1,3 +1,7 @@
+//Icon imports start
+import { MdCreate } from "react-icons/md";
+import { MdSettings } from "react-icons/md";
+//Icon imports end
 import { useMemo, useRef, useState } from "react";
 import {
 	Row,
@@ -14,12 +18,12 @@ import {
 import { Link } from "react-router-dom";
 import ReactSelect from "react-select";
 import { Note, Options, RawNote, Tag, TagWithNotesInfo } from "../App";
-
 import { NotesList } from "./NotesList";
 
 type NoteListProps = {
 	options: Options;
 	onUpdateOptions: (optionName: string, newValue: any) => void;
+	setOptionsModalIsOpen: (optionsModalIsOpen: boolean) => void;
 	notesWithTags: Note[];
 	setNotes: (
 		newNotes: RawNote[] | ((newNotes: RawNote[]) => RawNote[])
@@ -32,6 +36,7 @@ type NoteListProps = {
 export function NotesMain({
 	options,
 	onUpdateOptions,
+	setOptionsModalIsOpen,
 	notesWithTags,
 	setNotes,
 	onDeleteNoteWithConfirm,
@@ -74,10 +79,25 @@ export function NotesMain({
 				<Col
 					xs="auto" /* use this to push the buttons all the way to the right side */
 				>
-					<Stack gap={2} direction="horizontal">
+					<Stack gap={2} direction="horizontal" className="">
 						<Link to="/new">
-							<Button variant="success">Create New Note</Button>
+							<Button variant="success">
+								<Stack gap={1} direction="horizontal">
+									<span>Create New Note</span>
+									<div className="d-flex align-items-center">
+										<MdCreate />
+									</div>
+								</Stack>
+							</Button>
 						</Link>
+						<Button variant="dark" onClick={() => {setOptionsModalIsOpen(true)}} className="">
+							<Stack gap={1} direction="horizontal">
+								<span>Options</span>
+								<div className="d-flex align-items-center">
+									<MdSettings />
+								</div>
+							</Stack>
+						</Button>
 					</Stack>
 				</Col>
 			</Row>
