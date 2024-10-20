@@ -62,7 +62,9 @@ export function Demo({
 			});
 		});
 
-		addIdToTagLabel(["tag not used"], tagsDemo); //add an unused tag as an example
+		//add unused tags as examples
+		addIdToTagLabel(["this tag is not used"], tagsDemo);
+		addIdToTagLabel(["another unused tag"], tagsDemo);
 	}
 
 	return (

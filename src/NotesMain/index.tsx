@@ -17,7 +17,7 @@ import {
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ReactSelect from "react-select";
-import { Note, Options, RawNote, Tag, TagWithNotesInfo } from "../App";
+import { Note, Options, RawNote, TagWithNotesInfo } from "../App";
 import { NotesList } from "./NotesList";
 
 type NoteListProps = {
@@ -46,7 +46,8 @@ export function NotesMain({
 	const tagsUsedByNotes = tagsWithNotesInfo.filter(
 		(tag) => tag.isUsedByNotes === true
 	); //this stores only tags that are used by note(s) (i.e. excluding tags that don't belong to any note)
-	const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
+
+	const [selectedTags, setSelectedTags] = useState<TagWithNotesInfo[]>([]);
 
 	const [title, setTitle] = useState("");
 
@@ -69,6 +70,13 @@ export function NotesMain({
 			);
 		});
 	}, [title, selectedTags, notesWithTags]);
+
+	function handleExcludeUnusedTagsOn() {
+		//remove unused tags from the selected tags
+		setSelectedTags((prevTags) => {
+			return prevTags.filter((prevTag) => prevTag.isUsedByNotes);
+		});
+	}
 
 	return (
 		<>
@@ -156,17 +164,41 @@ export function NotesMain({
 											//Chose ReactSelect component here (instead of CreatableReactSelect), because no new tag will be created
 
 											value={selectedTags.map((tag) => {
-												//CreatableReactSelect expects a label and an id
-												return { label: tag.label, value: tag.id };
+												//CreatableReactSelect expects at least a label and a value (id), in this case isUsedByNotes is an additional custom property
+												return {
+													label: tag.label,
+													value: tag.id,
+													isUsedByNotes: tag.isUsedByNotes,
+												};
 											})}
-											options={tagsUsedByNotes.map((tag) => {
-												return { label: tag.label, value: tag.id };
-											})}
+											options={
+												options.excludeUnusedTagsForSearch === true ||
+												options.excludeUnusedTagsForSearch ===
+													undefined /* this option is assumed to be true when undefined */
+													? tagsUsedByNotes.map((tag) => {
+															return {
+																label: tag.label,
+																value: tag.id,
+																isUsedByNotes: tag.isUsedByNotes,
+															};
+													  })
+													: tagsWithNotesInfo.map((tag) => {
+															return {
+																label: tag.label,
+																value: tag.id,
+																isUsedByNotes: tag.isUsedByNotes,
+															};
+													  })
+											}
 											onChange={(tags) => {
 												setSelectedTags(
 													tags.map((tag) => {
 														//This is what is actually stored, which can be converted from what CreatableReactSelect expects
-														return { label: tag.label, id: tag.value };
+														return {
+															label: tag.label,
+															id: tag.value,
+															isUsedByNotes: tag.isUsedByNotes,
+														};
 													})
 												);
 											}}
@@ -210,6 +242,25 @@ export function NotesMain({
 								</InputGroup>
 							</Form.Group>
 						</Stack>
+					</Form>
+					<Form className="mt-2">
+						<Form.Check
+							type={`checkbox`}
+							id={`search-mode-tab-toggle-excludeUnusedTagsForSearch`}
+							label={`Exclude unused tags from searchable tags (recommended)`}
+							disabled={tagsUsedByNotes.length === 0}
+							checked={
+								options.excludeUnusedTagsForSearch === undefined
+									? true
+									: options.excludeUnusedTagsForSearch
+							} //default value is assumed to be true when undefined
+							onChange={(e) => {
+								onUpdateOptions("excludeUnusedTagsForSearch", e.target.checked);
+								if (e.target.checked) {
+									handleExcludeUnusedTagsOn();
+								}
+							}}
+						/>
 					</Form>
 				</Tab>
 				<Tab
@@ -264,14 +315,18 @@ export function NotesMain({
 
 			<Overlay //fundamental component for positioning and controlling <Tooltip> visibility
 				target={tagsSelectRef.current}
-				show={showTagsSelectTooltip}
+				show={
+					showTagsSelectTooltip &&
+					!options.hideTooltips &&
+					selectedTags.some((tag) => tag.isUsedByNotes === false) //show the tooltip when 1 or more selected tags are unused
+				}
 				placement="top"
 			>
 				{
 					//passing injected props from <Overlay> directly to the <Tooltip> component
 					(props) => (
 						<Tooltip id="tags-select-overlay" {...props}>
-							Unused tags are excluded
+							contains unused tag(s), which returns no search result.
 						</Tooltip>
 					)
 				}

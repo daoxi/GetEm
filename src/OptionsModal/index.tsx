@@ -46,6 +46,17 @@ export function OptionsModal({
 						}}
 					/>
 				</Form>
+				<Form>
+					<Form.Check
+						type={`checkbox`}
+						id={`options-toggle-hideTooltips`}
+						label={`Hide tooltips`}
+						checked={options.hideTooltips || false} //the "checked" prop can't be undefined (hence the "|| false" to fix this), or else this input will initially be considered uncontrolled by React
+						onChange={(e) => {
+							onUpdateOptions("hideTooltips", e.target.checked);
+						}}
+					/>
+				</Form>
 			</Modal.Body>
 		</Modal>
 	);

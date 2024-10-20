@@ -58,7 +58,7 @@ function App() {
 
 	const [options, setOptions] = useLocalStorage<Options>("OPTIONS", {});
 	//default values are assumed for all undefined (i.e. not set yet) properties in options, and they are:
-	//hideDemoPerm : false; activeMainTabKey : "search"; deleteNoteRequireConfirm: true;
+	//hideDemoPerm : false; activeMainTabKey : "search"; deleteNoteRequireConfirm : true; excludeUnusedTagsForSearch : true; hideTooltips : false
 
 	const [notes, setNotes] = useLocalStorage<RawNote[]>("NOTES", []);
 	const [tags, setTags] = useLocalStorage<Tag[]>("TAGS", []);
