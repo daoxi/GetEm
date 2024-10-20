@@ -31,6 +31,21 @@ export function OptionsModal({
 						}}
 					/>
 				</Form>
+				<Form>
+					<Form.Check
+						type={`checkbox`}
+						id={`options-modal-toggle-deleteNoteRequireConfirm`}
+						label={`Requires confirmation when deleting a note`}
+						checked={
+							options.deleteNoteRequireConfirm === undefined
+								? true
+								: options.deleteNoteRequireConfirm
+						} //default value is assumed to be true when undefined
+						onChange={(e) => {
+							onUpdateOptions("deleteNoteRequireConfirm", e.target.checked);
+						}}
+					/>
+				</Form>
 			</Modal.Body>
 		</Modal>
 	);
