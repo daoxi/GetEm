@@ -78,14 +78,14 @@ export const NoteCard = forwardRef(
 						<Row>
 							<Col>
 								<Link to={`/${id}/edit`}>
-									<Button variant="primary" size="sm" className="w-100">
+									<Button variant="outline-primary" size="sm" className="w-100">
 										Edit
 									</Button>
 								</Link>
 							</Col>
 							<Col>
 								<Button
-									variant="danger"
+									variant="outline-danger"
 									size="sm"
 									className="w-100"
 									onClick={() => {
