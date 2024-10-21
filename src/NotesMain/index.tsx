@@ -82,7 +82,7 @@ export function NotesMain({
 		<>
 			<Row className="align-items-center mb-4">
 				<Col>
-					<h1>Notes</h1>
+					<h1>Getem</h1>
 				</Col>
 				<Col
 					xs="auto" /* use this to push the buttons all the way to the right side */
@@ -147,7 +147,7 @@ export function NotesMain({
 										disabled={notesWithTags.length === 0}
 										placeholder={
 											notesWithTags.length === 0
-												? "You haven't added any note yet"
+												? "No notes created yet"
 												: "Search as you type"
 										}
 									/>
@@ -208,12 +208,12 @@ export function NotesMain({
 											isDisabled={tagsUsedByNotes.length === 0}
 											placeholder={
 												tagsUsedByNotes.length === 0
-													? "You haven't added any tags to any note yet"
-													: "Select one from the dropdown or search"
+													? "No tags added to any note"
+													: "Search/select from dropdown"
 											}
 											noOptionsMessage={(userinput) =>
 												userinput.inputValue === ""
-													? "You haven't added any tags to any note yet"
+													? "You haven't added any tag to any note yet"
 													: 'No tags were found from your search "' +
 													  userinput.inputValue +
 													  '"'
@@ -308,7 +308,7 @@ export function NotesMain({
 						<p>Your search didn't match any notes.</p>
 					)
 				) : (
-					<p /* don't show any tip if the user hasn't added any notes, because the search field already shows the needed tip */
+					<p /* don't show any tip if the user hasn't created any notes, because the search field already shows the needed tip */
 					></p>
 				)
 			) : options.activeMainTabKey === "manage" ? (
@@ -320,7 +320,7 @@ export function NotesMain({
 						onDeleteNoteWithConfirm={onDeleteNoteWithConfirm}
 					/>
 				) : (
-					<p>You haven't added any notes yet.</p>
+					<p>You haven't created any note yet.</p>
 				)
 			) : (
 				<p>The active tab is unknown.</p>

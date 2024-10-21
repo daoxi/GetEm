@@ -78,7 +78,7 @@ export function Demo({
 				}}
 				dismissible
 			>
-				Would you like to add some new notes data for demo/test purpose? (this
+				Would you like to generate some new notes data for demo purpose? (this
 				won't overwrite your existing data)
 				<br />
 				<Row
@@ -98,7 +98,7 @@ export function Demo({
 						variant="success"
 						className="mx-2 my-2"
 					>
-						Add Once
+						Generate Once
 					</Button>
 					<Button
 						onClick={() => {
