@@ -268,21 +268,34 @@ export function NotesMain({
 					title={<b>Manage</b>}
 					className="mb-3 p-3 border border-top-0 rounded rounded-top-0"
 				>
-					<Form>
-						<Form.Check
-							type={`checkbox`}
-							id={`manage-mode-tab-toggle-deleteNoteRequireConfirm`}
-							label={`Requires confirmation when deleting a note`}
-							checked={
-								options.deleteNoteRequireConfirm === undefined
-									? true
-									: options.deleteNoteRequireConfirm
-							} //default value is assumed to be true when undefined
-							onChange={(e) => {
-								onUpdateOptions("deleteNoteRequireConfirm", e.target.checked);
-							}}
-						/>
-					</Form>
+					<Stack gap={3}>
+						<Button
+							onClick={() => setEditTagsModalIsOpen(true)}
+							variant="primary"
+						>
+							Edit All Tags
+						</Button>
+						<Form>
+							<Form.Check
+								type={`checkbox`}
+								id={`manage-mode-tab-toggle-deleteNoteRequireConfirm`}
+								label={`Requires confirmation when deleting a note`}
+								checked={
+									options.deleteNoteRequireConfirm === undefined
+										? true
+										: options.deleteNoteRequireConfirm
+								} //default value is assumed to be true when undefined
+								onChange={(e) => {
+									onUpdateOptions("deleteNoteRequireConfirm", e.target.checked);
+								}}
+							/>
+						</Form>
+						<span>
+							Tip: use the dotted pattern (
+							<span style={{ color: "rgba(0, 0, 0, 0.1)" }}>●</span>) to drag
+							and drop the notes to reorder them.
+						</span>
+					</Stack>
 				</Tab>
 			</Tabs>
 			{options.activeMainTabKey === undefined ||
