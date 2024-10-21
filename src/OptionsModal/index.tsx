@@ -20,6 +20,7 @@ export function OptionsModal({
 				<Modal.Title>Options</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
+				<h5>Demo</h5>
 				<Form>
 					<Form.Check
 						type={`checkbox`}
@@ -31,6 +32,8 @@ export function OptionsModal({
 						}}
 					/>
 				</Form>
+				<hr />
+				<h5>Notes</h5>
 				<Form>
 					<Form.Check
 						type={`checkbox`}
@@ -46,6 +49,8 @@ export function OptionsModal({
 						}}
 					/>
 				</Form>
+				<hr />
+				<h5>Misc</h5>
 				<Form>
 					<Form.Check
 						type={`checkbox`}

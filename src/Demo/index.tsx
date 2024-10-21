@@ -94,12 +94,11 @@ export function Demo({
 					<Button
 						onClick={() => {
 							handleDemo();
-							onUpdateOptions("hideDemoPerm", true);
 						}}
 						variant="success"
 						className="mx-2 my-2"
 					>
-						Add
+						Add Once
 					</Button>
 					<Button
 						onClick={() => {
