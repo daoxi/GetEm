@@ -81,7 +81,11 @@ export const TagEditItem = forwardRef(
 										? `${styles["draggable-handle-icon-active"]}`
 										: `${styles["draggable-handle-icon"]}`
 								}
-								style={{ padding: "0.25rem 0.5rem" }}
+								style={{
+									touchAction:
+										"none" /* this makes sure the drag-and-drop works properly on touch devices */,
+									padding: "0.25rem 0.5rem",
+								}}
 							>
 								<MdReorder className="fs-4" />
 							</InputGroup.Text>

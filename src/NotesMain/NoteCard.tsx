@@ -44,6 +44,10 @@ export const NoteCard = forwardRef(
 								? styles["drag-cursor-active"]
 								: styles["drag-cursor"]
 						}`}
+						style={{
+							touchAction:
+								"none" /* this makes sure the drag-and-drop works properly on touch devices */,
+						}}
 					/>
 					<Card.Body
 						as={Link}
