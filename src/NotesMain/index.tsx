@@ -80,14 +80,22 @@ export function NotesMain({
 
 	return (
 		<>
-			<Row className="align-items-center mb-4">
+			<Row
+				xs={1}
+				sm={1}
+				md={1}
+				lg={2}
+				xl={2}
+				xxl={2}
+				/* Set number of columns for different screen sizes */ className="align-items-center mb-4"
+			>
 				<Col>
 					<h1>Getem</h1>
 				</Col>
 				<Col
-					xs="auto" /* use this to push the buttons all the way to the right side */
+				//xs="auto" /* use this to push the buttons all the way to the right side */
 				>
-					<Stack gap={2} direction="horizontal" className="">
+					<Stack gap={2} direction="horizontal" className="justify-content-end">
 						<Link to="/new">
 							<Button variant="success">
 								<Stack gap={1} direction="horizontal">
@@ -237,7 +245,7 @@ export function NotesMain({
 										onClick={() => setEditTagsModalIsOpen(true)}
 										variant="primary"
 									>
-										Edit All Tags
+										Edit
 									</Button>
 								</InputGroup>
 							</Form.Group>
@@ -269,12 +277,28 @@ export function NotesMain({
 					className="mb-3 p-3 border border-top-0 rounded rounded-top-0"
 				>
 					<Stack gap={3}>
-						<Button
-							onClick={() => setEditTagsModalIsOpen(true)}
-							variant="primary"
+						<Row
+							xs={1}
+							sm={1}
+							md={1}
+							lg={2}
+							xl={2}
+							xxl={2}
+							/* Set number of columns for different screen sizes */
 						>
-							Edit All Tags
-						</Button>
+							<Col>
+								<div
+									className="d-grid gap-3" /* In <Button>'s direct-parent element, "d-grid" or <Stack> makes button(s) block-level (i.e. full width) */
+								>
+									<Button
+										onClick={() => setEditTagsModalIsOpen(true)}
+										variant="primary"
+									>
+										Edit All Tags
+									</Button>
+								</div>
+							</Col>
+						</Row>
 						<Form>
 							<Form.Check
 								type={`checkbox`}

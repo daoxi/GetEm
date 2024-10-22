@@ -59,7 +59,15 @@ export function NoteForm({
 		<>
 			<Form onSubmit={handleSubmit}>
 				<Stack gap={4}>
-					<Row>
+					<Row
+						xs={1}
+						sm={1}
+						md={1}
+						lg={2}
+						xl={2}
+						xxl={2}
+						/* Set number of columns for different screen sizes */
+					>
 						<Col>
 							<Form.Group controlId="title">
 								<Form.Label>Title</Form.Label>
@@ -129,7 +137,7 @@ export function NoteForm({
 										onClick={() => setEditTagsModalIsOpen(true)}
 										variant="primary"
 									>
-										Edit All Tags
+										Edit
 									</Button>
 								</InputGroup>
 							</Form.Group>

@@ -43,9 +43,11 @@ export function NotesList({
 		return (
 			<Row
 				xs={1}
-				sm={2}
-				lg={3}
-				xl={4}
+				sm={1}
+				md={1}
+				lg={2}
+				xl={3}
+				xxl={4}
 				/* Set number of columns for each screen size */ className="g-3" /* for gap */
 			>
 				{notesToList.map((note) => (
@@ -117,9 +119,11 @@ export function NotesList({
 				>
 					<Row
 						xs={1}
-						sm={2}
-						lg={3}
-						xl={4}
+						sm={1}
+						md={1}
+						lg={2}
+						xl={3}
+						xxl={4}
 						/* Set number of columns for each screen size */ className="g-3" /* for gap */
 					>
 						{notesToList.map((note) => (

@@ -12,8 +12,16 @@ export function ViewNote({ onDeleteNoteWithConfirm }: ViewNoteProps) {
 
 	return (
 		<>
-			<Row className="align-items-center mb-4">
-				<Col>
+			<Row
+				xs={1}
+				sm={1}
+				md={1}
+				lg={2}
+				xl={2}
+				xxl={2}
+				/* Set number of columns for different screen sizes */ className="align-items-center mb-4"
+			>
+				<Col className="mb-3">
 					<h1 style={{ overflowWrap: "anywhere" }}>{note.title}</h1>
 					{note.tags.length > 0 && (
 						<Stack gap={1} direction="horizontal" className="flex-wrap">
@@ -30,9 +38,9 @@ export function ViewNote({ onDeleteNoteWithConfirm }: ViewNoteProps) {
 					)}
 				</Col>
 				<Col
-					xs="auto" /* use this to push the buttons all the way to the right side */
+				//xs="auto" /* use this to push the buttons all the way to the right side */
 				>
-					<Stack gap={2} direction="horizontal">
+					<Stack gap={2} direction="horizontal" className="justify-content-end">
 						<Link to={`/${note.id}/edit`}>
 							<Button variant="primary">Edit</Button>
 						</Link>
