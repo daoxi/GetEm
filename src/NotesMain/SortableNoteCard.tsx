@@ -27,7 +27,7 @@ export function SortableNoteCard({
 	} = useSortable({ id: id });
 
 	const style = {
-		transform: CSS.Transform.toString(transform),
+		transform: CSS.Translate.toString(transform), //used CSS.Translate.toString() instead of CSS.Transform.toString(), in order to NOT apply the scale transformation (which will visually stretch draggable items if they're of different heights)
 		transition,
 		opacity: isDragging ? 0.2 : 1, //make the note's position display element semi-transparent while that note is being dragged
 	};
