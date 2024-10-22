@@ -58,7 +58,7 @@ function App() {
 
 	const [options, setOptions] = useLocalStorage<Options>("OPTIONS", {});
 	//default values are assumed for all undefined (i.e. not set yet) properties in options, and they are:
-	//hideDemoPerm : false; activeMainTabKey : "search"; deleteNoteRequireConfirm : true; excludeUnusedTagsForSearch : true; hideTooltips : false
+	//hideDemoPerm : false; activeMainTabKey : "search"; deleteNoteRequireConfirm : true; excludeUnusedTagsForSearch : true; hideTooltips : false; tagsOrderAffectNotes: true
 
 	const [notes, setNotes] = useLocalStorage<RawNote[]>("NOTES", []);
 	const [tags, setTags] = useLocalStorage<Tag[]>("TAGS", []);
@@ -73,16 +73,40 @@ function App() {
 	//tracks the id for the note to be deleted from Modal
 	const [deleteConfirmModalNoteId, setDeleteConfirmModalNoteId] = useState("");
 
-	//convert raw note into actual note with tags (instead of just with ids of tags), and update it whenever there's any change on the notes or tags
+	//convert raw note into actual note with tags (instead of just with ids of tags), and update it whenever there's any change on the related option or notes or tags
 	const notesWithTags: Note[] = useMemo(() => {
-		return notes.map((note) => {
-			//add all the tags (that have matching tag ids) to the raw note
-			return {
-				...note,
-				tags: tags.filter((tag) => note.tagIds.includes(tag.id)),
-			};
-		});
-	}, [notes, tags]);
+		if (
+			options.tagsOrderAffectNotes === undefined ||
+			options.tagsOrderAffectNotes ===
+				true /* this option is assumed to be true when undefined */
+		) {
+			return notes.map((note) => {
+				//add all the tags (that have matching tag ids) to the raw note
+				return {
+					...note,
+					tags: tags.filter((tag) =>
+						note.tagIds.includes(tag.id)
+					) /* this reorders the tags in the returned array, using order of tags from the "tags" state */,
+				};
+			});
+		} else {
+			return notes.map((note) => {
+				return {
+					...note,
+					tags: note.tagIds
+						.filter(
+							(tagId) =>
+								tags.find(
+									(tag) => tag.id === tagId
+								) /* first filter out all tagIds that can't be found in tags */
+						)
+						.map(
+							(tagId) => tags.find((tag) => tag.id === tagId)! //used non-null type assertion because the .filter() already filtered out all tagIds that can't be found in tags
+						) /* this keeps tags order (in the returned array) the same as note.tagIds */,
+				};
+			});
+		}
+	}, [options.tagsOrderAffectNotes, notes, tags]);
 
 	//this new array of tags has an additional boolean property to track whether the tag belongs to any note(s)
 	const tagsWithNotesInfo: TagWithNotesInfo[] = useMemo(() => {

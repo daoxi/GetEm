@@ -303,7 +303,7 @@ export function NotesMain({
 							<Form.Check
 								type={`checkbox`}
 								id={`manage-mode-tab-toggle-deleteNoteRequireConfirm`}
-								label={`Requires confirmation when deleting a note`}
+								label={`Require confirmation when deleting a note`}
 								checked={
 									options.deleteNoteRequireConfirm === undefined
 										? true

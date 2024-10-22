@@ -33,12 +33,12 @@ export function OptionsModal({
 					/>
 				</Form>
 				<hr />
-				<h5>Notes</h5>
+				<h5>Notes & Tags</h5>
 				<Form>
 					<Form.Check
 						type={`checkbox`}
 						id={`options-modal-toggle-deleteNoteRequireConfirm`}
-						label={`Requires confirmation when deleting a note`}
+						label={`Require confirmation when deleting a note`}
 						checked={
 							options.deleteNoteRequireConfirm === undefined
 								? true
@@ -46,6 +46,21 @@ export function OptionsModal({
 						} //default value is assumed to be true when undefined
 						onChange={(e) => {
 							onUpdateOptions("deleteNoteRequireConfirm", e.target.checked);
+						}}
+					/>
+				</Form>
+				<Form>
+					<Form.Check
+						type={`checkbox`}
+						id={`options-modal-toggle-tagsOrderAffectNotes`}
+						label={`Tags in notes are ordered (i.e. matches tags order in dropdown and modal)`}
+						checked={
+							options.tagsOrderAffectNotes === undefined
+								? true
+								: options.tagsOrderAffectNotes
+						} //default value is assumed to be true when undefined
+						onChange={(e) => {
+							onUpdateOptions("tagsOrderAffectNotes", e.target.checked);
 						}}
 					/>
 				</Form>
