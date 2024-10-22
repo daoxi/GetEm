@@ -198,8 +198,17 @@ function App() {
 
 	function onDeleteTag(id: string) {
 		setTags((prevTags) => {
-			onUpdateTag;
 			return prevTags.filter((tag) => tag.id !== id); //keeping all notes that are not supposed to be deleted
+		});
+
+		//also delete the tag from notes
+		setNotes((prevNotes) => {
+			return prevNotes.map((note) => {
+				return {
+					...note,
+					tagIds: note.tagIds.filter((tagId) => tagId !== id),
+				};
+			});
 		});
 	}
 
