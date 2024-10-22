@@ -58,7 +58,9 @@ export const NoteCard = forwardRef(
 							gap={2}
 							className="h-100 align-items-center justify-content-center"
 						>
-							<Card.Title>{title}</Card.Title>
+							<Card.Title style={{ overflowWrap: "anywhere" }}>
+								{title}
+							</Card.Title>
 							{tags.length > 0 && (
 								<Stack
 									gap={1}

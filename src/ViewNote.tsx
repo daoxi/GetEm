@@ -14,7 +14,7 @@ export function ViewNote({ onDeleteNoteWithConfirm }: ViewNoteProps) {
 		<>
 			<Row className="align-items-center mb-4">
 				<Col>
-					<h1>{note.title}</h1>
+					<h1 style={{ overflowWrap: "anywhere" }}>{note.title}</h1>
 					{note.tags.length > 0 && (
 						<Stack gap={1} direction="horizontal" className="flex-wrap">
 							{note.tags.map((tag) => (
