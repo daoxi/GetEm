@@ -59,6 +59,7 @@ function App() {
 	const [options, setOptions] = useLocalStorage<Options>("OPTIONS", {});
 	//default values are assumed for all undefined (i.e. not set yet) properties in options, and they are:
 	//hideDemoPerm : false; activeMainTabKey : "search"; deleteNoteRequireConfirm : true; excludeUnusedTagsForSearch : true; hideTooltips : false; tagsOrderAffectNotes: true
+	//maxNoteTitleLength : 80;
 
 	const [notes, setNotes] = useLocalStorage<RawNote[]>("NOTES", []);
 	const [tags, setTags] = useLocalStorage<Tag[]>("TAGS", []);
@@ -247,6 +248,7 @@ function App() {
 						element={
 							<>
 								<NewNote
+									options={options}
 									onSubmit={onCreateNote}
 									onAddTag={onAddTag}
 									tagsWithNotesInfo={tagsWithNotesInfo}
@@ -269,6 +271,7 @@ function App() {
 							path="edit"
 							element={
 								<EditNote
+									options={options}
 									onSubmit={onUpdateNote}
 									onAddTag={onAddTag}
 									tagsWithNotesInfo={tagsWithNotesInfo}

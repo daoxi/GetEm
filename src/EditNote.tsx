@@ -1,9 +1,10 @@
-import { NoteData, Tag, TagWithNotesInfo } from "./App";
+import { NoteData, Options, Tag, TagWithNotesInfo } from "./App";
 import { NoteForm } from "./NoteForm";
 import { useNote } from "./NoteOutlet";
 
 type EditNoteProps = {
 	//similar to NoteForm
+	options: Options;
 	onSubmit: (id: string, data: NoteData) => void;
 	onAddTag: (tag: Tag) => void;
 	tagsWithNotesInfo: TagWithNotesInfo[];
@@ -11,6 +12,7 @@ type EditNoteProps = {
 };
 
 export function EditNote({
+	options,
 	onSubmit,
 	onAddTag,
 	tagsWithNotesInfo,
@@ -21,6 +23,7 @@ export function EditNote({
 		<>
 			<h1 className="mb-4">Edit Note</h1>
 			<NoteForm
+				options={options}
 				title={note.title}
 				body={note.body}
 				tags={note.tags}

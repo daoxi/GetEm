@@ -4,10 +4,11 @@ import { FormEvent, useRef, useState } from "react";
 import { Form, Stack, Col, Row, Button, InputGroup } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import CreatableReactSelect from "react-select/creatable";
-import { NoteData, Tag, TagWithNotesInfo } from "./App";
+import { NoteData, Options, Tag, TagWithNotesInfo } from "./App";
 import { v4 as uuidV4 } from "uuid";
 
 type NoteFormProps = {
+	options: Options;
 	onSubmit: (data: NoteData) => void;
 	onAddTag: (tag: Tag) => void;
 	tagsWithNotesInfo: TagWithNotesInfo[];
@@ -15,6 +16,7 @@ type NoteFormProps = {
 } & Partial<NoteData>; // use Partial to make NoteData optional
 
 export function NoteForm({
+	options,
 	onSubmit,
 	onAddTag,
 	tagsWithNotesInfo,
@@ -26,6 +28,7 @@ export function NoteForm({
 	const titleRef = useRef<HTMLInputElement>(null);
 	const bodyRef = useRef<HTMLTextAreaElement>(null);
 	const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
+	const [noteFormTitle, setNoteFormTitle] = useState(title);
 
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -74,12 +77,17 @@ export function NoteForm({
 								<Form.Control
 									ref={titleRef}
 									required
-									defaultValue={title}
-									maxLength={100}
+									value={noteFormTitle}
+									onChange={(e) => {
+										setNoteFormTitle(e.target.value);
+									}}
+									maxLength={options.maxNoteTitleLength}
 									aria-describedby="titleInputHelp"
 								/>
 								<Form.Text id="titleInputHelp" muted>
-									You can enter up to 100 characters.
+									You can enter{" "}
+									{options.maxNoteTitleLength - noteFormTitle.length} more
+									characters.
 								</Form.Text>
 							</Form.Group>
 						</Col>
