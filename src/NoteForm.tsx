@@ -86,8 +86,11 @@ export function NoteForm({
 								/>
 								<Form.Text id="titleInputHelp" muted>
 									You can enter{" "}
-									{options.maxNoteTitleLength - noteFormTitle.length} more
-									characters.
+									{options.maxNoteTitleLength
+										? options.maxNoteTitleLength - noteFormTitle.length
+										: 80 /* this option is assumed to be 80 when undefined */ -
+										  noteFormTitle.length}{" "}
+									more characters.
 								</Form.Text>
 							</Form.Group>
 						</Col>
