@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form } from "react-bootstrap";
 import { Options } from "../App";
 
@@ -35,6 +35,13 @@ export function OptionsRangeSlider({
 			return;
 		}
 	}
+
+	//update the controlled component whenever the related option changes by itself (e.g. resetting to default value (including if it's undefined))
+	useEffect(() => {
+		if (options[optionName] !== optionValueControl) {
+			setOptionValueControl(optionValueInitial);
+		}
+	}, [options[optionName]]);
 
 	return (
 		<Form>

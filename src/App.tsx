@@ -288,6 +288,7 @@ function App() {
 				show={optionsModalIsOpen}
 				handleClose={() => setOptionsModalIsOpen(false)}
 				options={options}
+				setOptions={setOptions}
 				onUpdateOptions={onUpdateOptions}
 			/>
 			<EditTagsModal

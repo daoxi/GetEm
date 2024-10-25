@@ -1,4 +1,4 @@
-import { Form, Modal } from "react-bootstrap";
+import { Button, Form, Modal } from "react-bootstrap";
 import { Options } from "../App";
 import { OptionsRangeSlider } from "../OptionsRangeSlider";
 
@@ -6,6 +6,7 @@ type OptionsModalProps = {
 	show: boolean;
 	handleClose: () => void;
 	options: Options;
+	setOptions: (newOptions: Options) => void;
 	onUpdateOptions: (optionName: string, newValue: any) => void;
 };
 
@@ -13,6 +14,7 @@ export function OptionsModal({
 	show,
 	handleClose,
 	options,
+	setOptions,
 	onUpdateOptions,
 }: OptionsModalProps) {
 	return (
@@ -50,6 +52,7 @@ export function OptionsModal({
 						}}
 					/>
 				</Form>
+				<div className="mb-3"></div>
 				<OptionsRangeSlider
 					options={options}
 					onUpdateOptions={onUpdateOptions}
@@ -77,6 +80,7 @@ export function OptionsModal({
 						}}
 					/>
 				</Form>
+				<div className="mb-3"></div>
 				<OptionsRangeSlider
 					options={options}
 					onUpdateOptions={onUpdateOptions}
@@ -100,6 +104,20 @@ export function OptionsModal({
 						}}
 					/>
 				</Form>
+				<div className="mb-5"></div>
+				<div
+					className="d-grid gap-2" /* "d-grid" makes block-level (full-width) buttons */
+				>
+					<Button
+						variant="primary"
+						onClick={() => {
+							setOptions({});
+							console.log("Default options are restored");
+						}}
+					>
+						Restore Default Options
+					</Button>
+				</div>
 			</Modal.Body>
 		</Modal>
 	);
