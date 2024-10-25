@@ -18,7 +18,7 @@ import {
 } from "@dnd-kit/sortable";
 //"The following" ends
 
-import { Tag, TagWithNotesInfo } from "../App";
+import { Options, Tag, TagWithNotesInfo } from "../App";
 import {
 	Stack,
 	Form,
@@ -34,6 +34,7 @@ import { TagEditItem } from "./TagEditItem";
 type EditTagsModalProps = {
 	show: boolean;
 	handleClose: () => void;
+	options: Options;
 	tagsWithNotesInfo: TagWithNotesInfo[];
 	onUpdateTag: (id: string, label: string) => void;
 	onDeleteTag: (id: string) => void;
@@ -47,6 +48,7 @@ export type TagInputWithStatus = {
 export function EditTagsModal({
 	show,
 	handleClose,
+	options,
 	tagsWithNotesInfo,
 	onUpdateTag,
 	onDeleteTag,
@@ -98,8 +100,10 @@ export function EditTagsModal({
 		});
 	}
 
-	//use a single constant to manage max length for input tag
-	const maxtagInputLength = 30;
+	//used to manage max length for input tag label
+	let maxTagLabelLength = options.maxTagLabelLength
+		? options.maxTagLabelLength
+		: 30; //this option is assumed to be 30 when undefined
 
 	//tagsInputWithStatus gets updated whenever tagsInput or tagsWithNotesInfo changes
 	const tagsInputWithStatus: TagInputWithStatus[] = useMemo(() => {
@@ -107,7 +111,7 @@ export function EditTagsModal({
 			let status = "unknown";
 			if (tagInput.label === "") {
 				status = "empty";
-			} else if (tagInput.label.length > maxtagInputLength) {
+			} else if (tagInput.label.length > maxTagLabelLength) {
 				status = "overlong";
 			} else if (
 				tagsInput
@@ -133,7 +137,7 @@ export function EditTagsModal({
 			}
 			return { ...tagInput, status: status };
 		});
-	}, [tagsInput, tagsWithNotesInfo]);
+	}, [maxTagLabelLength, tagsInput, tagsWithNotesInfo]);
 
 	//referenced from the dnd-kit web-documentation "Sortable" template
 	const sensors = useSensors(
@@ -230,7 +234,7 @@ export function EditTagsModal({
 									<SortableTagEditItem
 										key={tagInputWithStatus.id}
 										tagInputWithStatus={tagInputWithStatus}
-										maxtagInputLength={maxtagInputLength}
+										maxTagLabelLength={maxTagLabelLength}
 										onUpdateTagInput={onUpdateTagInput}
 										onUpdateTag={onUpdateTag}
 										onDeleteTag={onDeleteTag}
@@ -275,12 +279,13 @@ export function EditTagsModal({
 										</p>
 										<p>
 											Editing a tag affects <strong>all</strong> notes that use
-											the tag.
+											this tag.
 										</p>
 										<p>
-											Empty, overlong ({">"}
-											{maxtagInputLength} chars.) or duplicate (same label) tags
-											are <strong>not allowed</strong>.
+											Invalid tags <strong>can't be saved,</strong> e.g.{" "}
+											<strong>empty</strong>, <strong>duplicate</strong> (same
+											label) , or <strong>overlong</strong> (caused by lowering length limit, current limit:{" "}
+											<strong>{maxTagLabelLength}</strong>).
 										</p>
 									</Stack>
 								</Accordion.Body>
@@ -288,14 +293,15 @@ export function EditTagsModal({
 							<Accordion.Item eventKey="1">
 								<Accordion.Header>Colors</Accordion.Header>
 								<Accordion.Body>
-									<h6>Tag label:</h6>
+									<h6>Tag labels:</h6>
 									<p>
 										<span className="border border-success py-1 px-2">
 											Green border
 										</span>
 										<span>
 											{" "}
-											means the tag label is up to date with saved data.
+											means the tag label is valid and up to date with saved
+											data.
 										</span>
 									</p>
 									<p>
@@ -314,11 +320,11 @@ export function EditTagsModal({
 										</span>
 										<span>
 											{" "}
-											means the tag label is invalid (e.g. empty/duplicate), and
-											thus can't be saved.
+											means the tag label is invalid (e.g.
+											empty/duplicate/overlong), and thus can't be saved.
 										</span>
 									</p>
-									<h6>Delete button:</h6>
+									<h6>Tag delete buttons:</h6>
 									<span className="text-warning border rounded border-warning py-0 px-1">
 										✕
 									</span>{" "}

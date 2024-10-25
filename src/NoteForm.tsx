@@ -31,11 +31,15 @@ export function NoteForm({
 	const [noteFormTitle, setNoteFormTitle] = useState(title);
 	const [noteTitleIsEdited, setNoteTitleIsEdited] = useState(false);
 	const [noteTitleIsFocused, setNoteTitleIsFocused] = useState(false);
+	const [noteTagInput, setNoteTagInput] = useState("");
 
 	const maxNoteTitleLength = options.maxNoteTitleLength
 		? options.maxNoteTitleLength
 		: 80; //this option is assumed to be 80 when undefined
 	let remainingNoteTitleLength = maxNoteTitleLength - noteFormTitle.length;
+	const maxTagLabelLength = options.maxTagLabelLength
+		? options.maxTagLabelLength
+		: 30; //this option is assumed to be 30 when undefined
 
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -127,20 +131,57 @@ export function NoteForm({
 							<Form.Group controlId="tags">
 								<Form.Label>Tags</Form.Label>
 								<InputGroup>
-									<Col>
+									<Col
+										style={{
+											minWidth: 0 /* set this on the parent element of the react-select component, to indicate it's okay to shrink, 
+											and this fixes the issue that when having very long input or tags, the react-select component will expand past the expected width */,
+										}}
+									>
 										<CreatableReactSelect
-											//onCreateOption is fired when user creates a new tag, label is the input that the user typed in
+											inputValue={noteTagInput}
+											onInputChange={(newValue) => {
+												setNoteTagInput(newValue);
+											}}
+											isValidNewOption={
+												(
+													inputValue,
+													_value /* prefixing underscore indicates unused argument */,
+													options
+												) =>
+													inputValue.length > 0 &&
+													inputValue.length <= maxTagLabelLength &&
+													options.every((option) => option.label !== inputValue) //make sure the input value doesn't already exist in options
+											} //this prop determines whether the option to create a new option will be displayed
+											formatCreateLabel={(inputValue) => (
+												<>
+													<strong>
+														<span className="text-success">Create</span> new
+														tag: <br />
+														<span>"{inputValue}"</span>
+													</strong>
+													<br />
+													<span>
+														(
+														{maxTagLabelLength - inputValue.length > 0
+															? `You can enter ${
+																	maxTagLabelLength - inputValue.length
+															  } more character(s)`
+															: `You can't enter any more characters for creating a new tag`}
+														)
+													</span>
+												</>
+											)}
+											createOptionPosition={"first"} //Sets the position of the element (for creating a new option) in your options list. Defaults to "last"
 											onCreateOption={(label) => {
 												const newTag = { id: uuidV4(), label };
 												onAddTag(newTag);
 												//automatically add new tag to the currently selected tags by default
 												setSelectedTags((prev) => [...prev, newTag]);
-											}}
+											}} /* onCreateOption is fired when user creates a new tag, label is the input that the user typed in */
 											value={selectedTags.map((tag) => {
 												//CreatableReactSelect expects a label and an id
 												return { label: tag.label, value: tag.id };
-											})}
-											//when user creates a new tag, it does not fire onChange, instead it fires onCreateOption
+											})} //value is all the options selected, it's NOT the input value
 											options={tagsWithNotesInfo.map((tags) => {
 												return { label: tags.label, value: tags.id };
 											})}
@@ -151,17 +192,24 @@ export function NoteForm({
 														return { label: tag.label, id: tag.value };
 													})
 												);
-											}}
+											}} /* when user creates a new tag, it does not fire onChange, instead it fires onCreateOption */
 											isMulti
 											inputId="tags" //matches controlId from parent component <Form.Group>
-											className="flex-fill" //use flex-fill to grow to match the remaining width (not mandatory if the component is already wrapped by <Col>)
+											className="" //use "flex-fill" to grow to match the remaining width (not mandatory if the component is already wrapped by <Col>)
 											placeholder="Add tags"
 											noOptionsMessage={(userinput) =>
 												userinput.inputValue === ""
-													? "No selectable tags, start typing to add a new one"
-													: 'No tags were found from your search "' +
-													  userinput.inputValue +
-													  '"'
+													? `No selectable tags, start typing to add a new one`
+													: selectedTags.some(
+															(selectedTag) =>
+																selectedTag.label === userinput.inputValue
+													  ) //check if the input matches any of the already-selected tags
+													? `The tag "${userinput.inputValue}" has already been added`
+													: `Your input is longer than the set limit by ${
+															userinput.inputValue.length - maxTagLabelLength
+													  } character(s) for creating a new tag, and no tags were found from your search: "${
+															userinput.inputValue
+													  }"`
 											}
 											styles={{
 												control: (baseStyles) => ({
@@ -169,6 +217,10 @@ export function NoteForm({
 													//remove rounded corners on right side to align with the button better
 													borderTopRightRadius: 0,
 													borderBottomRightRadius: 0,
+												}),
+												menu: (baseStyles) => ({
+													...baseStyles,
+													overflowWrap: "anywhere", //do this to prevent dropdown menu horizontal scroll on very-long single word
 												}),
 											}}
 										/>

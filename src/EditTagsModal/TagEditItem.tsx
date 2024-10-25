@@ -21,7 +21,7 @@ type TagEditItemProps = {
 
 type TagEditItemPropsOptional = {
 	//below are not needed when using this component inside <DragOverlay> as visual element
-	maxtagInputLength: number;
+	maxTagLabelLength: number;
 	onUpdateTagInput: (id: string, label: string) => void;
 	onUpdateTag: (id: string, label: string) => void;
 	onDeleteTag: (id: string) => void;
@@ -35,7 +35,7 @@ export const TagEditItem = forwardRef(
 	(
 		{
 			tagInputWithStatus,
-			maxtagInputLength,
+			maxTagLabelLength,
 			onUpdateTagInput,
 			onUpdateTag,
 			onDeleteTag,
@@ -95,7 +95,7 @@ export const TagEditItem = forwardRef(
 								value={tagInputWithStatus.label}
 								isInvalid={borderClassName === "border-danger"}
 								className={"" + borderClassName}
-								maxLength={maxtagInputLength}
+								maxLength={maxTagLabelLength}
 								aria-describedby="tagInputTips"
 								onChange={
 									(e) =>
@@ -132,28 +132,33 @@ export const TagEditItem = forwardRef(
 							{tagInputWithStatus.status === "empty" ? (
 								<span className="text-danger">Tag label can't be empty.</span>
 							) : tagInputWithStatus.status === "overlong" ? (
-								<span className="text-danger">The tag label is too long.</span>
+								<span className="text-danger">
+									The tag label is longer than the set limit by{" "}
+									{maxTagLabelLength &&
+										tagInputWithStatus.label.length - maxTagLabelLength}{" "}
+									characters.
+								</span>
 							) : tagInputWithStatus.status === "duplicate" ? (
 								<span className="text-danger">
 									Duplicate tag labels are not allowed.
 								</span>
 							) : isFocused === true ? (
-								maxtagInputLength &&
+								maxTagLabelLength &&
 								/* short-circuiting to check if it's undefined first */ tagInputWithStatus
-									.label.length < maxtagInputLength ? (
+									.label.length < maxTagLabelLength ? (
 									<span className="text-muted">
 										You can enter{" "}
-										{maxtagInputLength - tagInputWithStatus.label.length} more
+										{maxTagLabelLength - tagInputWithStatus.label.length} more
 										characters.
 									</span>
-								) : tagInputWithStatus.label.length === maxtagInputLength ? (
+								) : tagInputWithStatus.label.length === maxTagLabelLength ? (
 									<span className="text-muted">
 										You have entered the maximum number of characters.
 									</span>
 								) : (
 									<span>
-										You have entered too many characters (which shouldn't be
-										possible).
+										(this shouldn't be
+										possible)
 									</span>
 								)
 							) : (

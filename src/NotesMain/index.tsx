@@ -167,6 +167,10 @@ export function NotesMain({
 									<Col
 										ref={tagsSelectRef}
 										/* Use <Col> to wrap <ReactSelect> in order to properly display the Bootstrap <Tooltip> */
+										style={{
+											minWidth: 0 /* set this on the parent element of the react-select component, to indicate it's okay to shrink, 
+											and this fixes the issue that when having very long input or tags, the react-select component will expand past the expected width */,
+										}}
 									>
 										<ReactSelect
 											//Chose ReactSelect component here (instead of CreatableReactSelect), because no new tag will be created
@@ -237,6 +241,10 @@ export function NotesMain({
 													...baseStyles,
 													//remove rounded corners on left and right side to align with elements on both sides better
 													borderRadius: 0,
+												}),
+												menu: (baseStyles) => ({
+													...baseStyles,
+													overflowWrap: "anywhere", //do this to prevent dropdown menu horizontal scroll on very-long single word
 												}),
 											}}
 										/>

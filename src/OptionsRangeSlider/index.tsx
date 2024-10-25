@@ -48,7 +48,7 @@ export function OptionsRangeSlider({
 				max={maxValue}
 				value={optionValueControl}
 				onChange={(e) => {
-					setOptionValueControl(e.target.value);
+					setOptionValueControl(e.target.valueAsNumber); //use valueAsNumber instead of value, otherwise it will return string type
 				}}
 				//The following events are for tracking when the user has finished sliding the range slider,
 				//this approach reduces the frequency that the locally-stored options get updated (which could also be useful when the app needs to communicate with the server whenever options are updated)
