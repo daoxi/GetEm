@@ -29,6 +29,13 @@ export function NoteForm({
 	const bodyRef = useRef<HTMLTextAreaElement>(null);
 	const [selectedTags, setSelectedTags] = useState<Tag[]>(tags);
 	const [noteFormTitle, setNoteFormTitle] = useState(title);
+	const [noteTitleIsEdited, setNoteTitleIsEdited] = useState(false);
+	const [noteTitleIsFocused, setNoteTitleIsFocused] = useState(false);
+
+	const maxNoteTitleLength = options.maxNoteTitleLength
+		? options.maxNoteTitleLength
+		: 80; //this option is assumed to be 80 when undefined
+	let remainingNoteTitleLength = maxNoteTitleLength - noteFormTitle.length;
 
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -80,17 +87,39 @@ export function NoteForm({
 									value={noteFormTitle}
 									onChange={(e) => {
 										setNoteFormTitle(e.target.value);
+										setNoteTitleIsEdited(true);
 									}}
-									maxLength={options.maxNoteTitleLength}
+									onFocus={() => setNoteTitleIsFocused(true)}
+									onBlur={() => setNoteTitleIsFocused(false)}
+									maxLength={maxNoteTitleLength} //browser may use maxLength to validate the form, but only after user has edited this input (tested on Chrome and Firefox)
 									aria-describedby="titleInputHelp"
+									isInvalid={
+										remainingNoteTitleLength < 0 &&
+										noteTitleIsEdited /* the maxLength validation only works after the user has edited the input */
+									}
 								/>
-								<Form.Text id="titleInputHelp" muted>
-									You can enter{" "}
-									{options.maxNoteTitleLength
-										? options.maxNoteTitleLength - noteFormTitle.length
-										: 80 /* this option is assumed to be 80 when undefined */ -
-										  noteFormTitle.length}{" "}
-									more characters.
+								<Form.Text
+									id="titleInputHelp"
+									className={`${
+										remainingNoteTitleLength < 0
+											? noteTitleIsEdited
+												? "text-danger"
+												: "text-warning"
+											: "text-muted"
+									}`}
+								>
+									{remainingNoteTitleLength > 0
+										? noteTitleIsFocused &&
+										  `You can enter ${remainingNoteTitleLength} more
+									character(s)`
+										: remainingNoteTitleLength === 0
+										? noteTitleIsFocused &&
+										  `You have reached the max set limit of characters`
+										: remainingNoteTitleLength < 0
+										? noteTitleIsEdited
+											? `Your title is longer than the set limit by ${-remainingNoteTitleLength} character(s)`
+											: `Your title is longer than your reduced limit (consider either shortening the title or increasing the limit)`
+										: `Did you set a characters limit?`}
 								</Form.Text>
 							</Form.Group>
 						</Col>
