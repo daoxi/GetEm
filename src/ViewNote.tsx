@@ -2,6 +2,7 @@ import { Badge, Button, Col, Row, Stack } from "react-bootstrap";
 import { useNote } from "./NoteOutlet";
 import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
+import styles from "./ViewNote.module.scss";
 
 type ViewNoteProps = {
 	onDeleteNoteWithConfirm: (id: string) => void;
@@ -59,6 +60,7 @@ export function ViewNote({ onDeleteNoteWithConfirm }: ViewNoteProps) {
 				</Col>
 			</Row>
 			<ReactMarkdown /* checkboxes are part of GitHub Flavored Markdown (GFM), check react-markdown for more info on how to enabled it through a plugin */
+				className={`${styles["react-markdown"]}`}
 			>
 				{note.body}
 			</ReactMarkdown>
