@@ -1,3 +1,7 @@
+//Icon imports start
+import { MdDeleteForever } from "react-icons/md";
+//Icon imports end
+
 //The following imports are partially referenced from the dnd-kit web-documentation "Sortable" template
 import {
 	DndContext,
@@ -284,7 +288,8 @@ export function EditTagsModal({
 										<p>
 											Invalid tags <strong>can't be saved,</strong> e.g.{" "}
 											<strong>empty</strong>, <strong>duplicate</strong> (same
-											label) , or <strong>overlong</strong> (caused by lowering length limit, current limit:{" "}
+											label) , or <strong>overlong</strong> (caused by lowering
+											length limit, current limit:{" "}
 											<strong>{maxTagLabelLength}</strong>).
 										</p>
 									</Stack>
@@ -325,8 +330,15 @@ export function EditTagsModal({
 										</span>
 									</p>
 									<h6>Tag delete buttons:</h6>
-									<span className="text-warning border rounded border-warning py-0 px-1">
-										✕
+									<span>
+										<div
+											className="d-inline-block text-warning border rounded border-warning"
+											style={{ padding: "0.2rem 0.3rem" }}
+										>
+											<div className="d-flex align-items-center">
+												<MdDeleteForever className="fs-5" />
+											</div>
+										</div>
 									</span>{" "}
 									(yellow delete button) means the tag is not currently being
 									used by any notes (thus deleting it won't affect any notes).

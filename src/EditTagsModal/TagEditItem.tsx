@@ -1,6 +1,7 @@
 //Icon imports start
 import { MdReorder } from "react-icons/md";
 import { MdSave } from "react-icons/md";
+import { MdDeleteForever } from "react-icons/md";
 //Icon imports end
 import { forwardRef, useState } from "react";
 import {
@@ -156,10 +157,7 @@ export const TagEditItem = forwardRef(
 										You have entered the maximum number of characters.
 									</span>
 								) : (
-									<span>
-										(this shouldn't be
-										possible)
-									</span>
+									<span>(this shouldn't be possible)</span>
 								)
 							) : (
 								<span></span>
@@ -168,7 +166,7 @@ export const TagEditItem = forwardRef(
 					</Col>
 
 					<Col xs="auto" className={isBeingDraggedClassName}>
-						<Stack direction="horizontal" gap={2}>
+						<Stack direction="horizontal" gap={2} style={{ height: "100%" }}>
 							<Button
 								variant={
 									tagInputWithStatus.isUsedByNotes
@@ -178,8 +176,11 @@ export const TagEditItem = forwardRef(
 								onClick={
 									() => onDeleteTag && onDeleteTag(tagInputWithStatus.id) //used short-circuiting to first check the onDeleteTag is not undefined (because onDeleteTag is an optional prop)
 								}
+								style={{ padding: "0.25rem 0.5rem", height: "100%" }}
 							>
-								<strong>✕</strong>
+								<div className="d-flex align-items-center">
+									<MdDeleteForever className="fs-4" />
+								</div>
 							</Button>
 						</Stack>
 					</Col>
