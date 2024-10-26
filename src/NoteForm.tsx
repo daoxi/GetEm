@@ -41,6 +41,7 @@ export function NoteForm({
 	const [noteTitleIsEdited, setNoteTitleIsEdited] = useState(false);
 	const [noteTitleIsFocused, setNoteTitleIsFocused] = useState(false);
 	const [noteTagInput, setNoteTagInput] = useState("");
+	const [formValidated, setFormValidated] = useState(false);
 
 	const maxNoteTitleLength = options.maxNoteTitleLength
 		? options.maxNoteTitleLength
@@ -70,22 +71,30 @@ export function NoteForm({
 	const [showTagsCreatableTooltip, setShowTagsCreatableTooltip] =
 		useState(false);
 
-	function handleSubmit(e: FormEvent) {
-		e.preventDefault();
+	function handleSubmit(event: FormEvent<HTMLFormElement>) {
+		event.preventDefault(); //this is needed for both when the form is invalid and valid
 
-		onSubmit({
-			//these values can't be null because they're required (as specified in the <Form.Control/> components), hence the non-null type assertion
-			title: titleRef.current!.value,
-			body: bodyRef.current!.value,
-			tags: selectedTags,
-		});
-
-		navigateBack();
+		//the following condition check and actions are needed when the "noValidate" prop is set on <Form>
+		if (event.currentTarget.checkValidity() === false) {
+			event.stopPropagation();
+			setFormValidated(true);
+		} else {
+			onSubmit({
+				title: titleRef.current!.value, //this value can't be null because it's required (as specified in the <Form.Control/> component), hence the non-null type assertion
+				body: bodyRef.current ? bodyRef.current.value : "", //send an empty string if it's null
+				tags: selectedTags,
+			});
+			navigateBack();
+		}
 	}
 
 	return (
 		<>
-			<Form onSubmit={handleSubmit}>
+			<Form
+				onSubmit={handleSubmit}
+				noValidate /* The "noValidate" prop can disable the default validation UI (which is inconsistent across different browsers), 
+				but it will also disable the browser's behavior that prevents invalid form submission (which is okay if the submission is handled manually or if a form library (e.g. Formik) is used) */
+			>
 				<Stack gap={4}>
 					<Row
 						xs={1}
@@ -97,7 +106,14 @@ export function NoteForm({
 						/* Set number of columns for different screen sizes */
 					>
 						<Col>
-							<Form.Group controlId="title">
+							<Form.Group
+								controlId="title"
+								className={`${
+									formValidated
+										? "was-validated" /* the "was-validated" class name is equivalent to setting the "validated" prop on <Form>, this only affects validation styles */
+										: ""
+								}`}
+							>
 								<Form.Label>Title</Form.Label>
 								<Form.Control
 									ref={titleRef}
@@ -119,19 +135,23 @@ export function NoteForm({
 								<Form.Text
 									id="titleInputHelp"
 									className={`${
-										remainingNoteTitleLength < 0
+										formValidated && noteFormTitle.length === 0
+											? "text-danger"
+											: remainingNoteTitleLength < 0
 											? noteTitleIsEdited
 												? "text-danger"
 												: "text-warning"
 											: "text-muted"
 									}`}
 								>
-									{remainingNoteTitleLength > 0
-										? noteTitleIsFocused &&
+									{formValidated && noteFormTitle.length === 0
+										? "Note title can't be empty"
+										: remainingNoteTitleLength > 0
+										? noteTitleIsFocused && //short-circuiting
 										  `You can enter ${remainingNoteTitleLength} more
 									character(s)`
 										: remainingNoteTitleLength === 0
-										? noteTitleIsFocused &&
+										? noteTitleIsFocused && //short-circuiting
 										  `You have reached the max set limit of characters`
 										: remainingNoteTitleLength < 0
 										? noteTitleIsEdited
@@ -261,7 +281,6 @@ export function NoteForm({
 						<Form.Label>Body</Form.Label>
 						<Form.Control
 							defaultValue={body}
-							required
 							as="textarea"
 							ref={bodyRef}
 							rows={18}
