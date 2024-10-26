@@ -1,7 +1,16 @@
 //Used for both creating new and and editing existing notes
 
 import { FormEvent, useRef, useState } from "react";
-import { Form, Stack, Col, Row, Button, InputGroup } from "react-bootstrap";
+import {
+	Form,
+	Stack,
+	Col,
+	Row,
+	Button,
+	InputGroup,
+	Overlay,
+	Tooltip,
+} from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import CreatableReactSelect from "react-select/creatable";
 import { NoteData, Options, Tag, TagWithNotesInfo } from "./App";
@@ -55,6 +64,11 @@ export function NoteForm({
 			); /* navigate back to the previous visited page (which should be within the app, thanks to the condition checking) */
 		}
 	}
+
+	//both for displaying Bootstrap <Tooltip>
+	const tagsCreatableRef = useRef(null);
+	const [showTagsCreatableTooltip, setShowTagsCreatableTooltip] =
+		useState(false);
 
 	function handleSubmit(e: FormEvent) {
 		e.preventDefault();
@@ -132,6 +146,8 @@ export function NoteForm({
 								<Form.Label>Tags</Form.Label>
 								<InputGroup>
 									<Col
+										ref={tagsCreatableRef}
+										/* Use <Col> to wrap <CreatableReactSelect> in order to properly display the Bootstrap <Tooltip> */
 										style={{
 											minWidth: 0 /* set this on the parent element of the react-select component, to indicate it's okay to shrink, 
 											and this fixes the issue that when having very long input or tags, the react-select component will expand past the expected width */,
@@ -193,6 +209,12 @@ export function NoteForm({
 													})
 												);
 											}} /* when user creates a new tag, it does not fire onChange, instead it fires onCreateOption */
+											onFocus={() => {
+												setShowTagsCreatableTooltip(true);
+											}}
+											onBlur={() => {
+												setShowTagsCreatableTooltip(false);
+											}}
 											isMulti
 											inputId="tags" //matches controlId from parent component <Form.Group>
 											className="" //use "flex-fill" to grow to match the remaining width (not mandatory if the component is already wrapped by <Col>)
@@ -259,6 +281,24 @@ export function NoteForm({
 					</Stack>
 				</Stack>
 			</Form>
+			<Overlay //fundamental component for positioning and controlling <Tooltip> visibility
+				target={tagsCreatableRef.current}
+				show={
+					showTagsCreatableTooltip &&
+					!options.hideTooltips &&
+					noteTagInput.length === 0 //show the tooltip only if the user hasn't typed anything
+				}
+				placement="top"
+			>
+				{
+					//passing injected props from <Overlay> directly to the <Tooltip> component
+					(props) => (
+						<Tooltip id="tags-creatable-overlay" {...props}>
+							create your new tag here if it doesn't exist in the list yet.
+						</Tooltip>
+					)
+				}
+			</Overlay>
 		</>
 	);
 }
