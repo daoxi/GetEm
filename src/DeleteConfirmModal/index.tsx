@@ -3,21 +3,21 @@ import { useNavigate } from "react-router-dom";
 
 type DeleteConfirmModalProps = {
 	show: boolean;
-	handleClose: () => void;
+	handleCloseModal: () => void;
 	id: string;
 	onDeleteNote: (id: string) => void;
 };
 
 export function DeleteConfirmModal({
 	show,
-	handleClose,
+	handleCloseModal,
 	id,
 	onDeleteNote,
 }: DeleteConfirmModalProps) {
 	const navigate = useNavigate();
 
 	return (
-		<Modal show={show} onHide={handleClose}>
+		<Modal show={show} onHide={handleCloseModal}>
 			<Modal.Header closeButton>
 				<Modal.Title>Please Confirm</Modal.Title>
 			</Modal.Header>
@@ -26,14 +26,14 @@ export function DeleteConfirmModal({
 				<Button
 					variant="danger"
 					onClick={() => {
-						handleClose();
+						handleCloseModal();
 						navigate("/");
 						onDeleteNote(id);
 					}}
 				>
 					Delete
 				</Button>
-				<Button variant="outline-secondary" onClick={handleClose}>
+				<Button variant="outline-secondary" onClick={handleCloseModal}>
 					Cancel
 				</Button>
 			</Modal.Footer>

@@ -36,7 +36,7 @@ import { TagEditItem } from "./TagEditItem";
 
 type EditTagsModalProps = {
 	show: boolean;
-	handleClose: () => void;
+	handleCloseModal: () => void;
 	options: Options;
 	tagsWithNotesInfo: TagWithNotesInfo[];
 	onUpdateTag: (id: string, label: string) => void;
@@ -55,7 +55,7 @@ export type TagInputWithStatus = {
 
 export function EditTagsModal({
 	show,
-	handleClose,
+	handleCloseModal,
 	options,
 	tagsWithNotesInfo,
 	onUpdateTag,
@@ -206,7 +206,7 @@ export function EditTagsModal({
 	};
 
 	return (
-		<Modal show={show} onHide={handleClose}>
+		<Modal show={show} onHide={handleCloseModal}>
 			<Modal.Header closeButton>
 				<Modal.Title>Edit All Tags</Modal.Title>
 			</Modal.Header>

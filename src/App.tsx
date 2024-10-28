@@ -323,14 +323,14 @@ function App() {
 			</Container>
 			<OptionsModal
 				show={optionsModalIsOpen}
-				handleClose={() => setOptionsModalIsOpen(false)}
+				handleCloseModal={() => setOptionsModalIsOpen(false)}
 				options={options}
 				onUpdateOptions={onUpdateOptions}
 				onRestoreDefaultOptions={onRestoreDefaultOptions}
 			/>
 			<EditTagsModal
 				show={editTagsModalIsOpen}
-				handleClose={() => setEditTagsModalIsOpen(false)}
+				handleCloseModal={() => setEditTagsModalIsOpen(false)}
 				options={options}
 				tagsWithNotesInfo={tagsWithNotesInfo}
 				onUpdateTag={onUpdateTag}
@@ -340,7 +340,7 @@ function App() {
 			/>
 			<DeleteConfirmModal
 				show={deleteConfirmModalIsOpen}
-				handleClose={() => setDeleteConfirmModalIsOpen(false)}
+				handleCloseModal={() => setDeleteConfirmModalIsOpen(false)}
 				id={deleteConfirmModalNoteId}
 				onDeleteNote={onDeleteNote}
 			/>

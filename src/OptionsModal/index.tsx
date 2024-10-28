@@ -4,7 +4,7 @@ import { OptionsRangeSlider } from "../OptionsRangeSlider";
 
 type OptionsModalProps = {
 	show: boolean;
-	handleClose: () => void;
+	handleCloseModal: () => void;
 	options: Options;
 	onUpdateOptions: (optionName: string, newValue: any) => void;
 	onRestoreDefaultOptions: () => void;
@@ -12,13 +12,13 @@ type OptionsModalProps = {
 
 export function OptionsModal({
 	show,
-	handleClose,
+	handleCloseModal,
 	options,
 	onUpdateOptions,
 	onRestoreDefaultOptions,
 }: OptionsModalProps) {
 	return (
-		<Modal show={show} onHide={handleClose}>
+		<Modal show={show} onHide={handleCloseModal}>
 			<Modal.Header closeButton>
 				<Modal.Title>Options</Modal.Title>
 			</Modal.Header>
