@@ -2,7 +2,7 @@
 import { MdCreate } from "react-icons/md";
 import { MdSettings } from "react-icons/md";
 //Icon imports end
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
 	Row,
 	Col,
@@ -77,6 +77,24 @@ export function NotesMain({
 			return prevTags.filter((prevTag) => prevTag.isUsedByNotes);
 		});
 	}
+
+	//update the selectedTags whenever the tags (from parent component) get edited or deleted (keep the order of tags unchanged in selectedTags)
+	useEffect(() => {
+		setSelectedTags((prevTags) => {
+			return prevTags
+				.filter((prevTag) =>
+					tagsWithNotesInfo.some(
+						(tagWithNotesInfo) => tagWithNotesInfo.id === prevTag.id
+					)
+				) /* first filter out those tags that have been deleted */
+				.map(
+					(prevTag) =>
+						tagsWithNotesInfo.find(
+							(tagWithNotesInfo) => tagWithNotesInfo.id === prevTag.id
+						)! /* using non-null type assertion because those deleted tags that can't be found have already been filtered out */
+				);
+		});
+	}, [tagsWithNotesInfo]);
 
 	return (
 		<>
@@ -176,7 +194,7 @@ export function NotesMain({
 											//Chose ReactSelect component here (instead of CreatableReactSelect), because no new tag will be created
 
 											value={selectedTags.map((tag) => {
-												//CreatableReactSelect expects at least a label and a value (id), in this case isUsedByNotes is an additional custom property
+												//CreatableReactSelect expects at least a label and a value (i.e. id), in this case isUsedByNotes is an additional custom property
 												return {
 													label: tag.label,
 													value: tag.id,

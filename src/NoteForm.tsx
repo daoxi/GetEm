@@ -1,6 +1,6 @@
 //Used for both creating new and and editing existing notes
 
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import {
 	Form,
 	Stack,
@@ -70,6 +70,24 @@ export function NoteForm({
 	const tagsCreatableRef = useRef(null);
 	const [showTagsCreatableTooltip, setShowTagsCreatableTooltip] =
 		useState(false);
+
+	//update the selectedTags whenever the tags (from parent component) get edited or deleted (keep the order of tags unchanged in selectedTags)
+	useEffect(() => {
+		setSelectedTags((prevTags) => {
+			return prevTags
+				.filter((prevTag) =>
+					tagsWithNotesInfo.some(
+						(tagWithNotesInfo) => tagWithNotesInfo.id === prevTag.id
+					)
+				) /* first filter out those tags that have been deleted */
+				.map(
+					(prevTag) =>
+						tagsWithNotesInfo.find(
+							(tagWithNotesInfo) => tagWithNotesInfo.id === prevTag.id
+						)! /* using non-null type assertion because those deleted tags that can't be found have already been filtered out */
+				);
+		});
+	}, [tagsWithNotesInfo]);
 
 	function handleSubmit(event: FormEvent<HTMLFormElement>) {
 		event.preventDefault(); //this is needed for both when the form is invalid and valid
