@@ -7,7 +7,7 @@ type NewNoteProps = {
 	onSubmit: (data: NoteData) => void;
 	onAddTag: (tag: Tag) => void;
 	tagsWithNotesInfo: TagWithNotesInfo[];
-	setEditTagsModalIsOpen: (newEditTagsModalIsOpen: boolean) => void;
+	onOpenEditTagsModal: () => void;
 };
 
 export function NewNote({
@@ -15,7 +15,7 @@ export function NewNote({
 	onSubmit,
 	onAddTag,
 	tagsWithNotesInfo,
-	setEditTagsModalIsOpen,
+	onOpenEditTagsModal,
 }: NewNoteProps) {
 	return (
 		<>
@@ -25,7 +25,7 @@ export function NewNote({
 				onSubmit={onSubmit}
 				onAddTag={onAddTag}
 				tagsWithNotesInfo={tagsWithNotesInfo}
-				setEditTagsModalIsOpen={setEditTagsModalIsOpen}
+				onOpenEditTagsModal={onOpenEditTagsModal}
 			/>
 		</>
 	);

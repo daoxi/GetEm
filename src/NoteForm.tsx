@@ -21,7 +21,7 @@ type NoteFormProps = {
 	onSubmit: (data: NoteData) => void;
 	onAddTag: (tag: Tag) => void;
 	tagsWithNotesInfo: TagWithNotesInfo[];
-	setEditTagsModalIsOpen: (newEditTagsModalIsOpen: boolean) => void;
+	onOpenEditTagsModal: () => void;
 } & Partial<NoteData>; // use Partial to make NoteData optional
 
 export function NoteForm({
@@ -29,7 +29,7 @@ export function NoteForm({
 	onSubmit,
 	onAddTag,
 	tagsWithNotesInfo,
-	setEditTagsModalIsOpen,
+	onOpenEditTagsModal,
 	title = "",
 	body = "",
 	tags = [],
@@ -286,7 +286,7 @@ export function NoteForm({
 										/>
 									</Col>
 									<Button
-										onClick={() => setEditTagsModalIsOpen(true)}
+										onClick={() => onOpenEditTagsModal()}
 										variant="primary"
 									>
 										Edit

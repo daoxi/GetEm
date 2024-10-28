@@ -121,6 +121,14 @@ function App() {
 		});
 	}, [notes, tags]);
 
+	function onOpenOptionsModal() {
+		setOptionsModalIsOpen(true);
+	}
+
+	function onOpenEditTagsModal() {
+		setEditTagsModalIsOpen(true);
+	}
+
 	function onUpdateOptions(optionName: string, newValue: any) {
 		setOptions((prevOptions) => {
 			return { ...prevOptions, [optionName]: newValue };
@@ -262,12 +270,12 @@ function App() {
 								<NotesMain
 									options={options}
 									onUpdateOptions={onUpdateOptions}
-									handleOpenOptionsModal={() => setOptionsModalIsOpen(true)}
+									onOpenOptionsModal={onOpenOptionsModal}
 									notesWithTags={notesWithTags}
 									onDeleteNoteWithConfirm={onDeleteNoteWithConfirm}
 									onReorderNotes={onReorderNotes}
 									tagsWithNotesInfo={tagsWithNotesInfo}
-									setEditTagsModalIsOpen={setEditTagsModalIsOpen}
+									onOpenEditTagsModal={onOpenEditTagsModal}
 								/>
 							</>
 						}
@@ -281,7 +289,7 @@ function App() {
 									onSubmit={onCreateNote}
 									onAddTag={onAddTag}
 									tagsWithNotesInfo={tagsWithNotesInfo}
-									setEditTagsModalIsOpen={setEditTagsModalIsOpen}
+									onOpenEditTagsModal={onOpenEditTagsModal}
 								/>
 							</>
 						}
@@ -304,7 +312,7 @@ function App() {
 									onSubmit={onUpdateNote}
 									onAddTag={onAddTag}
 									tagsWithNotesInfo={tagsWithNotesInfo}
-									setEditTagsModalIsOpen={setEditTagsModalIsOpen}
+									onOpenEditTagsModal={onOpenEditTagsModal}
 								/>
 							}
 						/>

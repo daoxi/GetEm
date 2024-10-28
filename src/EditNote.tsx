@@ -8,7 +8,7 @@ type EditNoteProps = {
 	onSubmit: (id: string, data: NoteData) => void;
 	onAddTag: (tag: Tag) => void;
 	tagsWithNotesInfo: TagWithNotesInfo[];
-	setEditTagsModalIsOpen: (newEditTagsModalIsOpen: boolean) => void;
+	onOpenEditTagsModal: () => void;
 };
 
 export function EditNote({
@@ -16,7 +16,7 @@ export function EditNote({
 	onSubmit,
 	onAddTag,
 	tagsWithNotesInfo,
-	setEditTagsModalIsOpen,
+	onOpenEditTagsModal,
 }: EditNoteProps) {
 	const note = useNote();
 	return (
@@ -31,7 +31,7 @@ export function EditNote({
 				/* can't just pass props in as "onSubmit={onSubmit}", due to different props type in EditNote and NoteForm */
 				onAddTag={onAddTag}
 				tagsWithNotesInfo={tagsWithNotesInfo}
-				setEditTagsModalIsOpen={setEditTagsModalIsOpen}
+				onOpenEditTagsModal={onOpenEditTagsModal}
 			/>
 		</>
 	);

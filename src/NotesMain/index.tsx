@@ -23,23 +23,23 @@ import { NotesList } from "./NotesList";
 type NoteListProps = {
 	options: Options;
 	onUpdateOptions: (optionName: string, newValue: any) => void;
-	handleOpenOptionsModal: () => void;
+	onOpenOptionsModal: () => void;
 	notesWithTags: Note[];
 	onDeleteNoteWithConfirm: (id: string) => void;
 	onReorderNotes: (activeId: string, overId: string) => void;
 	tagsWithNotesInfo: TagWithNotesInfo[];
-	setEditTagsModalIsOpen: (newEditTagsModalIsOpen: boolean) => void;
+	onOpenEditTagsModal: () => void;
 };
 
 export function NotesMain({
 	options,
 	onUpdateOptions,
-	handleOpenOptionsModal,
+	onOpenOptionsModal,
 	notesWithTags,
 	onDeleteNoteWithConfirm,
 	onReorderNotes,
 	tagsWithNotesInfo,
-	setEditTagsModalIsOpen,
+	onOpenEditTagsModal,
 }: NoteListProps) {
 	const tagsUsedByNotes = tagsWithNotesInfo.filter(
 		(tag) => tag.isUsedByNotes === true
@@ -124,7 +124,7 @@ export function NotesMain({
 						</Link>
 						<Button
 							variant="dark"
-							onClick={() => handleOpenOptionsModal()}
+							onClick={() => onOpenOptionsModal()}
 							className=""
 						>
 							<Stack gap={1} direction="horizontal">
@@ -264,7 +264,7 @@ export function NotesMain({
 										/>
 									</Col>
 									<Button
-										onClick={() => setEditTagsModalIsOpen(true)}
+										onClick={() => onOpenEditTagsModal()}
 										variant="primary"
 									>
 										Edit
@@ -313,7 +313,7 @@ export function NotesMain({
 									className="d-grid gap-3" /* In <Button>'s direct-parent element, "d-grid" or <Stack> makes button(s) block-level (i.e. full width) */
 								>
 									<Button
-										onClick={() => setEditTagsModalIsOpen(true)}
+										onClick={() => onOpenEditTagsModal()}
 										variant="primary"
 									>
 										Edit All Tags
