@@ -72,6 +72,10 @@ export const TagEditItem = forwardRef(
 				<Row ref={ref} style={props.style}>
 					<Col>
 						<InputGroup /* The hasValidation prop can make the second-last element in <InputGroup> has rounded-corners on the right side (useful for <Form.Control.Feedback>) */
+							style={{
+								height:
+									"2.5rem" /* matches the height of the tag delete button */,
+							}}
 						>
 							<InputGroup.Text
 								variant="outline-secondary"
@@ -166,7 +170,14 @@ export const TagEditItem = forwardRef(
 					</Col>
 
 					<Col xs="auto" className={isBeingDraggedClassName}>
-						<Stack direction="horizontal" gap={2} style={{ height: "100%" }}>
+						<Stack
+							direction="horizontal"
+							gap={2}
+							style={{
+								height:
+									"2.5rem" /* matches the height of the tag <InputGroup> */,
+							}}
+						>
 							<Button
 								variant={
 									tagInputWithStatus.isUsedByNotes
