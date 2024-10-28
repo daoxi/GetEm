@@ -126,6 +126,11 @@ function App() {
 		});
 	}
 
+	function onRestoreDefaultOptions() {
+		setOptions({});
+		console.log("Default options are restored");
+	}
+
 	//handles creation of a note
 	function onCreateNote({ tags, ...data }: NoteData) {
 		setNotes((prevNotes) => {
@@ -233,7 +238,7 @@ function App() {
 								<NotesMain
 									options={options}
 									onUpdateOptions={onUpdateOptions}
-									setOptionsModalIsOpen={setOptionsModalIsOpen}
+									handleOpenOptionsModal={() => setOptionsModalIsOpen(true)}
 									notesWithTags={notesWithTags}
 									setNotes={setNotes}
 									onDeleteNoteWithConfirm={onDeleteNoteWithConfirm}
@@ -288,8 +293,8 @@ function App() {
 				show={optionsModalIsOpen}
 				handleClose={() => setOptionsModalIsOpen(false)}
 				options={options}
-				setOptions={setOptions}
 				onUpdateOptions={onUpdateOptions}
+				onRestoreDefaultOptions={onRestoreDefaultOptions}
 			/>
 			<EditTagsModal
 				show={editTagsModalIsOpen}

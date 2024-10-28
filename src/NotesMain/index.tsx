@@ -23,7 +23,7 @@ import { NotesList } from "./NotesList";
 type NoteListProps = {
 	options: Options;
 	onUpdateOptions: (optionName: string, newValue: any) => void;
-	setOptionsModalIsOpen: (optionsModalIsOpen: boolean) => void;
+	handleOpenOptionsModal: () => void;
 	notesWithTags: Note[];
 	setNotes: (
 		newNotes: RawNote[] | ((newNotes: RawNote[]) => RawNote[])
@@ -36,7 +36,7 @@ type NoteListProps = {
 export function NotesMain({
 	options,
 	onUpdateOptions,
-	setOptionsModalIsOpen,
+	handleOpenOptionsModal,
 	notesWithTags,
 	setNotes,
 	onDeleteNoteWithConfirm,
@@ -126,9 +126,7 @@ export function NotesMain({
 						</Link>
 						<Button
 							variant="dark"
-							onClick={() => {
-								setOptionsModalIsOpen(true);
-							}}
+							onClick={() => handleOpenOptionsModal()}
 							className=""
 						>
 							<Stack gap={1} direction="horizontal">

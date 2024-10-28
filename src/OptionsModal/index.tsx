@@ -6,16 +6,16 @@ type OptionsModalProps = {
 	show: boolean;
 	handleClose: () => void;
 	options: Options;
-	setOptions: (newOptions: Options) => void;
 	onUpdateOptions: (optionName: string, newValue: any) => void;
+	onRestoreDefaultOptions: () => void;
 };
 
 export function OptionsModal({
 	show,
 	handleClose,
 	options,
-	setOptions,
 	onUpdateOptions,
+	onRestoreDefaultOptions,
 }: OptionsModalProps) {
 	return (
 		<Modal show={show} onHide={handleClose}>
@@ -108,13 +108,7 @@ export function OptionsModal({
 				<div
 					className="d-grid gap-2" /* "d-grid" makes block-level (full-width) buttons */
 				>
-					<Button
-						variant="primary"
-						onClick={() => {
-							setOptions({});
-							console.log("Default options are restored");
-						}}
-					>
+					<Button variant="primary" onClick={() => onRestoreDefaultOptions()}>
 						Restore Default Options
 					</Button>
 				</div>
