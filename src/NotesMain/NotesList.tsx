@@ -11,7 +11,6 @@ import {
 	useSensors,
 } from "@dnd-kit/core";
 import {
-	arrayMove,
 	SortableContext,
 	sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
@@ -19,7 +18,7 @@ import {
 import { Row } from "react-bootstrap";
 import { SortableNoteCard } from "./SortableNoteCard";
 import { NoteCard } from "./NoteCard";
-import { Note, RawNote } from "../App";
+import { Note } from "../App";
 
 type NotesListProps = {
 	notesMode: string;
@@ -27,17 +26,15 @@ type NotesListProps = {
 } & Partial<NotesListPropsOptional>;
 
 type NotesListPropsOptional = {
-	setNotes: (
-		newNotes: RawNote[] | ((newNotes: RawNote[]) => RawNote[])
-	) => void; //only needed for "manage" mode
 	onDeleteNoteWithConfirm: (id: string) => void; //only needed for "manage" mode
+	onReorderNotes: (activeId: string, overId: string) => void; //only needed for "manage" mode
 };
 
 export function NotesList({
 	notesMode,
 	notesToList,
-	setNotes,
 	onDeleteNoteWithConfirm,
+	onReorderNotes,
 }: NotesListProps) {
 	if (notesMode === "view") {
 		return (
@@ -87,19 +84,14 @@ export function NotesList({
 			if (over === null) {
 				//stop here if it's null
 				return;
-			} else if (setNotes === undefined) {
-				console.log("setNotes wasn't passed in"); //for debugging only
+			} else if (onReorderNotes === undefined) {
+				console.log("onReorderNotes wasn't passed in"); //for debugging only
 				return;
 			} else if (active.id !== over.id) {
-				setNotes((prevNotes) => {
-					const oldIndex = prevNotes.findIndex(
-						(prevNote) => prevNote.id === active.id.toString()
-					);
-					const newIndex = prevNotes.findIndex(
-						(prevNote) => prevNote.id === over!.id.toString() //using non-null type assertion here because it's already been checked to not be null
-					);
-					return arrayMove(prevNotes, oldIndex, newIndex);
-				});
+				onReorderNotes(
+					active.id.toString(),
+					over!.id.toString() //using non-null type assertion here because it's already been checked to not be null
+				);
 			}
 
 			setActiveId(null);

@@ -15,14 +15,13 @@ import {
 	DragOverlay,
 } from "@dnd-kit/core";
 import {
-	arrayMove,
 	SortableContext,
 	sortableKeyboardCoordinates,
 	verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 //"The following" ends
 
-import { Options, Tag, TagWithNotesInfo } from "../App";
+import { Options, TagWithNotesInfo } from "../App";
 import {
 	Stack,
 	Form,
@@ -42,7 +41,12 @@ type EditTagsModalProps = {
 	tagsWithNotesInfo: TagWithNotesInfo[];
 	onUpdateTag: (id: string, label: string) => void;
 	onDeleteTag: (id: string) => void;
-	setTags: (newTags: Tag[] | ((newTags: Tag[]) => Tag[])) => void;
+	onReorderTags: (activeId: string, overId: string) => void;
+	arrayMoveHelper: (
+		prevStateArray: any[],
+		activeId: string,
+		overId: string
+	) => any[];
 };
 
 export type TagInputWithStatus = {
@@ -56,7 +60,8 @@ export function EditTagsModal({
 	tagsWithNotesInfo,
 	onUpdateTag,
 	onDeleteTag,
-	setTags,
+	onReorderTags,
+	arrayMoveHelper,
 }: EditTagsModalProps) {
 	//const [tagsInput, setTagsInput] = useState<TagWithNotesInfo[]>(structuredClone(tagsWithNotesInfo)); //alternative deep clone
 	const [tagsInput, setTagsInput] = useState<TagWithNotesInfo[]>(
@@ -166,31 +171,15 @@ export function EditTagsModal({
 			//stop here if it's null
 			return;
 		} else if (active.id !== over.id) {
-			function arrayMoveHelper(
-				prevStateArray: any[],
-				activeId: string,
-				overId: string
-			) {
-				const oldIndex = prevStateArray.findIndex(
-					(prevStateArrayElement) => prevStateArrayElement.id === activeId
-				);
-				const newIndex = prevStateArray.findIndex(
-					(prevStateArrayElement) => prevStateArrayElement.id === overId //using non-null type assertion here because it's already been checked to not be null
-				);
-				return arrayMove(prevStateArray, oldIndex, newIndex);
-			}
-
-			//if only using setTags() to only update the tags state (from parent component), the tagsInput state will still be updated accordingly, however the dnd-kit drop animation will behave unexpectedly;
-			//therefore, instead, use setTagsInput() first so that the drop animation behaves properly, then use setTags() AFTER that.
+			//if only using onReorderTags() to only update the tags state (from parent component), the tagsInput state will still be updated accordingly, however the dnd-kit drop animation will behave unexpectedly;
+			//therefore, instead, use setTagsInput() first so that the drop animation behaves properly, then use onReorderTags() AFTER that.
 			setTagsInput((prevTags) =>
 				arrayMoveHelper(prevTags, active.id.toString(), over!.id.toString())
 			); //using non-null type assertion here because it's already been checked to not be null
-			setTags((prevTags) =>
-				arrayMoveHelper(prevTags, active.id.toString(), over!.id.toString())
-			); //using non-null type assertion here because it's already been checked to not be null
+			onReorderTags(active.id.toString(), over!.id.toString()); //using non-null type assertion here because it's already been checked to not be null
 
 			/*
-			//legacy code for when not grouping similar code into a single callback function
+			//legacy code (only as reference)
 
 			setTagsInput((prevTags) => {
 				const oldIndex = prevTags.findIndex(

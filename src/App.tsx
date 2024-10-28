@@ -14,6 +14,7 @@ import { Demo } from "./Demo";
 import { EditTagsModal } from "./EditTagsModal";
 import { DeleteConfirmModal } from "./DeleteConfirmModal";
 import { OptionsModal } from "./OptionsModal";
+import { arrayMove } from "@dnd-kit/sortable";
 
 export type Options = {
 	[optionName: string]: any; //this allows any string as option name and stores any type of value
@@ -131,6 +132,21 @@ function App() {
 		console.log("Default options are restored");
 	}
 
+	//this function is used for helping with reordering dnd-kit sortable items (e.g. notes, tags)
+	function arrayMoveHelper(
+		prevStateArray: any[],
+		activeId: string,
+		overId: string
+	): any[] {
+		const oldIndex = prevStateArray.findIndex(
+			(prevStateArrayElement) => prevStateArrayElement.id === activeId
+		);
+		const newIndex = prevStateArray.findIndex(
+			(prevStateArrayElement) => prevStateArrayElement.id === overId
+		);
+		return arrayMove(prevStateArray, oldIndex, newIndex);
+	}
+
 	//handles creation of a note
 	function onCreateNote({ tags, ...data }: NoteData) {
 		setNotes((prevNotes) => {
@@ -176,6 +192,10 @@ function App() {
 		});
 	}
 
+	function onReorderNotes(activeId: string, overId: string) {
+		setNotes((prevNotes) => arrayMoveHelper(prevNotes, activeId, overId));
+	}
+
 	function onAddTag(tag: Tag) {
 		//console.log("onAddTag: id=" + tag.id + ", label=" + tag.label);
 		setTags((prev) => [...prev, tag]);
@@ -218,6 +238,10 @@ function App() {
 		});
 	}
 
+	function onReorderTags(activeId: string, overId: string) {
+		setTags((prevTags) => arrayMoveHelper(prevTags, activeId, overId));
+	}
+
 	return (
 		<>
 			<Container className="my-4">
@@ -240,8 +264,8 @@ function App() {
 									onUpdateOptions={onUpdateOptions}
 									handleOpenOptionsModal={() => setOptionsModalIsOpen(true)}
 									notesWithTags={notesWithTags}
-									setNotes={setNotes}
 									onDeleteNoteWithConfirm={onDeleteNoteWithConfirm}
+									onReorderNotes={onReorderNotes}
 									tagsWithNotesInfo={tagsWithNotesInfo}
 									setEditTagsModalIsOpen={setEditTagsModalIsOpen}
 								/>
@@ -303,7 +327,8 @@ function App() {
 				tagsWithNotesInfo={tagsWithNotesInfo}
 				onUpdateTag={onUpdateTag}
 				onDeleteTag={onDeleteTag}
-				setTags={setTags}
+				onReorderTags={onReorderTags}
+				arrayMoveHelper={arrayMoveHelper}
 			/>
 			<DeleteConfirmModal
 				show={deleteConfirmModalIsOpen}

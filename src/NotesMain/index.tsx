@@ -17,7 +17,7 @@ import {
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ReactSelect from "react-select";
-import { Note, Options, RawNote, TagWithNotesInfo } from "../App";
+import { Note, Options, TagWithNotesInfo } from "../App";
 import { NotesList } from "./NotesList";
 
 type NoteListProps = {
@@ -25,10 +25,8 @@ type NoteListProps = {
 	onUpdateOptions: (optionName: string, newValue: any) => void;
 	handleOpenOptionsModal: () => void;
 	notesWithTags: Note[];
-	setNotes: (
-		newNotes: RawNote[] | ((newNotes: RawNote[]) => RawNote[])
-	) => void;
 	onDeleteNoteWithConfirm: (id: string) => void;
+	onReorderNotes: (activeId: string, overId: string) => void;
 	tagsWithNotesInfo: TagWithNotesInfo[];
 	setEditTagsModalIsOpen: (newEditTagsModalIsOpen: boolean) => void;
 };
@@ -38,8 +36,8 @@ export function NotesMain({
 	onUpdateOptions,
 	handleOpenOptionsModal,
 	notesWithTags,
-	setNotes,
 	onDeleteNoteWithConfirm,
+	onReorderNotes,
 	tagsWithNotesInfo,
 	setEditTagsModalIsOpen,
 }: NoteListProps) {
@@ -364,7 +362,7 @@ export function NotesMain({
 					<NotesList
 						notesMode="manage"
 						notesToList={notesWithTags}
-						setNotes={setNotes}
+						onReorderNotes={onReorderNotes}
 						onDeleteNoteWithConfirm={onDeleteNoteWithConfirm}
 					/>
 				) : (
