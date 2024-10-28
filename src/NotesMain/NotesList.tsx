@@ -141,6 +141,11 @@ export function NotesList({
 								body={activeNote.body}
 								tags={activeNote.tags}
 								isBeingDragged
+								style={{
+									padding:
+										"0 0.5rem" /* do this to prevent the card from becoming slightly wider while being dragged (probably due to missing x-axis paddings on its container), 
+										"g-3" class name in <Row> (under <SortableContext>) sets the css variable "--bs-gutter-x" to 1rem (defaults is 1.5rem), and x-axis paddings are half of it */,
+								}}
 							/>
 						) : (
 							<p /* fallback message (e.g. for debugging) when undefined */>
