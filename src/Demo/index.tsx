@@ -6,6 +6,7 @@ import { useState } from "react";
 
 type DemoProps = {
 	options: Options;
+	defaultOptions: Options;
 	onUpdateOptions: (optionName: string, newValue: any) => void;
 	onCreateNote: ({ tags, ...data }: NoteData) => void;
 	onAddTag: (tag: Tag) => void;
@@ -14,6 +15,7 @@ type DemoProps = {
 
 export function Demo({
 	options,
+	defaultOptions,
 	onUpdateOptions,
 	onCreateNote,
 	onAddTag,
@@ -71,8 +73,7 @@ export function Demo({
 		<>
 			<Alert
 				variant="success"
-				/* as long as 1 of the sub-conditions is false, the demo won't be shown. "options.hideDemoPerm" works for both false and undefined (which is also falsy and happens when the object property is non-existent) */
-				show={showDemoTemp && !options.hideDemoPerm}
+				show={showDemoTemp && (options.hideDemoPerm === false || options.hideDemoPerm === undefined && defaultOptions.hideDemoPerm === false)}
 				onClose={() => {
 					setShowDemoTemp(false);
 				}}

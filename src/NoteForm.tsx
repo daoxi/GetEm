@@ -18,6 +18,7 @@ import { v4 as uuidV4 } from "uuid";
 
 type NoteFormProps = {
 	options: Options;
+	defaultOptions: Options;
 	onSubmit: (data: NoteData) => void;
 	onAddTag: (tag: Tag) => void;
 	tagsWithNotesInfo: TagWithNotesInfo[];
@@ -26,6 +27,7 @@ type NoteFormProps = {
 
 export function NoteForm({
 	options,
+	defaultOptions,
 	onSubmit,
 	onAddTag,
 	tagsWithNotesInfo,
@@ -45,11 +47,11 @@ export function NoteForm({
 
 	const maxNoteTitleLength = options.maxNoteTitleLength
 		? options.maxNoteTitleLength
-		: 80; //this option is assumed to be 80 when undefined
+		: defaultOptions.maxNoteTitleLength; //use default when undefined
 	let remainingNoteTitleLength = maxNoteTitleLength - noteFormTitle.length;
 	const maxTagLabelLength = options.maxTagLabelLength
 		? options.maxTagLabelLength
-		: 30; //this option is assumed to be 30 when undefined
+		: defaultOptions.maxTagLabelLength; //use default when undefined
 
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -200,12 +202,15 @@ export function NoteForm({
 												(
 													inputValue,
 													_value /* prefixing underscore indicates unused argument */,
-													options
+													reactSelectOptions
 												) =>
 													inputValue.length > 0 &&
 													inputValue.length <= maxTagLabelLength &&
-													options.every((option) => option.label !== inputValue) //make sure the input value doesn't already exist in options
-											} //this prop determines whether the option to create a new option will be displayed
+													reactSelectOptions.every(
+														(reactSelectOption) =>
+															reactSelectOption.label !== inputValue
+													) //make sure the input value doesn't already exist in react-select options
+											} //this prop determines whether the element to create a new tag (i.e. option) will be displayed
 											formatCreateLabel={(inputValue) => (
 												<>
 													<strong>
@@ -322,7 +327,9 @@ export function NoteForm({
 				target={tagsCreatableRef.current}
 				show={
 					showTagsCreatableTooltip &&
-					!options.hideTooltips &&
+					(options.hideTooltips === false ||
+						(options.hideTooltips === undefined &&
+							defaultOptions.hideTooltips === false)) &&
 					noteTagInput.length === 0 //show the tooltip only if the user hasn't typed anything
 				}
 				placement="top"

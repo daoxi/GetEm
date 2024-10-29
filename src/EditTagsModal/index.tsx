@@ -38,6 +38,7 @@ type EditTagsModalProps = {
 	show: boolean;
 	handleCloseModal: () => void;
 	options: Options;
+	defaultOptions: Options;
 	tagsWithNotesInfo: TagWithNotesInfo[];
 	onUpdateTag: (id: string, label: string) => void;
 	onDeleteTag: (id: string) => void;
@@ -57,6 +58,7 @@ export function EditTagsModal({
 	show,
 	handleCloseModal,
 	options,
+	defaultOptions,
 	tagsWithNotesInfo,
 	onUpdateTag,
 	onDeleteTag,
@@ -112,7 +114,7 @@ export function EditTagsModal({
 	//used to manage max length for input tag label
 	let maxTagLabelLength = options.maxTagLabelLength
 		? options.maxTagLabelLength
-		: 30; //this option is assumed to be 30 when undefined
+		: defaultOptions.maxTagLabelLength; //assume default value when undefined
 
 	//tagsInputWithStatus gets updated whenever tagsInput or tagsWithNotesInfo changes
 	const tagsInputWithStatus: TagInputWithStatus[] = useMemo(() => {

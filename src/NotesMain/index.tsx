@@ -22,6 +22,7 @@ import { NotesList } from "./NotesList";
 
 type NoteListProps = {
 	options: Options;
+	defaultOptions: Options;
 	onUpdateOptions: (optionName: string, newValue: any) => void;
 	onOpenOptionsModal: () => void;
 	notesWithTags: Note[];
@@ -33,6 +34,7 @@ type NoteListProps = {
 
 export function NotesMain({
 	options,
+	defaultOptions,
 	onUpdateOptions,
 	onOpenOptionsModal,
 	notesWithTags,
@@ -140,8 +142,10 @@ export function NotesMain({
 			<Tabs
 				id="controlled-tab-notes"
 				activeKey={
-					options.activeMainTabKey ? options.activeMainTabKey : "search"
-				} //default to "search" when this option hasn't been set yet
+					options.activeMainTabKey
+						? options.activeMainTabKey
+						: defaultOptions.activeMainTabKey
+				} //use default when this option hasn't been set yet
 				onSelect={
 					(k) =>
 						onUpdateOptions(
@@ -199,8 +203,8 @@ export function NotesMain({
 											})}
 											options={
 												options.excludeUnusedTagsForSearch === true ||
-												options.excludeUnusedTagsForSearch ===
-													undefined /* this option is assumed to be true when undefined */
+												(options.excludeUnusedTagsForSearch === undefined &&
+													defaultOptions.excludeUnusedTagsForSearch === true)
 													? tagsUsedByNotes.map((tag) => {
 															return {
 																label: tag.label,
@@ -281,9 +285,9 @@ export function NotesMain({
 							disabled={tagsUsedByNotes.length === 0}
 							checked={
 								options.excludeUnusedTagsForSearch === undefined
-									? true
+									? defaultOptions.excludeUnusedTagsForSearch
 									: options.excludeUnusedTagsForSearch
-							} //default value is assumed to be true when undefined
+							}
 							onChange={(e) => {
 								onUpdateOptions("excludeUnusedTagsForSearch", e.target.checked);
 								if (e.target.checked) {
@@ -328,9 +332,9 @@ export function NotesMain({
 								label={`Require confirmation when deleting a note`}
 								checked={
 									options.deleteNoteRequireConfirm === undefined
-										? true
+										? defaultOptions.deleteNoteRequireConfirm
 										: options.deleteNoteRequireConfirm
-								} //default value is assumed to be true when undefined
+								}
 								onChange={(e) => {
 									onUpdateOptions("deleteNoteRequireConfirm", e.target.checked);
 								}}
@@ -344,9 +348,9 @@ export function NotesMain({
 					</Stack>
 				</Tab>
 			</Tabs>
-			{options.activeMainTabKey === undefined ||
-			options.activeMainTabKey ===
-				"search" /* default to "search" when this option hasn't been set yet */ ? (
+			{(options.activeMainTabKey === undefined &&
+				defaultOptions.activeMainTabKey === "search") ||
+			options.activeMainTabKey === "search" ? (
 				notesWithTags.length !== 0 ? (
 					filteredNotes.length !== 0 ? (
 						<NotesList notesMode="view" notesToList={filteredNotes} />
@@ -357,7 +361,9 @@ export function NotesMain({
 					<p /* don't show any tip if the user hasn't created any notes, because the search field already shows the needed tip */
 					></p>
 				)
-			) : options.activeMainTabKey === "manage" ? (
+			) : (options.activeMainTabKey === undefined &&
+					defaultOptions.activeMainTabKey === "manage") ||
+			  options.activeMainTabKey === "manage" ? (
 				notesWithTags.length !== 0 ? (
 					<NotesList
 						notesMode="manage"
@@ -376,7 +382,9 @@ export function NotesMain({
 				target={tagsSelectRef.current}
 				show={
 					showTagsSelectTooltip &&
-					!options.hideTooltips &&
+					(options.hideTooltips === false ||
+						(options.hideTooltips === undefined &&
+							defaultOptions.hideTooltips === false)) &&
 					selectedTags.some((tag) => tag.isUsedByNotes === false) //show the tooltip when 1 or more selected tags are unused
 				}
 				placement="top"
