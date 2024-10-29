@@ -22,11 +22,12 @@ export function OptionsModal({
 }: OptionsModalProps) {
 	//this only controls whether the user should be notified that the option defaults are restored
 	const [showDefaultsRestored, setShowDefaultsRestored] = useState(false);
+	const [optionsAreDefault, setOptionsAreDefault] = useState(
+		Object.keys(options).length === 0
+	);
 	useEffect(() => {
-		if (
-			showDefaultsRestored /* the first condition only serves as a short-circuiting to improve performance */ &&
-			Object.keys(options).length !== 0
-		) {
+		setOptionsAreDefault(Object.keys(options).length === 0);
+		if (showDefaultsRestored && Object.keys(options).length !== 0) {
 			setShowDefaultsRestored(false);
 		}
 	}, [options]);
@@ -138,15 +139,17 @@ export function OptionsModal({
 					className="d-grid gap-2" /* "d-grid" makes block-level (full-width) buttons */
 				>
 					<Button
-						variant={showDefaultsRestored ? "secondary" : "primary"}
-						disabled={showDefaultsRestored}
+						variant={optionsAreDefault ? "secondary" : "primary"}
+						disabled={optionsAreDefault}
 						onClick={() => {
 							onRestoreDefaultOptions();
 							setShowDefaultsRestored(true);
 						}}
 					>
-						{showDefaultsRestored
-							? "Defaults Restored"
+						{optionsAreDefault
+							? showDefaultsRestored
+								? "Defaults Restored"
+								: "Options Are Default"
 							: "Restore Default Options"}
 					</Button>
 				</div>
