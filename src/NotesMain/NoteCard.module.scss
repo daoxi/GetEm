@@ -1,12 +1,24 @@
 .card {
 	transition: translate ease-in-out 100ms, box-shadow ease-in-out 100ms;
-	&:hover {
-		translate: 0 -5px;
-		box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2);
+
+	//To prevent hover effect from becoming "sticky" on touch-able decices (including dual-input (touch + mouse) devices, e.g. touchscreen laptops),
+	//use media query to only allow the hover effect when hover is available and device is not touch-able,
+	//(there isn't a CSS feature yet to check the currently used pointer, "(pointer: fine)" only checks the primary pointer)
+	//* this similar approach is used for: notecard, notecard's draggable area, and editable tag's drag handle (keep CSS comments consistent for these)
+	@media (hover: hover) and (not (any-pointer: coarse)) {
+		&:hover {
+			translate: 0 -5px;
+			box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2);
+		}
 	}
 }
 
 .draggable-area {
+	//SCSS declarations should be above nested rules because:
+	//"Deprecation Warning: Sass's behavior for declarations that appear after nested rules will be changing to match the behavior specified by CSS in an upcoming version.
+	//To keep the existing behavior, move the declaration above the nested rule."
+
+	//dotted pattern
 	background-image: radial-gradient(
 		circle at center,
 		rgba(0, 0, 0, 0.1) 0.25rem,
@@ -15,11 +27,13 @@
 	background-size: 1rem 1rem;
 	background-repeat: round; // the repeated dots will stretch until there is room for another one to be added (this prevents partial dots)
 
-	//SCSS declarations should be above nested rules because:
-	//"Deprecation Warning: Sass's behavior for declarations that appear after nested rules will be changing to match the behavior specified by CSS in an upcoming version. 
-	//To keep the existing behavior, move the declaration above the nested rule."
+	//change cursor to grab
+	cursor: move; /* fallback if grab cursor is unsupported */
+	cursor: grab;
+	cursor: -moz-grab;
+	cursor: -webkit-grab;
 
-	&:hover {
+	@mixin draggable-area-highlighted {
 		background-image: radial-gradient(
 			circle at center,
 			rgba(0, 0, 0, 0.4) 0.25rem,
@@ -27,15 +41,20 @@
 		);
 	}
 
-	&.drag-cursor {
-		cursor: move; /* fallback if grab cursor is unsupported */
-		cursor: grab;
-		cursor: -moz-grab;
-		cursor: -webkit-grab;
+	//To prevent hover effect from becoming "sticky" on touch-able decices (including dual-input (touch + mouse) devices, e.g. touchscreen laptops),
+	//use media query to only allow the hover effect when hover is available and device is not touch-able,
+	//(there isn't a CSS feature yet to check the currently used pointer, "(pointer: fine)" only checks the primary pointer)
+	//* this similar approach is used for: notecard, notecard's draggable area, and editable tag's drag handle (keep CSS comments consistent for these)
+	@media (hover: hover) and (not (any-pointer: coarse)) {
+		&:hover {
+			@include draggable-area-highlighted;
+		}
 	}
-	/* Apply a "closed-hand" cursor during drag operation. */
-	/* Can't use ":active" here, because the active element is actually its own separate element */
-	&.drag-cursor-active {
+
+	&.is-being-dragged {
+		@include draggable-area-highlighted;
+
+		/* Apply a "closed-hand" cursor during drag operation. */
 		cursor: grabbing;
 		cursor: -moz-grabbing;
 		cursor: -webkit-grabbing;

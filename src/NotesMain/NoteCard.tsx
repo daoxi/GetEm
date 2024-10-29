@@ -39,11 +39,7 @@ export const NoteCard = forwardRef(
 						src='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" height="2rem" width="100%"></svg>' //the height of the svg controls height of the draggable pattern area
 						className={`${notesMode !== "manage" && "d-none"} ${
 							styles["draggable-area"]
-						} ${
-							isBeingDragged
-								? styles["drag-cursor-active"]
-								: styles["drag-cursor"]
-						}`}
+						} ${isBeingDragged && styles["is-being-dragged"]}`}
 						style={{
 							touchAction:
 								"none" /* this makes sure the drag-and-drop works properly on touch devices */,

@@ -4,15 +4,27 @@
 	cursor: -moz-grab;
 	cursor: -webkit-grab;
 
-	&:hover {
-		background: #d8d8d8;
+	@mixin draggable-handle-icon-highlighted {
+		background: #d8d8d8; //
+	}
+
+	//To prevent hover effect from becoming "sticky" on touch-able decices (including dual-input (touch + mouse) devices, e.g. touchscreen laptops),
+	//use media query to only allow the hover effect when hover is available and device is not touch-able,
+	//(there isn't a CSS feature yet to check the currently used pointer, "(pointer: fine)" only checks the primary pointer)
+	//* this similar approach is used for: notecard, notecard's draggable area, and editable tag's drag handle (keep CSS comments consistent for these)
+	@media (hover: hover) and (not (any-pointer: coarse)) {
+		&:hover {
+			@include draggable-handle-icon-highlighted;
+		}
+	}
+
+	&.is-being-dragged {
+		@include draggable-handle-icon-highlighted;
+
+		/* Apply a "closed-hand" cursor during drag operation. */
+		cursor: grabbing;
+		cursor: -moz-grabbing;
+		cursor: -webkit-grabbing;
 	}
 }
 
-/* Apply a "closed-hand" cursor during drag operation. */
-/* Can't use ":active" here, because the active element is actually its own separate element */
-.draggable-handle-icon-active {
-	cursor: grabbing;
-	cursor: -moz-grabbing;
-	cursor: -webkit-grabbing;
-}

@@ -81,11 +81,7 @@ export const TagEditItem = forwardRef(
 								variant="outline-secondary"
 								{...props.attributes}
 								{...props.listeners}
-								className={
-									isBeingDragged
-										? `${styles["draggable-handle-icon-active"]}`
-										: `${styles["draggable-handle-icon"]}`
-								}
+								className={`${styles["draggable-handle-icon"]} ${isBeingDragged && styles["is-being-dragged"]}`}
 								style={{
 									touchAction:
 										"none" /* this makes sure the drag-and-drop works properly on touch devices */,
