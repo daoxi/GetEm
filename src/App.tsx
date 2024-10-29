@@ -57,7 +57,7 @@ export type TagWithNotesInfo = {
 function App() {
 	const navigate = useNavigate();
 
-	//initialize the options as an empty object instead of cloning it from the default options object, 
+	//initialize the options as an empty object instead of cloning it from the default options object,
 	//this approach minimizes the stored data, and allows easier transition when users with stored old options data start using a newer version of the app with more option(s)
 	const [options, setOptions] = useLocalStorage<Options>("OPTIONS", {});
 	//default options that are assumed for all undefined (i.e. not set yet) properties in options, each can be changed as needed (as long as the comment for that default option is followed)
@@ -140,9 +140,21 @@ function App() {
 	}
 
 	function onUpdateOptions(optionName: string, newValue: any) {
-		setOptions((prevOptions) => {
-			return { ...prevOptions, [optionName]: newValue };
-		});
+		if (
+			newValue ===
+			defaultOptions[
+				optionName as keyof typeof defaultOptions
+			] /* don't store it if it's already specified in defaultOptions */
+		) {
+			setOptions((prevOptions) => {
+				delete prevOptions[optionName]; //removes that option (if that option doesn't exist then this won't do anything)
+				return { ...prevOptions };
+			});
+		} else {
+			setOptions((prevOptions) => {
+				return { ...prevOptions, [optionName]: newValue };
+			});
+		}
 	}
 
 	function onRestoreDefaultOptions() {
