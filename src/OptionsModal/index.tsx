@@ -1,6 +1,7 @@
 import { Button, Form, Modal } from "react-bootstrap";
 import { Options } from "../App";
 import { OptionsRangeSlider } from "../OptionsRangeSlider";
+import { useEffect, useState } from "react";
 
 type OptionsModalProps = {
 	show: boolean;
@@ -19,8 +20,24 @@ export function OptionsModal({
 	onUpdateOptions,
 	onRestoreDefaultOptions,
 }: OptionsModalProps) {
+	//this only controls whether the user should be notified that the option defaults are restored
+	const [showDefaultsRestored, setShowDefaultsRestored] = useState(false);
+	useEffect(() => {
+		if (
+			showDefaultsRestored /* the first condition only serves as a short-circuiting to improve performance */ &&
+			Object.keys(options).length !== 0
+		) {
+			setShowDefaultsRestored(false);
+		}
+	}, [options]);
 	return (
-		<Modal show={show} onHide={handleCloseModal}>
+		<Modal
+			show={show}
+			onHide={() => {
+				handleCloseModal();
+				setShowDefaultsRestored(false);
+			}}
+		>
 			<Modal.Header closeButton>
 				<Modal.Title>Options</Modal.Title>
 			</Modal.Header>
@@ -120,8 +137,17 @@ export function OptionsModal({
 				<div
 					className="d-grid gap-2" /* "d-grid" makes block-level (full-width) buttons */
 				>
-					<Button variant="primary" onClick={() => onRestoreDefaultOptions()}>
-						Restore Default Options
+					<Button
+						variant={showDefaultsRestored ? "secondary" : "primary"}
+						disabled={showDefaultsRestored}
+						onClick={() => {
+							onRestoreDefaultOptions();
+							setShowDefaultsRestored(true);
+						}}
+					>
+						{showDefaultsRestored
+							? "Defaults Restored"
+							: "Restore Default Options"}
 					</Button>
 				</div>
 			</Modal.Body>
